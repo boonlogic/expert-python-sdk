@@ -1,4 +1,4 @@
-# Project Title
+# BoonNano Python API
 
 Python API for interacting with BoonNano Cloud API
 
