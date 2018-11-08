@@ -529,7 +529,7 @@ class BoonNano:
         fout.write(size_str)
 
         #max value (used in scaling) previously maxval
-        bit_str = str(int(255)) + '\n'
+        bit_str = str(int(65535)) + '\n'
         fout.write(bit_str)
 
         #change format for different data types
@@ -576,16 +576,37 @@ class BoonNano:
         data_native = np.zeros_like(np_data)
         #Grab unscaled minimum
         min_raw = np.amin(np_data,axis=0)
+        max_raw = np.amax(np_data,axis=0)
+        #compute scale factor so each feature maps to the same integer range
+        scaling_range = scalefactor / np.subtract(max_raw,min_raw)
         #shift from min
         for i in range(np.shape(np_data)[0]):
             row = np_data[i,:]
             row_shift = np.subtract(row, min_raw) #0 min
-            row_scaled = np.rint(row_shift*scalefactor) #scale to integers
+            row_scaled = np.rint(np.multiply(row_shift,scaling_range)) #scale to integers
             data_native[i,:] = row_scaled
 
         #return data and range
         max_scaled = np.amax(data_native,axis=0)
         return data_native, max_scaled
+
+    def computePatternStatistics(self, np_data):
+        """Get the near and far outlier limits
+
+        Args:
+            np_data (numpy.array): A numpy array of native data
+        Returns:
+            NearOutlierMin: The 5th percentile
+            NearOutlierMax: The 95th percentile
+            FarOutlierMin: The 1st percentile
+            FarOutlierMax: The 99th percentile
+        """
+        all_percentiles = np.percentile(np_data, np.array([5,95,1,99]) )
+        NearOutlierMin = int(all_percentiles[0])
+        NearOutlierMax = int(all_percentiles[1])
+        FarOutlierMin = int(all_percentiles[2])
+        FarOutlierMax = int(all_percentiles[3])
+        return NearOutlierMin, NearOutlierMax, FarOutlierMin, FarOutlierMax
 
     def frequencyCounts(self, np_ids):
         """Count the frequency of each cluster integer
