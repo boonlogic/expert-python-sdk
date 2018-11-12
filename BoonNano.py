@@ -633,3 +633,21 @@ class BoonNano:
             cmap.append(color)
         self.colormap = cmap
         return cmap
+
+    def readPGM(self, filename):
+        """Read a pgm file to array
+
+        Notes:
+            Requires OpenCV be installed
+        Args:
+            filename (str): Path to the pgm file
+        Returns:
+            numpy.array: Raw PGM Data
+            int: number of rows/samples
+            int: number of columns/features
+        """
+        import cv2
+        image = cv2.imread(filename,0)
+        rows,cols = image.shape
+        return image,rows,cols
+
