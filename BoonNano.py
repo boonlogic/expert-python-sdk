@@ -2,46 +2,56 @@
 import urllib3
 import json
 import numpy as np
-import struct
+import os
 
 ############################
-# BoonNano Python API v1.0 #
+# BoonNano Python API v2.1 #
 ############################
 
 class BoonNano:
     """Python class to perform clustering with BoonNano Server
 
     Args:
-        
+
     Returns:
+        empty returns (only bool for success of call):
+            post calls
+            saveSnapshot
+            autotune
+            deleteInstance
+        functions with valued returns:
+            get calls
+            uploadData
+            runNano
 
     Example Usage:
-        bn = BoonNano('localhost',5010,'<token>')
-        success, size = bn.loadDataSet('~/nativeset510.pgm')
-        success, params = bn.setClusterParameters(0.99, 0.03, 0, 500)
-        success, ids = bn.getClusterIds()
-
+        bn = BoonNano('localhost',5010)
+        success, config = bn.getConfigTemplate(numFeatures=30, numType='native', min=0, max=10, percentVariation=0.05, streamingWindow=1, accuracy=0.99, weight=1)
+        success, instance = bn.getInstance()
+        success = bn.postClusterConfiguration(instance, config)
+        success, data_results = bn.uploadData(instance, Data)
+        success = bn.autotune(instance)
+        success, nano_results = bn.runNano(instance, Results='All')
     """
-    def __init__(self, host, port, token, timeout):
+
+    def __init__(self, host, port, token='2B69F78F61A572DBF8D1E44548B48', timeout=60.0):
         """BoonNano __init__ method.
 
         Args:
             host (str): Host Address.
             port (int): Remote Port.
-            token (str): API Access token.
             timeout (float): HTTP Request Timeout
         Returns:
-            
-            
+
+
         """
         #arguments
+        self.timeout = timeout
+        self.token = token
+
         self.host = host
         self.port = port
-        self.token = str(token)
-        self.timeout = timeout 
-
-        #construct request address
-        self.primary = '/expert/v1/'
+        self.primary = '/expert/v2/'
         self.url = 'http://' + str(self.host) + ':' + str(self.port) + self.primary
 
         #create pool manager
@@ -50,604 +60,662 @@ class BoonNano:
         else:
             self.http = urllib3.PoolManager(timeout=self.timeout)
 
-        #state checks
-        self.is_dataset = False
-        self.is_parameter = False
-        
         #parameters
-        print '#################################'
-        print 'Opening BoonNano Client'
-        print 'URL: ', self.url
-        print '#################################'
-
+        print('#################################')
+        print('Opening BoonNano Client')
+        print('URL: ', self.url)
+        print('#################################')
 
     def __del__(self):
         """Destructor Method.
 
-                        
+
         """
         print('Closing Pool')
         self.http.clear()
 
-
-    def setToken(self, token):
-        """Change the API Access Token
-
-        Args:
-            token (str): The new access token
-        Returns:
-                        
-        """
-        self.token = str(token)
-
-    def setHostPort(self, host, port):
+    def setHostPort(self, host, port, token='2B69F78F61A572DBF8D1E44548B48'):
         """Change the host and port
 
         Args:
             host (str): Host Address.
             port (int): Remote Port.
         Returns:
-                        
-        """
-        self.host = host 
-        self.port = port 
-        self.url = 'http://' + str(self.host) + ':' + str(self.port) + self.primary
 
+        """
+        self.host = host
+        self.port = port
+        self.token = token
+        self.primary = '/expert/v2/'
+        self.url = 'http://' + str(self.host) + ':' + str(self.port) + self.primary
 
     ##########################
     #  Server Requests       #
     ##########################
-    
 
-    def loadDataSet(self, filename):
-        """Upload data set to server
 
-        Notes:
-            Filename must be of type .pgm
-        Args:
-            filename (str): Full path to pgm file.
-        Returns:
-            bool: The return value. True for success, False otherwise.
-            (:obj:`list` of :obj:`int`): The Width,Height of the received dataset
+#############
+# INSTANCES #
+#############
+
+    def getInstance(self, NanoInstanceID=''):
+        """If an instance number is not given,
+        the nano will return the next open number
+        as a running instance
         """
-         
+
+        # build command
+        instance_cmd = self.url + 'nanoInstance/' + str(NanoInstanceID)
+
+        # initialize instance
+        try:
+            instance_response = self.http.request(
+                'POST',
+                instance_cmd,
+                headers={
+                    'x-token': self.token,
+                    'Content-Type': 'application/json'
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False, None
+
+        # check for error
+        if instance_response.status != 200 and instance_response.status != 201:
+            print(json.loads(instance_response.data.decode('utf-8')))
+            return False, None
+
+        return True, json.loads(instance_response.data.decode('utf-8'))['instanceID']
+
+    def getInstanceStatus(self, NanoInstanceID):
+        """returns true if NanoInstanceID is a running instance
+        and false otherwise
+        """
+
+        # build command
+        instance_cmd = self.url + 'nanoInstance/' + str(NanoInstanceID)
+
+        # check status of instance
+        try:
+            instance_response = self.http.request(
+                'GET',
+                instance_cmd,
+                headers={
+                    'x-token': self.token,
+                    'Content-Type': 'application/json'
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False, None
+
+        # check for error
+        if instance_response.status != 200 and instance_response.status != 201:
+            # Error code 404 is that instance is not a running instance
+            if instance_response.status == 404:
+                return True, False
+            # all other errors are a problem with the call rather than returning the status of the instance
+            return False, None
+
+        # the instance is running
+        return True, True
+
+    def deleteInstance(self, NanoInstanceID=''):
+        """If an instance number is not given,
+        the nano will delete ALL running instances
+        """
+
+        # build command
+        if NanoInstanceID == '':
+            # call to delete all instances
+            instance_cmd = self.url + 'nanoInstances'
+        else:
+            # call to delete specified instance number
+            instance_cmd = self.url + 'nanoInstance/' + str(NanoInstanceID)
+
+        # delete instance(s)
+        try:
+            instance_response = self.http.request(
+                'DELETE',
+                instance_cmd,
+                headers={
+                    'x-token': self.token
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False
+
+            # check for error
+        if instance_response.status != 200 and instance_response.status != 201:
+            print(json.loads(instance_response.data.decode('utf-8')))
+            return False
+
+        return True
+
+    def getRunningInstances(self):
+        """returns list of nano instances running
+        """
+
+        # build command
+        instance_cmd = self.url + 'nanoInstances'
+
+        # list of running instances
+        try:
+            instance_response = self.http.request(
+                'GET',
+                instance_cmd,
+                headers={
+                    'x-token': self.token,
+                    'Content-Type': 'application/json'
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False, None
+
+        # check for error
+        if instance_response.status != 200 and instance_response.status != 201:
+            print(json.loads(instance_response.data.decode('utf-8')))
+            return False, None
+
+        return True, json.loads(instance_response.data.decode('utf-8'))
+
+##################
+# CONFIGURATIONS #
+##################
+
+    def saveSnapshot(self, NanoInstanceID, filename):
+        """serializes the nano and saves it as a tar filename
+        """
+
+        # build command
+        snapshot_cmd = self.url + 'snapshot/' + str(NanoInstanceID)
+
+        # serialize nano
+        try:
+            snapshot_response = self.http.request(
+                'GET',
+                snapshot_cmd,
+                headers={
+                    'x-token': self.token
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False
+
+        # check for error
+        if snapshot_response.status != 200 and snapshot_response.status != 201:
+            print(json.loads(snapshot_response.data.decode('utf-8')))
+            return False
+
+        # at this point, the call succeed so saves the return to a tar file
+        self.filename = filename
+        fp = open(self.filename, 'wb')
+        fp.write(snapshot_response.data)
+        fp.close
+
+        return True
+
+    def postSnapshot(self, NanoInstanceID, filename):
+        """deserialize existing nano
+        upload file to given instance
+
+        NOTE: must be of type tar
+        """
+
         self.filename = filename
 
         #check filetype
-        if not ".pgm" in self.filename:
-            print('Dataset Must Be In .pgm Format')
+        if not ".tar" in self.filename:
+            print('Dataset Must Be In .tar Format')
+            return False
+
+        with open(self.filename, "rb") as fp:
+            tar_data = fp.read()
+
+        # build command
+        snapshot_cmd = self.url + 'snapshot/' + str(NanoInstanceID)
+
+        # post serialized nano
+        try:
+            snapshot_response = self.http.request(
+                'POST',
+                snapshot_cmd,
+                headers={
+                    'x-token': self.token
+                },
+                fields={
+                    'snapshot': (self.filename, tar_data)
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False
+
+        # check for error
+        if snapshot_response.status != 200 and snapshot_response.status != 201:
+            print(json.loads(snapshot_response.data.decode('utf-8')))
+            return False
+
+        return True
+
+    def getClusterConfiguration(self, NanoInstanceID):
+        """returns the posted clustering configuration
+        """
+
+        # build command
+        config_cmd = self.url + 'clusterConfig/' + str(NanoInstanceID)
+
+        # get config
+        try:
+            config_response = self.http.request(
+                'GET',
+                config_cmd,
+                headers={
+                    'x-token': self.token,
+                    'Content-Type': 'application/json'
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
             return False, None
+
+        # check for error
+        if config_response.status != 200 and config_response.status != 201:
+            print(json.loads(config_response.data.decode('utf-8')))
+            return False, None
+
+        return True, json.loads(config_response.data.decode('utf-8'))
+
+    def getConfigTemplate(self, numFeatures, numType, min=1, max=10, percentVariation=0.05, streamingWindow=1, weight=1, accuracy=0.99):
+        """returns a json config version for the given Parameters
+        """
+
+        # build command
+        config_cmd = self.url + 'configTemplate?featureCount=' + str(numFeatures) + '&numericFormat=' + str(numType) + '&minVal=' + str(min) + '&maxVal=' + str(max) + '&weight=' + str(weight) + '&percentVariation=' + str(percentVariation) + '&accuracy=' + str(accuracy) + '&streamingWindowSize=' + str(streamingWindow)
+
+        # convert to config format
+        try:
+            config_response = self.http.request(
+                'GET',
+                config_cmd,
+                headers={
+                    'x-token': self.token,
+                    'Content-Type': 'application/json'
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False, None
+
+        # check for error
+        if config_response.status != 200 and config_response.status != 201:
+            print(json.loads(config_response.data.decode('utf-8')))
+            return False, None
+
+        return True, json.loads(config_response.data.decode('utf-8'))
+
+    def postClusterConfiguration(self, NanoInstanceID, JSONConfig):
+        """returns the posted clustering configuration
+        """
+
+        # build command
+        config_cmd = self.url + 'clusterConfig/' + str(NanoInstanceID)
+
+        # post config
+        try:
+            config_response = self.http.request(
+                'POST',
+                config_cmd,
+                headers={
+                    'x-token': self.token,
+                    'Content-Type': 'application/json'
+                },
+                body=json.dumps(JSONConfig).encode('utf-8')
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False
+
+        # check for error
+        if config_response.status != 200 and config_response.status != 201:
+            print(json.loads(config_response.data.decode('utf-8')))
+            return False
+
+        return True
+
+    def autotune(self, NanoInstanceID, byFeature=False, autotunePV=True, autotuneRange=True, exclusions={}):
+        """autotunes the percent variation
+        and the min and max for each feature
+        """
+
+        # build command
+        config_cmd = self.url + 'autoTuneConfig/' + str(NanoInstanceID) + '?byFeature=' + str(byFeature).lower() + '&autoTunePV=' + str(autotunePV).lower() + '&autoTuneRange=' + str(autotuneRange).lower() + '&exclusions=' + str(exclusions)[1:-1].replace(' ','')
+
+        # autotune parameters
+        try:
+            config_response = self.http.request(
+                'POST',
+                config_cmd,
+                headers={
+                    'x-token': self.token,
+                    'Content-Type': 'application/json'
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False
+
+        # check for error
+        if config_response.status != 200 and config_response.status != 201:
+            print(json.loads(config_response.data.decode('utf-8')))
+            return False
+
+        return True
+
+###########
+# CLUSTER #
+###########
+
+    def uploadData(self, NanoInstanceID, filename, runNano=False, appendData=False, Results=''):
+        """posts the data and clusters it if runNano is True
+
+        results per pattern options:
+            ID = cluster ID
+            SI = smoothed anomaly index
+            RI = raw anomaly index
+            FI = frequency index
+            DI = distance index
+            GR = ???
+            MD = metadata
+        """
+
+        self.filename = filename
+        #check filetype
+        if not ".bin" in str(self.filename) and not '.csv' in str(self.filename):
+            # write filename to a temporary file to upload
+            self.filename = 'Temp_data.csv'
+            np.savetxt(self.filename, filename, delimiter=',')
+        else:
+            self.filename = filename
 
         #open filename
         with open(self.filename) as fp:
             file_data = fp.read()
 
-        #build command
-        dataset_cmd = self.url + 'dataSet?gzip=false'
-        if ".tar" in self.filename:
-            dataset_cmd = self.url + 'dataSet?gzip=true'
-
-        #post dataset
-        try:
-            load_response = self.http.request( 'POST', dataset_cmd, headers={'x-token': self.token}, fields={ 'binFile': (self.filename, file_data)} )
-        except Exception as e:
-            print('Request Timeout')
-            return False, None
-
-        #check status
-        isError, status = self.responseStatus(load_response)
-        if isError:
-            return False, None
-
-        #parse response
-        load_dict = json.loads(load_response.data.decode('utf-8'))
-        load_list = self.parseDictionary(load_dict, ['Width','Height'])
-
-        #flag check
-        self.is_dataset = True
-
-        #release
-        load_response.release_conn()
-        
-        return True, load_list
-
-
-    def deleteDataSet(self):
-        """Delete current dataset from server
-
-        Args:
-            
-        Returns:
-            bool: The return value. True for success, False otherwise.
-        """
-        #build command
-        dataset_cmd = self.url + 'dataSet'
-
-        #delete dataset
-        try:
-            del_response = self.http.request( 'DELETE', dataset_cmd, headers={'x-token': self.token} )
-        except Exception as e:
-            print('Request Timeout')
-            return False, None
-
-        #check status
-        isError, status = self.responseStatus(del_response)
-        if isError:
-            return False, None
-
-        #release
-        del_response.release_conn()
-
-        return True
-
-
-    def setClusterParameters(self, accuracy, percentVariation, minVal, maxVal):
-        """Set clustering parameters
-
-        Args:
-            accuracy (float): The accuracy between clusters
-            percentVariation (float): The variation among clusters
-            minVal (float): The minimum data value
-            maxVal (float): The maximum data value
-        Returns:
-            bool: The return value. True for success, False otherwise.
-            (:obj:`list` of :obj:`float`): The received parameters (accuracy, percentVariation, minVal, maxVal)
-        """
-         
-        #check dataset
-        if not self.is_dataset:
-            print('You Must First Upload Dataset')
-            return False, None
-        
-        self.accuracy = accuracy #0.99
-        self.percentVariation = percentVariation #0.03
-        self.minVal = minVal #0
-        self.maxVal = maxVal #500
-
-        #build body of parameters
-        data = {'accuracy': self.accuracy, 'percentVariation': self.percentVariation, 'minVal': self.minVal, 'maxVal': self.maxVal}
-        encoded_data = json.dumps(data).encode('utf-8')
-
-        #build command
-        parameter_cmd = self.url + 'clusteringParameters'
-
-        #post clustering params
-        try:
-            param_set  = self.http.request( 'POST', parameter_cmd, headers={'x-token': self.token, 'Content-Type': 'application/json'}, body=encoded_data )
-        except Exception as e:
-            print('Request Timeout')
-            return False, None
-        
-        #check status
-        isError, status = self.responseStatus(param_set)
-        if isError:
-            return False, None
-
-        #parse response
-        param_dict = json.loads(param_set.data.decode('utf-8'))
-        param_list = self.parseDictionary(param_dict, ['accuracy','percentVariation','minVal','maxVal'])
-
-        #flag check
-        self.is_parameter = True
-
-        #release
-        param_set.release_conn()
-
-        return True, param_list
-
-
-    def getClusterParameters(self):
-        """Get Current clustering parameters
-
-        Args:
-
-        Returns:
-            bool: The return value. True for success, False otherwise.
-            (:obj:`list` of :obj:`float`): The current server parameters (accuracy, percentVariation, minVal, maxVal)
-        """
-        #check dataset
-        if not self.is_dataset or not self.is_parameter:
-            print('You Must First Upload Dataset & Set Parameters')
-            return False, None
-        
-        #build command
-        parameter_cmd = self.url + 'clusteringParameters'
-
-        #post clustering params
-        try:
-            param_get  = self.http.request( 'GET', parameter_cmd, headers={'x-token': self.token, 'Content-Type': 'application/json'} )
-        except Exception as e:
-            print('Request Timeout')
-            return False, None
-        
-        #check status
-        isError, status = self.responseStatus(param_get)
-        if isError:
-            return False, None
-
-        #parse response
-        param_dict = json.loads(param_get.data.decode('utf-8'))
-        param_list = self.parseDictionary(param_dict, ['accuracy','percentVariation','minVal','maxVal'])
-
-        #release
-        param_get.release_conn()
-
-        #return 
-        return True, param_list
-
-
-    def getClusterIds(self):
-        """Get Cluster IDs from BN Server
-
-        Args:
-            
-        Returns:
-            bool: The return value. True for success, False otherwise.
-            numpy.array: The clusters IDs. Array of size 1xn_Samples
-
-        """
-        
-        #check dataset
-        if not self.is_dataset or not self.is_parameter:
-            print('You Must First Upload Dataset & Set Parameters')
-            return False, None
-        
-        #build command
-        getid_cmd = self.url + 'clusterIDs'
-
-        #get cluster ids
-        try:
-            id_response  = self.http.request( 'GET', getid_cmd, headers={'x-token': self.token, 'Content-Type': 'application/json'})
-        except Exception as e:
-            print('Request Timeout')
-            return False, None
-        
-        #check status
-        isError, status = self.responseStatus(id_response)
-        if isError:
-            return False, None
-
-        #parse response
-        id_dict = json.loads(id_response.data.decode('utf-8'))
-        id_list = self.parseDictionary(id_dict, ['IDs'])[0]
-        ids_np = np.array(id_list)
-
-        #release
-        id_response.release_conn()
-
-        return True, ids_np
-
-    def getClusterSummary(self):
-        """Get cluster summary
-
-        Args:
-
-        Returns:
-            bool: The return value. True for success, False otherwise.
-            (:obj:`list` of :obj:`float`): The summary data (clustersCreated, patternsClustered, timePerPatternMicroSec, totalTimeInSec)
-        """
-                
-        #check dataset
-        if not self.is_dataset or not self.is_parameter:
-            print('You Must First Upload Dataset & Set Parameters')
-            return False, None
-        
-        #build command
-        getsum_cmd = self.url + 'clusterSummary'
-
-        #get cluster ids
-        try:
-            sum_response  = self.http.request( 'GET', getsum_cmd, headers={'x-token': self.token, 'Content-Type': 'application/json'})
-        except Exception as e:
-            print('Request Timeout')
-            return False, None
-
-        #check status
-        isError, status = self.responseStatus(sum_response)
-        if isError:
-            return False, None
-
-        #parse response
-        sum_dict = json.loads(sum_response.data.decode('utf-8'))
-        sum_list = self.parseDictionary(sum_dict, ['clustersCreated', 'patternsClustered', 'timePerPatternMicroSec', 'totalTimeInSec'])
-
-        #release
-        sum_response.release_conn()
-        
-        return True, sum_list
-
-    def getClusterPCA(self):
-        """Get cluster principal component analysis
-
-        Args:
-
-        Returns:
-            bool: The return value. True for success, False otherwise.
-            numpy.array: The principal components for each cluster index [r,g,b,anomoly]
-        """
-        
-        #check dataset
-        if not self.is_dataset or not self.is_parameter:
-            print('You Must First Upload Dataset & Set Parameters')
-            return False, None
-        
-        #build command
-        getpca_cmd = self.url + 'clusterPCA'
-
-        #get cluster ids
-        try:
-            pca_response  = self.http.request( 'GET', getpca_cmd, headers={'x-token': self.token, 'Content-Type': 'application/json'})
-        except Exception as e:
-            print('Request Timeout')
-            return False, None
-        
-        #check status
-        isError, status = self.responseStatus(pca_response)
-        if isError:
-            return False, None
-
-        #parse response
-        pca_dict = json.loads(pca_response.data.decode('utf-8'))
-        pca_list = self.parseDictionary(pca_dict, ['Values'])[0]
-        pca_np = np.array(pca_list)
-
-        #release
-        pca_response.release_conn()
-
-        return True, pca_np
-
-
-    def CSVToPGM(self, csvfile, pgmfile, datatype):
-        """Convert CSV file to PGM 
-
-        Args:
-            csvfile (str): The full path to the local csv file
-            pgmfile (str): The full path where we store the new pgm file
-            datatype (str): Data type for the csv file ('int','float','native')
-        Returns:
-            bool: The return value. True for success, False otherwise.
-            int: server response status
-        """
-        self.csvfile = csvfile #'/Users/rodneydockter/python_ws/nativeset1.csv'
-
-        #open filename
-        with open(self.csvfile) as fp:
-            csv_data = fp.read()
-
-        #build command
-        csv_cmd = self.url + 'csvToDataSet?type=' + str(datatype)
-
-        #post csv
-        try:
-            csv_response = self.http.request( 'POST', csv_cmd, headers={'x-token': self.token}, fields={ 'csvFile': (self.csvfile, csv_data)} )
-        except Exception as e:
-            print('Request Timeout')
-            return False, None
-        
-        #check status
-        isError, status = self.responseStatus(csv_response)
-        if isError:
-            return False, csv_response.status
-
-        #download response data
-        pgmout = open(pgmfile, 'wb')
-        pgmout.write(csv_response.data)
-        pgmout.close()
-
-        #release
-        csv_response.release_conn()
-        
-        return True, csv_response.status
-
-
-    ##################
-    #     Utils      #
-    ##################
-
-    def responseStatus(self, response):
-        """Check status of http response for errors
-
-        Args:
-            response (int): The http request response
-        Returns:
-            bool: Is error. False if valid status. True if error occured.
-            int: Server response status
-        """
-        #check status of http response
-        if response.status >= 200 and response.status < 300:
-            return False, response.status #No Error
-        elif response.status >= 300 and response.status < 400:
-            print 'Redirection Error ', response.status
-            print(response.data)
-            return True, response.status #Redirection Messages
-        elif response.status >= 400 and response.status < 500:
-            print 'Client Error ', response.status
-            print(response.data)
-            return True, response.status #Client Error 
-        elif response.status >= 500 and response.status < 600:
-            print 'Server Error ', response.status
-            print(response.data)
-            return True, response.status #Server Error
-        
-
-    def parseDictionary(self, dict_in, keys):
-        """Parse elements in dictionary using key
-
-        Args:
-            dict_in (dict): An existing dictionary
-            keys (:obj:`list` of :obj:`str`): A list of keys to find
-        Returns:
-            (:obj:`list` of :obj:`str`): List of floats from dictionary. In order of keys.
-            
-        """
-        elements = []
-        for key in keys:
-            elements.append(dict_in.get(key))
-        return elements
-
-
-    def numpyToPGM(self,np_data,NumericType,MinVal,MaxVal,NearOutlierMin,NearOutlierMax,FarOutlierMin,FarOutlierMax):
-        """Save a numpy array to custom PGM filetype 
-
-        Args:
-            np_data (numpy.array): A numpy array with features as columns, samples as rows
-            NumericType (str): The data type present 'int','float','native'
-            MinVal (int): The minimum value (0)
-            MaxVal (int): The maximum value
-            NearOutlierMin (int): The minimum outlier value
-            NearOutlierMax (int): The maximum outlier value
-            FarOutlierMin (int): The minimum outlier value
-            FarOutlierMax (int): The maximum outlier value
-        Returns:
-            string: The temporary pgm file path
-            
-        """
-        # open temp file for writing 
-        filename = '/tmp/temp_np.pgm'
-        fout=open(filename, 'wb')
-
-        #PGM type
-        type_str = 'P5\n'
-        fout.write(type_str)
-
-        # custom PGM Header
-        header_str = '#{' + '"NumericType":' + '"' + str(NumericType) + '"' + \
-                             ',"MinVal":' + str(MinVal) + ',"MaxVal":' + str(MaxVal) + \
-                             ',"NearOutlierMin":' + str(NearOutlierMin) + ',"NearOutlierMax":' + str(NearOutlierMax) + \
-                             ',"FarOutlierMin":' + str(FarOutlierMin) + ',"FarOutlierMax":' + str(FarOutlierMax) + '}\n'
-        fout.write(header_str)
-
-        #get max value in data (This changes num bytes etc)
-        maxval = np.amax(np_data)
-        minval = np.amin(np_data) 
-
-        #size/dimensions
-        size_tuple = np.shape(np_data)
-        height = size_tuple[0]
-        width = size_tuple[1]
-        size_str = str(width) + ' ' + str(height) + '\n'
-        fout.write(size_str)
-
-        #max value (used in scaling) previously maxval
-        bit_str = str(int(65535)) + '\n'
-        fout.write(bit_str)
-
-        #change format for different data types
-        fmt = '%iH'
-        if(NumericType == 'native'):
-            #unsigned 16 bit (2x 8 bit)
-            fmt = '%iH'
-            if(maxval > 65535 or minval < 0):
-                raise('Invalid NumericType given feature values')
-        elif(NumericType == 'int'):
-            #signed 16 bit (2x 8 bit)
-            fmt = '%ih'
-            if(maxval > 32767 or minval < -32768):
-                raise('Invalid NumericType given feature values')
-        elif(NumericType == 'float'):
-            #IEEE float 32 bit (4x 8 bit)
-            fmt = '%if'
+        # delete temp data file
+        if 'Temp_data.csv' in self.filename:
+            os.remove(self.filename)
+
+        # build results command
+        if str(Results) == 'All':
+            results_str = ',ID,SI,RI,FI,DI,GR,MD'
         else:
-            raise('Unknown numerictype')
+            results_str = ''
+            if 'ID' in str(Results):
+                results_str = results_str + ',ID'
+            if 'SI' in str(Results):
+                results_str = results_str + ',SI'
+            if 'RI' in str(Results):
+                results_str = results_str + ',RI'
+            if 'FI' in str(Results):
+                results_str = results_str + ',FI'
+            if 'DI' in str(Results):
+                results_str = results_str + ',DI'
+            if 'GR' in str(Results):
+                results_str = results_str + ',GR'
+            if 'MD' in str(Results):
+                results_str = results_str + ',MD'
 
-        #dump the array row by row as binary
-        for i in range(height):
-            row = list(np_data[i,:])
-            row_byte = struct.pack(fmt % len(row), *row)
-            fout.write(row_byte)
-        fout.close()
+        # build command
+        dataset_cmd = self.url + 'data/' + str(NanoInstanceID) + '?runNano=' + str(runNano).lower() + '&fileType=' + ('raw' if 'bin' in self.filename else 'csv') + '&gzip=false' + '&results=' + results_str[1:] + '&appendData=' + str(appendData).lower()
 
-        return filename
+        # post dataset
+        try:
+            dataset_response = self.http.request(
+                'POST',
+                dataset_cmd,
+                headers={
+                    'x-token': self.token
+                },
+                fields={
+                    'data': (self.filename, file_data)
+                }
+            )
 
+        except Exception as e:
+            print('Request Timeout')
+            return False, None
 
-    def scaleDataNative(self, np_data, scalefactor):
-        """Scale numpy array data to 'native' range 
+        # check for error
+        if dataset_response.status != 200 and dataset_response.status != 201:
+            print(json.loads(dataset_response.data.decode('utf-8')))
+            return False, None
 
-        Notes:
-            Native range is an unsigned int 0<x<maxval. Used by BoonNano
-        Args:
-            np_data (numpy.array): A numpy array of unscaled data
-            scalefactor (float): scale factor to shift and round float values to integers
-        Returns:
-            numpy.array: The scaled native data
-            max_scaled: The new maximum value in the data
+        return True, json.loads(dataset_response.data.decode('utf-8'))
+
+    def runNano(self, NanoInstanceID, Results=''):
+        """ clusters the data in the buffer
+        returns any specified results
+
+        results per pattern options:
+            ID = cluster ID
+            SI = smoothed anomaly index
+            RI = raw anomaly index
+            FI = frequency index
+            DI = distance index
+            GR = ???
+            MD = metadata
         """
-        #allocate
-        data_native = np.zeros_like(np_data)
-        #Grab unscaled minimum
-        min_raw = np.amin(np_data,axis=0)
-        max_raw = np.amax(np_data,axis=0)
-        #compute scale factor so each feature maps to the same integer range
-        scaling_range = scalefactor / np.subtract(max_raw,min_raw)
-        #shift from min
-        for i in range(np.shape(np_data)[0]):
-            row = np_data[i,:]
-            row_shift = np.subtract(row, min_raw) #0 min
-            row_scaled = np.rint(np.multiply(row_shift,scaling_range)) #scale to integers
-            data_native[i,:] = row_scaled
 
-        #return data and range
-        max_scaled = np.amax(data_native,axis=0)
-        return data_native, max_scaled
+        # build results command
+        if str(Results) == 'All':
+            results_str = ',ID,SI,RI,FI,DI,GR,MD'
+        else:
+            results_str = ''
+            if 'ID' in str(Results):
+                results_str = results_str + ',ID'
+            if 'SI' in str(Results):
+                results_str = results_str + ',SI'
+            if 'RI' in str(Results):
+                results_str = results_str + ',RI'
+            if 'FI' in str(Results):
+                results_str = results_str + ',FI'
+            if 'DI' in str(Results):
+                results_str = results_str + ',DI'
+            if 'GR' in str(Results):
+                results_str = results_str + ',GR'
+            if 'MD' in str(Results):
+                results_str = results_str + ',MD'
 
-    def computePatternStatistics(self, np_data):
-        """Get the near and far outlier limits
+        # build command
+        nano_cmd = self.url + 'nanoRun/' + str(NanoInstanceID) + '?results=' + results_str[1:]
 
-        Args:
-            np_data (numpy.array): A numpy array of native data
-        Returns:
-            NearOutlierMin: The 5th percentile
-            NearOutlierMax: The 95th percentile
-            FarOutlierMin: The 1st percentile
-            FarOutlierMax: The 99th percentile
+        # run nano
+        try:
+            nano_response = self.http.request(
+                'POST',
+                nano_cmd,
+                headers={
+                    'x-token': self.token
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False, None
+
+        # check for error
+        if nano_response.status != 200 and nano_response.status != 201:
+            print(json.loads(nano_response.data.decode('utf-8')))
+            return False, None
+
+        return True, json.loads(nano_response.data.decode('utf-8'))
+
+    def getBufferStatus(self, NanoInstanceID):
+        """ results related to the bytes processed/in the buffer
         """
-        all_percentiles = np.percentile(np_data, np.array([5,95,1,99]) )
-        NearOutlierMin = int(all_percentiles[0])
-        NearOutlierMax = int(all_percentiles[1])
-        FarOutlierMin = int(all_percentiles[2])
-        FarOutlierMax = int(all_percentiles[3])
-        return NearOutlierMin, NearOutlierMax, FarOutlierMin, FarOutlierMax
 
-    def frequencyCounts(self, np_ids):
-        """Count the frequency of each cluster integer
+        # build command
+        results_cmd = self.url + 'bufferStatus/' + str(NanoInstanceID)
 
-        Args:
-            np_ids (numpy.array): A numpy array of cluster ids
-        Returns:
-            numpy.array: The occurence count for cluster id
+        # buffer status
+        try:
+            results_response = self.http.request(
+                'GET',
+                results_cmd,
+                headers={
+                    'x-token': self.token
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False, None
+
+        # check for error
+        if results_response.status != 200 and results_response.status != 201:
+            print(json.loads(results_response.data.decode('utf-8')))
+            return False, None
+
+        return True, json.loads(results_response.data.decode('utf-8'))
+
+    def getNanoResults(self, NanoInstanceID, Results='All'):
+        """ results per pattern
+        options:
+            ID = cluster ID
+            SI = smoothed anomaly index
+            RI = raw anomaly index
+            FI = frequency index
+            DI = distance index
+            GR = ???
+            MD = metadata
         """
-        counts = np.bincount(np_ids) #builtin numpy
-        return counts
 
-    def colorMap(self, num_clusters):
-        """Create a list of unique rgb colors for each cluster
+        # build results command
+        if str(Results) == 'All':
+            results_str = ',ID,SI,RI,FI,DI,GR,MD'
+        else:
+            results_str = ''
+            if 'ID' in str(Results):
+                results_str = results_str + ',ID'
+            if 'SI' in str(Results):
+                results_str = results_str + ',SI'
+            if 'RI' in str(Results):
+                results_str = results_str + ',RI'
+            if 'FI' in str(Results):
+                results_str = results_str + ',FI'
+            if 'DI' in str(Results):
+                results_str = results_str + ',DI'
+            if 'GR' in str(Results):
+                results_str = results_str + ',GR'
+            if 'MD' in str(Results):
+                results_str = results_str + ',MD'
 
-        Args:
-            num_clusters (int): The number of clusters
-        Returns:
-            (:obj:`list` of :obj:`tuple`): A list of rgb triplets
+        # build command
+        results_cmd = self.url + 'nanoResults/' + str(NanoInstanceID) + '?results=' + results_str[1:]
+
+        # pattern results
+        try:
+            results_response = self.http.request(
+                'GET',
+                results_cmd,
+                headers={
+                    'x-token': self.token,
+                    'Content-Type': 'application/json'
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False, None
+
+        # check for error
+        if results_response.status != 200 and results_response.status != 201:
+            print(json.loads(results_response.data.decode('utf-8')))
+            return False, None
+
+        return True, json.loads(results_response.data.decode('utf-8'))
+
+    def getNanoStatus(self, NanoInstanceID, Results='All'):
+        """results in relation to each cluster/overall stats
+
+        results options:
+        (includes 0 cluster)
+            PCA = principal components
+            clusterGrowth = indexes of each increase in cluster
+            clusterSizes = number of patterns in each cluster
+            anomalyIndexes = anomaly index
+            frequencyIndexes = frequency index
+            distanceIndexes = distance index
+
+        (overall or no 0 cluster)
+            patternMemory = base64 pattern memory
+            totalInferences = total number of patterns clustered
+            averageInferenceTime = time to cluster per pattern (not available if uploading from serialized nano)
+            numClusters = total number of clusters (includes 0 cluster)
         """
-        cmap = []
-        for i in range(num_clusters):
-            color = list(np.random.choice(range(256), size=3))
-            cmap.append(color)
-        self.colormap = cmap
-        return cmap
 
-    def readPGM(self, filename):
-        """Read a pgm file to array
+        # build results command
+        if str(Results) == 'All':
+            results_str = ',PCA,patternMemory,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,averageInferenceTime,numClusters'
+        else:
+            results_str = ''
+            if 'PCA' in str(Results):
+                results_str = results_str + ',PCA'
+            if 'patternMemory' in str(Results):
+                results_str = results_str + ',patternMemory'
+            if 'clusterGrowth' in str(Results):
+                results_str = results_str + ',clusterGrowth'
+            if 'clusterSizes' in str(Results):
+                results_str = results_str + ',clusterSizes'
+            if 'anomalyIndexes' in str(Results):
+                results_str = results_str + ',anomalyIndexes'
+            if 'frequencyIndexes' in str(Results):
+                results_str = results_str + ',frequencyIndexes'
+            if 'distanceIndexes' in str(Results):
+                results_str = results_str + ',distanceIndexes'
+            if 'totalInferences' in str(Results):
+                results_str = results_str + ',totalInferences'
+            if 'averageInferenceTime' in str(Results):
+                results_str = results_str + ',averageInferenceTime'
+            if 'numClusters' in str(Results):
+                results_str = results_str + ',numClusters'
 
-        Notes:
-            Requires OpenCV be installed
-        Args:
-            filename (str): Path to the pgm file
-        Returns:
-            numpy.array: Raw PGM Data
-            int: number of rows/samples
-            int: number of columns/features
-        """
-        import cv2
-        image = cv2.imread(filename,0)
-        rows,cols = image.shape
-        return image,rows,cols
+        # build command
+        results_cmd = self.url + 'nanoStatus/' + str(NanoInstanceID) + '?results=' + results_str[1:]
 
+        # cluster status
+        try:
+            results_response = self.http.request(
+                'GET',
+                results_cmd,
+                headers={
+                    'x-token': self.token,
+                    'Content-Type': 'application/json'
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False, None
+
+        # check for error
+        if results_response.status != 200 and results_response.status != 201:
+            print(json.loads(results_response.data.decode('utf-8')))
+            return False, None
+
+        return True, json.loads(results_response.data.decode('utf-8'))
