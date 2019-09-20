@@ -444,7 +444,7 @@ class BoonNano:
         """
 
         self.filename = filename
-        # #check filetype
+        # check filetype
         if not ".bin" in str(self.filename) and not '.csv' in str(self.filename):
             print("BoonNano: Uploading numpy array of type {}".format(filename.dtype))
             file_data = filename.tostring()
