@@ -446,7 +446,15 @@ class BoonNano:
         self.filename = filename
         # check filetype
         if not ".bin" in str(self.filename) and not '.csv' in str(self.filename):
-            print("BoonNano: Uploading numpy array of type {}".format(filename.dtype))
+            dtype = filename.dtype
+            if dtype == np.int64:
+                print("BoonNano: uploadData: Recasting numpy array from np.int64 -> np.int32")
+                filename = filename.astype(np.int32)
+            elif dtype == np.float64:
+                print("BoonNano: uploadData: Recasting numpy array from np.float64 -> np.float32")
+                filename = filename.astype(np.float32)
+            else:
+                print("BoonNano: uploadData: Uploading numpy array of type {}".format(filename.dtype))
             file_data = filename.tostring()
             self.filename = 'dummy_filename.bin'
         else:
