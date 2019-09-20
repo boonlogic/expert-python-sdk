@@ -444,21 +444,14 @@ class BoonNano:
         """
 
         self.filename = filename
-        #check filetype
+        # #check filetype
         if not ".bin" in str(self.filename) and not '.csv' in str(self.filename):
-            # write filename to a temporary file to upload
-            self.filename = 'Temp_data.csv'
-            np.savetxt(self.filename, filename, delimiter=',')
+            print("BoonNano: Uploading numpy array of type {}".format(filename.dtype))
+            file_data = filename.tostring()
+            self.filename = 'dummy_filename.bin'
         else:
-            self.filename = filename
-
-        #open filename
-        with open(self.filename) as fp:
-            file_data = fp.read()
-
-        # delete temp data file
-        if 'Temp_data.csv' in self.filename:
-            os.remove(self.filename)
+            with open(self.filename) as fp:
+                file_data = fp.read()
 
         # build results command
         if str(Results) == 'All':
@@ -504,6 +497,9 @@ class BoonNano:
         if dataset_response.status != 200 and dataset_response.status != 201:
             print(json.loads(dataset_response.data.decode('utf-8')))
             return False, None
+
+        if not Results:
+            return True, None
 
         return True, json.loads(dataset_response.data.decode('utf-8'))
 
