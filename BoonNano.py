@@ -430,7 +430,7 @@ class BoonNano:
 # CLUSTER #
 ###########
 
-    def uploadData(self, NanoInstanceID, filename, runNano=False, appendData=False, Results=''):
+    def uploadData(self, NanoInstanceID, filename, runNano=False, appendData=False, Results='', verbose=True):
         """posts the data and clusters it if runNano is True
 
         results per pattern options:
@@ -448,13 +448,16 @@ class BoonNano:
         if not ".bin" in str(self.filename) and not '.csv' in str(self.filename):
             dtype = filename.dtype
             if dtype == np.int64:
-                print("BoonNano: uploadData: Recasting numpy array from np.int64 -> np.int32")
+                if verbose:
+                    print("BoonNano: uploadData: Recasting numpy array from np.int64 -> np.int32")
                 filename = filename.astype(np.int32)
             elif dtype == np.float64:
-                print("BoonNano: uploadData: Recasting numpy array from np.float64 -> np.float32")
+                if verbose:
+                    print("BoonNano: uploadData: Recasting numpy array from np.float64 -> np.float32")
                 filename = filename.astype(np.float32)
             else:
-                print("BoonNano: uploadData: Uploading numpy array of type {}".format(filename.dtype))
+                if verbose:
+                    print("BoonNano: uploadData: Uploading numpy array of type {}".format(filename.dtype))
             file_data = filename.tostring()
             self.filename = 'dummy_filename.bin'
         else:
