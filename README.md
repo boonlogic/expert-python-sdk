@@ -29,11 +29,11 @@ Import into your source code:
 from boonnanopyapi import BoonNano
 ```
 
-To build and install within a virtual environment, navigate to the boonnanopyapi directory after activating the virtual environment and:
+To install within a virtual environment in the editable state:
 ```
-pip install boonnanopyapi
+pip install -e boonnanopyapi
 ```
-To install in the editable state, include the `-e` flag after `pip install`. Then all edits made to the `.py` files will be included automatically in the installed package.
+Then all edits made to the `.py` files will be included automatically in the installed package.
 
 ### Using Virtual Environment
 
