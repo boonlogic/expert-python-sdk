@@ -29,6 +29,11 @@ Import into your source code:
 from boonnanopyapi import BoonNano
 ```
 
+To build and install within a virtual environment:
+```
+pip install boonnanopyapi
+```
+
 ### Using Virtual Environment
 
 Python dependences 
