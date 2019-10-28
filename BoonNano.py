@@ -31,7 +31,7 @@ class BoonNano:
         success = bn.postClusterConfiguration(instance, config)
         success, data_results = bn.uploadData(instance, Data)
         success = bn.autotune(instance)
-        success, nano_results = bn.runNano(instance, Results='All')
+        success, nano_results = bn.runNano(instance, results='All')
     """
 
     def __init__(self, host, port, token='2B69F78F61A572DBF8D1E44548B48', timeout=60.0):
@@ -74,7 +74,7 @@ class BoonNano:
         print('Closing Pool')
         self.http.clear()
 
-    def setHostPort(self, host, port, token='2B69F78F61A572DBF8D1E44548B48'):
+    def set_host_port(self, host, port, token='2B69F78F61A572DBF8D1E44548B48'):
         """Change the host and port
 
         Args:
@@ -93,19 +93,50 @@ class BoonNano:
     #  Server Requests       #
     ##########################
 
+###########
+# GENERAL #
+###########
+
+    def get_version(self):
+        """gives the version of the api running"""
+        # build command
+        version_cmd = self.url[:-3] + 'version'
+
+        # call the version number
+        try:
+            version_response = self.http.request(
+                'GET',
+                version_cmd,
+                headers={
+                    'x-token': self.token,
+                    'Content-Type': 'application/json'
+                }
+            )
+
+        except Exception as e:
+            print('Request Timeout')
+            return False, None
+
+        # check for error
+        if version_response.status != 200 and version_response.status != 201:
+            print(json.loads(version_response.data.decode('utf-8')))
+            return False, None
+
+        return True, json.loads(version_response.data.decode('utf-8'))['api-version']
+
 
 #############
 # INSTANCES #
 #############
 
-    def getInstance(self, NanoInstanceID=''):
+    def get_instance(self, nano_instance_id=''):
         """If an instance number is not given,
         the nano will return the next open number
         as a running instance
         """
 
         # build command
-        instance_cmd = self.url + 'nanoInstance/' + str(NanoInstanceID)
+        instance_cmd = self.url + 'nanoInstance/' + str(nano_instance_id)
 
         # initialize instance
         try:
@@ -129,13 +160,13 @@ class BoonNano:
 
         return True, json.loads(instance_response.data.decode('utf-8'))['instanceID']
 
-    def getInstanceStatus(self, NanoInstanceID):
-        """returns true if NanoInstanceID is a running instance
+    def get_instance_status(self, nano_instance_id):
+        """returns true if nano_instance_id is a running instance
         and false otherwise
         """
 
         # build command
-        instance_cmd = self.url + 'nanoInstance/' + str(NanoInstanceID)
+        instance_cmd = self.url + 'nanoInstance/' + str(nano_instance_id)
 
         # check status of instance
         try:
@@ -163,18 +194,18 @@ class BoonNano:
         # the instance is running
         return True, True
 
-    def deleteInstance(self, NanoInstanceID=''):
+    def delete_instance(self, nano_instance_id=''):
         """If an instance number is not given,
         the nano will delete ALL running instances
         """
 
         # build command
-        if NanoInstanceID == '':
+        if nano_instance_id == '':
             # call to delete all instances
             instance_cmd = self.url + 'nanoInstances'
         else:
             # call to delete specified instance number
-            instance_cmd = self.url + 'nanoInstance/' + str(NanoInstanceID)
+            instance_cmd = self.url + 'nanoInstance/' + str(nano_instance_id)
 
         # delete instance(s)
         try:
@@ -197,7 +228,7 @@ class BoonNano:
 
         return True
 
-    def getRunningInstances(self):
+    def get_running_instances(self):
         """returns list of nano instances running
         """
 
@@ -230,12 +261,12 @@ class BoonNano:
 # CONFIGURATIONS #
 ##################
 
-    def saveSnapshot(self, NanoInstanceID, filename):
+    def save_snapshot(self, nano_instance_id, filename):
         """serializes the nano and saves it as a tar filename
         """
 
         # build command
-        snapshot_cmd = self.url + 'snapshot/' + str(NanoInstanceID)
+        snapshot_cmd = self.url + 'snapshot/' + str(nano_instance_id)
 
         # serialize nano
         try:
@@ -264,7 +295,7 @@ class BoonNano:
 
         return True
 
-    def postSnapshot(self, NanoInstanceID, filename):
+    def post_snapshot(self, nano_instance_id, filename):
         """deserialize existing nano
         upload file to given instance
 
@@ -282,7 +313,7 @@ class BoonNano:
             tar_data = fp.read()
 
         # build command
-        snapshot_cmd = self.url + 'snapshot/' + str(NanoInstanceID)
+        snapshot_cmd = self.url + 'snapshot/' + str(nano_instance_id)
 
         # post serialized nano
         try:
@@ -308,12 +339,12 @@ class BoonNano:
 
         return True
 
-    def getClusterConfiguration(self, NanoInstanceID):
+    def get_cluster_configuration(self, nano_instance_id):
         """returns the posted clustering configuration
         """
 
         # build command
-        config_cmd = self.url + 'clusterConfig/' + str(NanoInstanceID)
+        config_cmd = self.url + 'clusterConfig/' + str(nano_instance_id)
 
         # get config
         try:
@@ -337,12 +368,12 @@ class BoonNano:
 
         return True, json.loads(config_response.data.decode('utf-8'))
 
-    def getConfigTemplate(self, numFeatures, numType, min=1, max=10, percentVariation=0.05, streamingWindow=1, weight=1, accuracy=0.99):
+    def get_config_template(self, numeric_type, number_of_features, min=1, max=10, weight=1, percent_variation=0.05, streaming_window=1, accuracy=0.99):
         """returns a json config version for the given Parameters
         """
 
         # build command
-        config_cmd = self.url + 'configTemplate?featureCount=' + str(numFeatures) + '&numericFormat=' + str(numType) + '&minVal=' + str(min) + '&maxVal=' + str(max) + '&weight=' + str(weight) + '&percentVariation=' + str(percentVariation) + '&accuracy=' + str(accuracy) + '&streamingWindowSize=' + str(streamingWindow)
+        config_cmd = self.url + 'configTemplate?featureCount=' + str(number_of_features) + '&numericFormat=' + str(numeric_type) + '&minVal=' + str(min) + '&maxVal=' + str(max) + '&weight=' + str(weight) + '&percentVariation=' + str(percent_variation) + '&accuracy=' + str(accuracy) + '&streamingWindowSize=' + str(streaming_window)
 
         # convert to config format
         try:
@@ -366,12 +397,12 @@ class BoonNano:
 
         return True, json.loads(config_response.data.decode('utf-8'))
 
-    def postClusterConfiguration(self, NanoInstanceID, JSONConfig):
+    def post_cluster_configuration(self, nano_instance_id, json_config):
         """returns the posted clustering configuration
         """
 
         # build command
-        config_cmd = self.url + 'clusterConfig/' + str(NanoInstanceID)
+        config_cmd = self.url + 'clusterConfig/' + str(nano_instance_id)
 
         # post config
         try:
@@ -382,7 +413,7 @@ class BoonNano:
                     'x-token': self.token,
                     'Content-Type': 'application/json'
                 },
-                body=json.dumps(JSONConfig).encode('utf-8')
+                body=json.dumps(json_config).encode('utf-8')
             )
 
         except Exception as e:
@@ -396,13 +427,13 @@ class BoonNano:
 
         return True
 
-    def autotune(self, NanoInstanceID, byFeature=False, autotunePV=True, autotuneRange=True, exclusions={}):
+    def autotune(self, nano_instance_id, by_feature=False, autotune_pv=True, autotune_range=True, exclusions={}):
         """autotunes the percent variation
         and the min and max for each feature
         """
 
         # build command
-        config_cmd = self.url + 'autoTuneConfig/' + str(NanoInstanceID) + '?byFeature=' + str(byFeature).lower() + '&autoTunePV=' + str(autotunePV).lower() + '&autoTuneRange=' + str(autotuneRange).lower() + '&exclusions=' + str(exclusions)[1:-1].replace(' ','')
+        config_cmd = self.url + 'autoTuneConfig/' + str(nano_instance_id) + '?byFeature=' + str(by_feature).lower() + '&autoTunePV=' + str(autotune_pv).lower() + '&autoTuneRange=' + str(autotune_range).lower() + '&exclusions=' + str(exclusions)[1:-1].replace(' ','')
 
         # autotune parameters
         try:
@@ -430,7 +461,7 @@ class BoonNano:
 # CLUSTER #
 ###########
 
-    def uploadData(self, NanoInstanceID, filename, runNano=False, appendData=False, Results=''):
+    def post_data(self, nano_instance_id, filename, run_nano=False, append_data=False, results=''):
         """posts the data and clusters it if runNano is True
 
         results per pattern options:
@@ -461,27 +492,27 @@ class BoonNano:
             os.remove(self.filename)
 
         # build results command
-        if str(Results) == 'All':
+        if str(results) == 'All':
             results_str = ',ID,SI,RI,FI,DI,GR,MD'
         else:
             results_str = ''
-            if 'ID' in str(Results):
+            if 'ID' in str(results):
                 results_str = results_str + ',ID'
-            if 'SI' in str(Results):
+            if 'SI' in str(results):
                 results_str = results_str + ',SI'
-            if 'RI' in str(Results):
+            if 'RI' in str(results):
                 results_str = results_str + ',RI'
-            if 'FI' in str(Results):
+            if 'FI' in str(results):
                 results_str = results_str + ',FI'
-            if 'DI' in str(Results):
+            if 'DI' in str(results):
                 results_str = results_str + ',DI'
-            if 'GR' in str(Results):
+            if 'GR' in str(results):
                 results_str = results_str + ',GR'
-            if 'MD' in str(Results):
+            if 'MD' in str(results):
                 results_str = results_str + ',MD'
 
         # build command
-        dataset_cmd = self.url + 'data/' + str(NanoInstanceID) + '?runNano=' + str(runNano).lower() + '&fileType=' + ('raw' if 'bin' in self.filename else 'csv') + '&gzip=false' + '&results=' + results_str[1:] + '&appendData=' + str(appendData).lower()
+        dataset_cmd = self.url + 'data/' + str(nano_instance_id) + '?runNano=' + str(run_nano).lower() + '&fileType=' + ('raw' if 'bin' in self.filename else 'csv') + '&gzip=false' + '&results=' + results_str[1:] + '&appendData=' + str(append_data).lower()
 
         # post dataset
         try:
@@ -507,7 +538,7 @@ class BoonNano:
 
         return True, json.loads(dataset_response.data.decode('utf-8'))
 
-    def runNano(self, NanoInstanceID, Results=''):
+    def post_nano_run(self, nano_instance_id, results=''):
         """ clusters the data in the buffer
         returns any specified results
 
@@ -522,27 +553,27 @@ class BoonNano:
         """
 
         # build results command
-        if str(Results) == 'All':
+        if str(results) == 'All':
             results_str = ',ID,SI,RI,FI,DI,GR,MD'
         else:
             results_str = ''
-            if 'ID' in str(Results):
+            if 'ID' in str(results):
                 results_str = results_str + ',ID'
-            if 'SI' in str(Results):
+            if 'SI' in str(results):
                 results_str = results_str + ',SI'
-            if 'RI' in str(Results):
+            if 'RI' in str(results):
                 results_str = results_str + ',RI'
-            if 'FI' in str(Results):
+            if 'FI' in str(results):
                 results_str = results_str + ',FI'
-            if 'DI' in str(Results):
+            if 'DI' in str(results):
                 results_str = results_str + ',DI'
-            if 'GR' in str(Results):
+            if 'GR' in str(results):
                 results_str = results_str + ',GR'
-            if 'MD' in str(Results):
+            if 'MD' in str(results):
                 results_str = results_str + ',MD'
 
         # build command
-        nano_cmd = self.url + 'nanoRun/' + str(NanoInstanceID) + '?results=' + results_str[1:]
+        nano_cmd = self.url + 'nanoRun/' + str(nano_instance_id) + '?results=' + results_str[1:]
 
         # run nano
         try:
@@ -565,12 +596,12 @@ class BoonNano:
 
         return True, json.loads(nano_response.data.decode('utf-8'))
 
-    def getBufferStatus(self, NanoInstanceID):
+    def get_buffer_status(self, nano_instance_id):
         """ results related to the bytes processed/in the buffer
         """
 
         # build command
-        results_cmd = self.url + 'bufferStatus/' + str(NanoInstanceID)
+        results_cmd = self.url + 'bufferStatus/' + str(nano_instance_id)
 
         # buffer status
         try:
@@ -593,7 +624,7 @@ class BoonNano:
 
         return True, json.loads(results_response.data.decode('utf-8'))
 
-    def getNanoResults(self, NanoInstanceID, Results='All'):
+    def get_nano_results(self, nano_instance_id, results='All'):
         """ results per pattern
         options:
             ID = cluster ID
@@ -606,27 +637,27 @@ class BoonNano:
         """
 
         # build results command
-        if str(Results) == 'All':
-            results_str = ',ID,SI,RI,FI,DI,GR,MD'
+        if str(results) == 'All':
+            results_str = ',ID,SI,RI,FI,DI'
         else:
             results_str = ''
-            if 'ID' in str(Results):
+            if 'ID' in str(results):
                 results_str = results_str + ',ID'
-            if 'SI' in str(Results):
+            if 'SI' in str(results):
                 results_str = results_str + ',SI'
-            if 'RI' in str(Results):
+            if 'RI' in str(results):
                 results_str = results_str + ',RI'
-            if 'FI' in str(Results):
+            if 'FI' in str(results):
                 results_str = results_str + ',FI'
-            if 'DI' in str(Results):
+            if 'DI' in str(results):
                 results_str = results_str + ',DI'
-            if 'GR' in str(Results):
+            if 'GR' in str(results):
                 results_str = results_str + ',GR'
-            if 'MD' in str(Results):
+            if 'MD' in str(results):
                 results_str = results_str + ',MD'
 
         # build command
-        results_cmd = self.url + 'nanoResults/' + str(NanoInstanceID) + '?results=' + results_str[1:]
+        results_cmd = self.url + 'nanoresults/' + str(nano_instance_id) + '?results=' + results_str[1:]
 
         # pattern results
         try:
@@ -650,7 +681,7 @@ class BoonNano:
 
         return True, json.loads(results_response.data.decode('utf-8'))
 
-    def getNanoStatus(self, NanoInstanceID, Results='All'):
+    def get_nano_status(self, nano_instance_id, results='All'):
         """results in relation to each cluster/overall stats
 
         results options:
@@ -670,33 +701,33 @@ class BoonNano:
         """
 
         # build results command
-        if str(Results) == 'All':
+        if str(results) == 'All':
             results_str = ',PCA,patternMemory,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,averageInferenceTime,numClusters'
         else:
             results_str = ''
-            if 'PCA' in str(Results):
+            if 'PCA' in str(results):
                 results_str = results_str + ',PCA'
-            if 'patternMemory' in str(Results):
+            if 'patternMemory' in str(results):
                 results_str = results_str + ',patternMemory'
-            if 'clusterGrowth' in str(Results):
+            if 'clusterGrowth' in str(results):
                 results_str = results_str + ',clusterGrowth'
-            if 'clusterSizes' in str(Results):
+            if 'clusterSizes' in str(results):
                 results_str = results_str + ',clusterSizes'
-            if 'anomalyIndexes' in str(Results):
+            if 'anomalyIndexes' in str(results):
                 results_str = results_str + ',anomalyIndexes'
-            if 'frequencyIndexes' in str(Results):
+            if 'frequencyIndexes' in str(results):
                 results_str = results_str + ',frequencyIndexes'
-            if 'distanceIndexes' in str(Results):
+            if 'distanceIndexes' in str(results):
                 results_str = results_str + ',distanceIndexes'
-            if 'totalInferences' in str(Results):
+            if 'totalInferences' in str(results):
                 results_str = results_str + ',totalInferences'
-            if 'averageInferenceTime' in str(Results):
+            if 'averageInferenceTime' in str(results):
                 results_str = results_str + ',averageInferenceTime'
-            if 'numClusters' in str(Results):
+            if 'numClusters' in str(results):
                 results_str = results_str + ',numClusters'
 
         # build command
-        results_cmd = self.url + 'nanoStatus/' + str(NanoInstanceID) + '?results=' + results_str[1:]
+        results_cmd = self.url + 'nanoStatus/' + str(nano_instance_id) + '?results=' + results_str[1:]
 
         # cluster status
         try:
