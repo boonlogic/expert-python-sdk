@@ -304,7 +304,7 @@ class BoonNano:
 
         self.filename = filename
 
-        #check filetype
+        # check filetype
         if not ".tar" in self.filename:
             print('Dataset Must Be In .tar Format')
             return False
@@ -475,21 +475,25 @@ class BoonNano:
         """
 
         self.filename = filename
-        #check filetype
+        # check filetype
         if not ".bin" in str(self.filename) and not '.csv' in str(self.filename):
-            # write filename to a temporary file to upload
-            self.filename = 'Temp_data.csv'
-            np.savetxt(self.filename, filename, delimiter=',')
+            dtype = filename.dtype
+            if dtype == np.int64:
+                if not silent:
+                    print("BoonNano: uploadData: Recasting numpy array from np.int64 -> np.int32")
+                filename = filename.astype(np.int32)
+            elif dtype == np.float64:
+                if not silent:
+                    print("BoonNano: uploadData: Recasting numpy array from np.float64 -> np.float32")
+                filename = filename.astype(np.float32)
+            else:
+                if not silent:
+                    print("BoonNano: uploadData: Uploading numpy array of type {}".format(filename.dtype))
+            file_data = filename.tostring()
+            self.filename = 'dummy_filename.bin'
         else:
-            self.filename = filename
-
-        #open filename
-        with open(self.filename) as fp:
-            file_data = fp.read()
-
-        # delete temp data file
-        if 'Temp_data.csv' in self.filename:
-            os.remove(self.filename)
+            with open(self.filename) as fp:
+                file_data = fp.read()
 
         # build results command
         if str(results) == 'All':
@@ -535,6 +539,9 @@ class BoonNano:
         if dataset_response.status != 200 and dataset_response.status != 201:
             print(json.loads(dataset_response.data.decode('utf-8')))
             return False, None
+
+        if not Results:
+            return True, None
 
         return True, json.loads(dataset_response.data.decode('utf-8'))
 
