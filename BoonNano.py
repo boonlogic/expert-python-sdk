@@ -712,25 +712,25 @@ class BoonNano:
             results_str = ',PCA,patternMemory,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,averageInferenceTime,numClusters'
         else:
             results_str = ''
-            if 'PCA' in str(results):
+            if 'pca' in str(results):
                 results_str = results_str + ',PCA'
-            if 'patternMemory' in str(results):
+            if 'pattern_memory' in str(results):
                 results_str = results_str + ',patternMemory'
-            if 'clusterGrowth' in str(results):
+            if 'cluster_growth' in str(results):
                 results_str = results_str + ',clusterGrowth'
-            if 'clusterSizes' in str(results):
+            if 'cluster_sizes' in str(results):
                 results_str = results_str + ',clusterSizes'
-            if 'anomalyIndexes' in str(results):
+            if 'anomaly_indexes' in str(results):
                 results_str = results_str + ',anomalyIndexes'
-            if 'frequencyIndexes' in str(results):
+            if 'frequency_indexes' in str(results):
                 results_str = results_str + ',frequencyIndexes'
-            if 'distanceIndexes' in str(results):
+            if 'distance_indexes' in str(results):
                 results_str = results_str + ',distanceIndexes'
-            if 'totalInferences' in str(results):
+            if 'total_inferences' in str(results):
                 results_str = results_str + ',totalInferences'
-            if 'averageInferenceTime' in str(results):
+            if 'average_inference_time' in str(results):
                 results_str = results_str + ',averageInferenceTime'
-            if 'numClusters' in str(results):
+            if 'number_of_clusters' in str(results):
                 results_str = results_str + ',numClusters'
 
         # build command
