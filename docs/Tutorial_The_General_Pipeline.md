@@ -1,6 +1,6 @@
 # Tutorial: The General Pipeline
 
-If the client library is already downloaded from github, skip to [Setting up client library](#setup)
+If the client library is already downloaded from [GitLab](https://gitlab.boonlogic.com/development/tools/boonnanopyapi), skip to [Setting up client library](#setup)
 
 ### Download the python client library
 [Python3](https://programwithus.com/learn-to-code/install-python3-mac/) is needed to run the python client library for the Nano API.
@@ -46,26 +46,26 @@ Save the file.
 
 
 ### Post the configuration
-On the next line of the main function, use the function getConfigTemplate() to generate the json configuration block specific for a dataset.
+On the next line of the main function, use the function get_config_template() to generate the json configuration block specific for a dataset.
 ```
-success, config = bn.getConfigTemplate('float', 20, -10, 15, percentVariation=0.037)
+success, config = bn.get_config_template('float', 20, -10, 15, percent_variation=0.037)
 ```
 Initializing the instance.
 ```
-success, instanceID = bn.getInstance()
+success, instance = bn.get_instance()
 ```
 Using that instance ID number, post the configuration by pointing it to that specific instance.
 ```
-bn.postClusterConfiguration(instanceID, config)
+bn.postClusterConfiguration(instance, config)
 ```
 
 Once the config is posted, the nano has everything it needs to start reading in data. Download the example data file from [Gitlab](https://gitlab.boonlogic.com/development/tools/boonnanopyapi/tree/master/docs) and save it in the same folder as `NanoExample.py`. Post the data by telling it the instance to post to and the file name.
 ```
-bn.uploadData(instanceID, 'Data.csv')
+bn.post_data(instance, 'Data.csv')
 ```
 Finally, call the runNano() function to cluster the data and print out the status.
 ```
-success = bn.runNano(instanceID)
+success = bn.post_nano_run(instance)
 print(success)
 ```
 Go to the terminal and cd into the folder where the .py files are saved. Run `NanoExample.py`.

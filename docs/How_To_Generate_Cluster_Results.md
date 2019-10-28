@@ -1,4 +1,4 @@
-# How-to: Generate Cluster Results
+# How-to: Generate Cluster results
 
 Start by downloading the python client library, importing the appropriate libraries, and defining the initialization call.
 
@@ -10,38 +10,37 @@ def main():
 
 Save the file.
 
-
 ### Cluster the Data
 Initialize an instance and post a configuration.
 ```
-success, instanceID = bn.getInstance()
-success, config = bn.getConfigTemplate('float', 20, -10, 15, percentVariation=0.037)
-bn.postClusterConfiguration(instanceID, config)
+success, instance = bn.get_instance()
+success, config = bn.get_config_template('float', 20, -10, 15, percent_variation=0.037)
+bn.post_cluster_configuration(instance, config)
 ```
 
-Next, post the data either by giving it the file name of your data or the variable name of the numpy array. Post the data either by calling runNano() after the data is uploaded or set runNano=True in the uploadData() input parameters.
+Next, post the data either by giving it the file name of your data or the variable name of the numpy array. Post the data either by calling run_nano() after the data is uploaded or set run_nano=True in the post_data() input parameters.
 ```
-bn.uploadData(instanceID, 'Data.csv', runNano=True)
+bn.post_data(instance, 'Data.csv', run_nano=True)
 ```
 
 ### Cluster Results
 There are two ways to return the results.
 
-##### getNanoResults()
+##### get_nano_results()
 First way is as a separate call.
-Once the data is uploaded and clustered, call `getNanoResults(instanceID)`.
+Once the data is uploaded and clustered, call `get_nano_results(instance)`.
 This returns the list of IDs, Anomaly Indexes, Smoothed Anomaly Indexes, Frequency Indexes, and Distance Indexes. The length of each list is the number of patterns clustered when running the nano.
 ```
-success, results = getNanoResults(instanceID)
+success, results = get_nano_results(instance)
 ```
-To specify only certain results, add the input parameter `Results` set as a list of the desired results.
+To specify only certain results, add the input parameter `results` set as a list of the desired results.
 ```
-success, results = getNanoResults(instanceID, Results={ID,RI})
+success, results = get_nano_results(instance, results={ID,RI})
 ```
 
-##### Results (as a variable)
-The second way to request results is to call it while uploading the data, as long as runNano is also set to `True` in the `uploadData` function call.
+##### results (as a variable)
+The second way to request results is to call it while uploading the data, as long as run_nano is also set to `True` in the `post_data` function call.
 ```
-success, results = uploadData(instanceID, 'Data.csv', runNano=True, Results=All)
+success, results = post_data(instance, 'Data.csv', run_nano=True, results=All)
 ```
->NOTE: if runNano is not specified to `True`, the returned results will be whatever the previous results were and not the results from clustering the most recently posted data (which hasn't been clustered yet). That means that if it is the first time clustering since the instance was instantiated, the results will be empty.
+>NOTE: if run_nano is not specified to `True`, the returned results will be whatever the previous results were and not the results from clustering the most recently posted data (which hasn't been clustered yet). That means that if it is the first time clustering since the instance was instantiated, the results will be empty.

@@ -1,13 +1,13 @@
 # Tutorial: Getting Started
 
-If the client library is already downloaded from github, skip to [Setting up client library](#setup)
+If the client library is already downloaded from [Gitlab](https://gitlab.boonlogic.com/development/tools/boonnanopyapi), skip to [Setting up client library](#setup)
 
 ### Download the python client library
 [Python3](https://programwithus.com/learn-to-code/install-python3-mac/) is needed to run the python client library for the Nano API.
 
 Go to the [Python API Github repository](https://gitlab.boonlogic.com/development/tools/boonnanopyapi) and download `BoonNano.py` into the directory
 
-### Setting up client library (Mac OS)
+### Setting up client library (Mac OS) {#setup}
 Open a text editor of your choice (one free option is [Atom](https://atom.io/)). Go up to the menu bar and under "File" -> "Save As..." save your file as `NanoVersion.py` in the same folder as where `BoonNano.py` is saved.
 
 One the first five lines import the following libraries:
@@ -46,7 +46,7 @@ Save the file.
 ### Get the version number
 Finally, on line 9 and 10, call the function getVersion to return which Boon Nano is associated with your account and print the result.
 ```
-succeeded, ver = bn.getVersion()
+succeeded, ver = bn.get_version()
 print(ver)
 ```
 

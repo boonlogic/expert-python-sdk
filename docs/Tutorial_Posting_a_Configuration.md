@@ -1,13 +1,13 @@
 # Tutorial: Posting a Configuration
 
-If the client library is already downloaded from github, skip to [Setting up client library](#setup)
+If the client library is already downloaded from [GitLab](https://gitlab.boonlogic.com/development/tools/boonnanopyapi), skip to [Setting up client library](#setup)
 
 ### Download the python client library
 [Python3](https://programwithus.com/learn-to-code/install-python3-mac/) is needed to run the python client library for the Nano API.
 
 Go to the [Python API Github repository](https://gitlab.boonlogic.com/development/tools/boonnanopyapi) and download `BoonNano.py` into the directory
 
-### Setting up client library (Mac OS)
+### Setting up client library (Mac OS) {#setup}
 Open a text editor of your choice (one free option is [Atom](https://atom.io/)). Go up to the menu bar and under "File" -> "Save As..." save your file as `NanoConfig.py` in the same folder as where `BoonNano.py` is saved.
 
 One the first five lines import the following libraries:
@@ -45,9 +45,9 @@ Save the file.
 
 
 ### Generate the configuration block
-On line 9, use the function getConfigTemplate() to generate the json configuration block specific for a dataset.
+On line 9, use the function get_config_template() to generate the json configuration block specific for a dataset.
 ```
-success, config = bn.getConfigTemplate('float', 20, -10, 15, percentVariation=0.037)
+success, config = bn.get_config_template('float', 20, -10, 15, percent_variation=0.037)
 ```
 Add a call to print out the configuration generated.
 ```
@@ -74,11 +74,11 @@ Closing Pool
 
 Now you have all the pieces to start actually using the nano. First start by initializing the instance on line 11.
 ```
-success, instanceID = bn.getInstance()
+success, instance = bn.get_instance()
 ```
 Using that instance ID number, post the configuration by pointing it to that specific instance.
 ```
-success = bn.postClusterConfiguration(instanceID, config)
+success = bn.post_cluster_configuration(instance, config)
 ```
 Print out the  status of the post.
 ```
