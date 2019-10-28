@@ -5,7 +5,7 @@ If the client library is already downloaded from github, skip to [Setting up cli
 ### Download the python client library
 [Python3](https://programwithus.com/learn-to-code/install-python3-mac/) is needed to run the python client library for the Nano API.
 
-Go to the [Python API Github repository](github.com) and download `BoonNano.py` into the directory
+Go to the [Python API Github repository](https://gitlab.boonlogic.com/development/tools/boonnanopyapi) and download `BoonNano.py` into the directory
 
 ### Setting up client library (Mac OS)
 Open a text editor of your choice (one free option is [Atom](https://atom.io/)). Go up to the menu bar and under "File" -> "Save As..." save your file as `NanoVersion.py` in the same folder as where `BoonNano.py` is saved.

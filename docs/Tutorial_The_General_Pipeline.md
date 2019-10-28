@@ -5,9 +5,9 @@ If the client library is already downloaded from github, skip to [Setting up cli
 ### Download the python client library
 [Python3](https://programwithus.com/learn-to-code/install-python3-mac/) is needed to run the python client library for the Nano API.
 
-Go to the [Python API Github repository](github.com) and download `BoonNano.py` into the directory
+Go to the [Python API Github repository](https://gitlab.boonlogic.com/development/tools/boonnanopyapi) and download `BoonNano.py` into the directory
 
-### Setting up client library (Mac OS)
+### Setting up client library (Mac OS) {#setup}
 Open a text editor of your choice (one free option is [Atom](https://atom.io/)). Go up to the menu bar and under "File" -> "Save As..." save your file as `NanoExample.py` in the same folder as where `BoonNano.py` is saved.
 
 One the first five lines import the following libraries:
@@ -59,7 +59,7 @@ Using that instance ID number, post the configuration by pointing it to that spe
 bn.postClusterConfiguration(instanceID, config)
 ```
 
-Once the config is posted, the nano has everything it needs to start reading in data. Download the example data file from [Github](github.com) and save it in the same folder as `NanoExample.py`. Post the data by telling it the instance to post to and the file name.
+Once the config is posted, the nano has everything it needs to start reading in data. Download the example data file from [Gitlab](https://gitlab.boonlogic.com/development/tools/boonnanopyapi/tree/master/docs) and save it in the same folder as `NanoExample.py`. Post the data by telling it the instance to post to and the file name.
 ```
 bn.uploadData(instanceID, 'Data.csv')
 ```

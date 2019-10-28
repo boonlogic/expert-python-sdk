@@ -1,6 +1,6 @@
 # Guide: Nano Status
 
-See [How-to: Generate Cluster Status](http://github.com) for instructions on generating nano status statistics.
+See [How-to: Generate Cluster Results](https://gitlab.boonlogic.com/development/tools/boonnanopyapi/blob/master/docs/How_To_Generate_Cluster_Results.md) for instructions on generating nano results statistics which is similar to getting the cluster status statistics.
 
 ### Options
 The nano status stats can only be called from `getNanoStatus()`. There are 12 return types:
