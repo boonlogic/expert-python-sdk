@@ -1,6 +1,6 @@
 # Guide: Nano Results
 
-See [How-to: Generate Cluster Results](http://github.com) for instructions on generating the results.
+See [How-to: Generate Cluster Results](https://gitlab.boonlogic.com/development/tools/boonnanopyapi/blob/master/docs/How_To_Generate_Cluster_Results.md) for instructions on generating the results.
 
 ### Options
 The results call (no matter where you call it from) has seven options:
@@ -41,11 +41,11 @@ The distance index (`DI`), is the last of the results' statistical metrics. The 
 ##### MD
 `MD` stands for "metadata" and is the one result that is not the same length as the number of clustered patterns. This returns the preprocessing key that was posted with the data.
 
-##### ""
-Setting Results equal to an empty string will omit any results being returned. This is not an option when calling `getNanoResults` since that function is called only when results are desired.
+##### ''
+Setting results equal to an empty string will omit any results being returned. This is not an option when calling `get_nano_results` since that function is called only when results are desired.
 
 ##### All
-Finally, setting results to All will return the IDs, RIs, SIs, FIs, and DIs. This lists are returned uncollated but are all the same length (that matches the number of patterns most recently clustered)
+Finally, setting results to All will return the IDs, RIs, SIs, FIs, and DIs. These results are returned as a JSON block with uncollated lists but are all the same length (that matches the number of patterns most recently clustered).
 
 
-For more statistical values, see [Guide: Nano Status](http://github.com)
+For more statistical values, see [Guide: Nano Status](https://gitlab.boonlogic.com/development/tools/boonnanopyapi/blob/master/docs/Guide_Nano_Status.md)
