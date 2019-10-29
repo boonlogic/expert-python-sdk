@@ -54,3 +54,5 @@ Finally, setting results to All will return the IDs, RIs, SIs, FIs, and DIs. The
 
 
 For more statistical values, see [Guide: Nano Status](https://gitlab.boonlogic.com/development/tools/boonnanopyapi/blob/master/docs/Guide_Nano_Status.md)
+
+[Return to documentation homepage](../Docs_Landing_Page.md)

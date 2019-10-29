@@ -43,3 +43,5 @@ Similarly, this bool variable tells whether to autotune the min and max or use t
 
 ##### exclusions
 This option only applies when autotuning by feature. Using one-based indexing, the exclusions are the list of column indexes that should be ignored when autotuning the min and max and the original config's min and max value are used on those columns. The default is an empty list.
+
+[Return to documentation homepage](../Docs_Landing_Page.md)
