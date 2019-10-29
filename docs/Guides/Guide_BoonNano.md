@@ -23,6 +23,8 @@
 <br/>
 
 ## Configuration
+### [save_config()](../Functions/save_config.md)
+>saves the nano in its current state as a compressed serialized file
 
 <br/>
 
