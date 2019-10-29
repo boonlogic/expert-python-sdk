@@ -17,6 +17,9 @@
 ### [delete_instance()](../Functions/delete_instance.md)
 >deletes the specified instance or deletes all running instances (if no ID is given)
 
+### [get_running_instances()](../Functions/get_running_instances.md)
+>returns a list of running instance IDs
+
 <br/>
 
 ## Configuration
