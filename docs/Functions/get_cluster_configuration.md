@@ -9,6 +9,7 @@
 ##### output
 >*`True` followed by the json string (successful call)*
 
+or
 >*error code and message are printed and `False`,`None` is returned if the called failed*   
 
 [back to list](../Index.md)

@@ -22,6 +22,7 @@
 ##### output
 >*If the input ID is available, the `True` along with `nano_instance_id` is returned*    
 
+or
 >*If the value is an already running instance, the error code and message is printed and the function returns `False`,`None`*
 
 [back to list](../Index.md)

@@ -9,8 +9,10 @@
 ##### output
 >*`True`,`True` if the instance with the given ID is running.*   
 
+or
 >*`True`,`False` if there is not an instance with the given ID.*   
 
+or
 >*`False`,`None` if the call failed.*
 
 [back to list](../Index.md)

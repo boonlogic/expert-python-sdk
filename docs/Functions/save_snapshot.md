@@ -12,6 +12,7 @@
 ##### output
 >*`True` if the file was created successfully*
 
+or
 >*prints the error code and message and returns `False`*
 
 [back to list](../Index.md)

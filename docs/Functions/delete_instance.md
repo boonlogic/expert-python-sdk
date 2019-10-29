@@ -22,6 +22,7 @@
 ##### output
 >*`True`*
 
+or
 >*error code and message is printed and return `False`*
 
 [back to list](../Index.md)
