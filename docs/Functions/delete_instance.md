@@ -2,22 +2,22 @@
 
 #### Stop all running instances  
 ##### input
->None
+>*None*
 
 ##### output
->`True`
+>*`True`*
 
->error code and message is printed and return `False`
+>*error code and message is printed and return `False`*
 
 ---------
 
 #### Stop specified instance ID    
 ##### input
->instanceID
+>*instanceID*
 
 ##### output
->`True`
+>*`True`*
 
->error code and message is printed and return `False`
+>*error code and message is printed and return `False`*
 
 [back to list](../Index.md)
