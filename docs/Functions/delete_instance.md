@@ -1,7 +1,5 @@
 # **delete_instance()**
 <br/>
-<br/>
-
 
 #### Stop all running instances  
 ##### input
@@ -13,7 +11,7 @@
 >*error code and message is printed and return `False`*
 
 ---------
-
+<br/>
 #### Stop specified instance ID    
 ##### input
 >*instanceID*
