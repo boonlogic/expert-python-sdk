@@ -35,6 +35,9 @@
 ### [get_config_template()](../Functions/get_config_template.md)
 >returns a formatted json block from the given parameters
 
+### [post_cluster_configuration()](../Functions/post_cluster_configuration.md)
+>loads the given configuration to the nano
+
 <br/>
 
 ## Cluster
