@@ -10,7 +10,8 @@
 >>*file path to the serialized nano file*
 
 ##### output
->*`True` if the nano was loaded successfully*    
+>*`True` if the nano was loaded successfully*
+
 >*prints the error code and message and returns `False`*
 
 [back to list](../Index.md)
