@@ -49,3 +49,6 @@
 
 ### [post_nano_run()](../Functions/post_nano_run.md)
 >clusters the data in the buffer
+
+### [get_buffer_status()](../Functions/get_buffer_status.md)
+>returns the byte information about the status of the nano
