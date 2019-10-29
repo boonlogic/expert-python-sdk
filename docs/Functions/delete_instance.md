@@ -16,7 +16,7 @@
 
 #### Stop specified instance ID    
 ##### input
->*instanceID*
+>*instanceID = ID of the instance to stop*
 
 ##### output
 >*`True`*
