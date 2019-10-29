@@ -16,8 +16,8 @@
 >>*determines whether to append the new data to the data currently in the buffer*
 >
 >`results` = ''
->>*specifies which result types to return if run_nano is called*
->>*Options include: ID, RI, SI, FI, DI*
+>>*specifies which result types to return if run_nano is called*    
+>>*Options include: ID, RI, SI, FI, DI*     
 >[Guide: Results](../Guides/Guide_Nano_Results.md)
 
 ##### output
