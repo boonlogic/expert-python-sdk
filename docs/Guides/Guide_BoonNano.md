@@ -26,6 +26,9 @@
 ### [save_snapshot()](../Functions/save_snapshot.md)
 >saves the nano in its current state as a compressed serialized file
 
+### [post_snapshot()](../Functions/post_snapshot.md)
+>loads previous nano settings and status to the instantiated instance
+
 <br/>
 
 ## Cluster

@@ -16,7 +16,7 @@
 
 #### Start an instance at the given ID
 ##### input
->_instanceID = Input an integer as the desired ID for the instance_
+>_nano_instance_id = Input an integer as the desired ID for the instance_
 
 ##### output
 >_If the input ID is available, the `True` along with the ID is returned_    

@@ -3,7 +3,7 @@
 
 #### Check whether the instance ID is a valid running instance
 ##### input
->_instanceID = ID of the instance to check_
+>_nano_instance_id = ID of the instance to check_
 
 ##### output
 >_`True`,`True` if the instance with the given ID is running._   
