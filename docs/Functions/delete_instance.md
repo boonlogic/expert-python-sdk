@@ -11,7 +11,9 @@
 >*error code and message is printed and return `False`*
 
 ---------
+
 <br/>
+
 #### Stop specified instance ID    
 ##### input
 >*instanceID*
