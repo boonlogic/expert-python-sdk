@@ -1,6 +1,6 @@
 ## delete_instance()
 
-#### delete all instances  
+#### Stop all running instances  
 ##### input
 >None
 
@@ -11,7 +11,7 @@
 
 ---------
 
-#### delete specified instance ID    
+#### Stop specified instance ID    
 ##### input
 >instanceID
 
