@@ -122,7 +122,7 @@ class BoonNano:
             print(json.loads(version_response.data.decode('utf-8')))
             return False, None
 
-        return True, json.loads(version_response.data.decode('utf-8'))['api-version']
+        return True, json.loads(version_response.data.decode('utf-8'))
 
 
 #############

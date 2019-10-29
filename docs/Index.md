@@ -1,6 +1,6 @@
 ###### [get_version()](./Functions/get_version.md)
 
-###### get_instance()
+###### [get_instance()](./Functions/get_instance.md)
 
 ###### get_instance_status()
 
