@@ -1,21 +1,12 @@
-# **post_data()**
+# **post_nano_run()**
 <br/>
 
-#### Post data to cluster
+#### Clusters any existing data in the buffer
 ##### input
 >`nano_instance_id`
 >>*instance to reference*
 >
->`filename`
->>*either the name of the binary or csv file to upload or the variable name to the numpy array*
->
->`run_nano` = `False`
->>*tells whether or not to run the nano after uploading the data*
->
->`append_data` = `False`
->>*determines whether to append the new data to the data currently in the buffer*
->
->`results` = ''
+>`results`=''
 >>*specifies which result types to return if run_nano is called*    
 >>*Options include: ID, RI, SI, FI, DI*     
 >[Guide: Results](../Guides/Guide_Nano_Results.md)

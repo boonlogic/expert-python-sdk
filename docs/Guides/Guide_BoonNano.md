@@ -46,3 +46,6 @@
 ## Cluster
 ### [post_data()](../Functions/post_data.md)
 >uploads data to the buffer to be clustered
+
+### [post_nano_run()](../Functions/post_nano_run.md)
+>clusters the data in the buffer
