@@ -2,7 +2,7 @@
 
 ###### [get_instance()](./Functions/get_instance.md)
 
-###### get_instance_status()
+###### [get_instance_status()](./Functions/get_instance_status.md)
 
 ###### delete_instance()
 
