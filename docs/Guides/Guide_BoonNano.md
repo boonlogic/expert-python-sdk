@@ -12,6 +12,7 @@
 >checks whether the given instanceID is an instantiated instance
 
 ### [delete_instance()](../Functions/delete_instance.md)
+>deletes the specified instance or deletes all running instances (if no ID is given)
 
 ## Configuration
 
