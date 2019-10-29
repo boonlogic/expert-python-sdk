@@ -3,12 +3,12 @@
 
 #### Start up an arbitrary instance
 ##### input
->_None_
+>*None*
 
 ##### output
->_`True` and the next available instance ID that is not currently running._   
+>*`True` and the next available instance ID that is not currently running.*   
 
->_`False` followed by the error code and message_
+>*`False` followed by the error code and message*
 
 -----------
 
@@ -16,11 +16,12 @@
 
 #### Start an instance at the given ID
 ##### input
->_nano_instance_id = Input an integer as the desired ID for the instance_
+>*nano_instance_id*    
+>>*Input an integer as the desired ID for the instance*
 
 ##### output
->_If the input ID is available, the `True` along with the ID is returned_    
+>*If the input ID is available, the `True` along with the ID is returned*    
 
->_If the value is an already running instance, the error code and message is printed and the function returns `False`,`None`_
+>*If the value is an already running instance, the error code and message is printed and the function returns `False`,`None`*
 
 [back to list](../Index.md)

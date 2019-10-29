@@ -3,13 +3,14 @@
 
 #### Check whether the instance ID is a valid running instance
 ##### input
->_nano_instance_id = ID of the instance to check_
+>*nano_instance_id*   
+>>*ID of the instance to check*
 
 ##### output
->_`True`,`True` if the instance with the given ID is running._   
+>*`True`,`True` if the instance with the given ID is running.*   
 
->_`True`,`False` if there is not an instance with the given ID._   
+>*`True`,`False` if there is not an instance with the given ID.*   
 
->_`False`,`None` if the call failed._
+>*`False`,`None` if the call failed.*
 
 [back to list](../Index.md)
