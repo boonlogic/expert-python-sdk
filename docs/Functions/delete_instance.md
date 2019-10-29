@@ -1,9 +1,8 @@
 ## delete_instance()
 
+#### delete all instances  
 ##### input
 >None
-
-deletes all running instances
 
 ##### output
 >`True`
@@ -12,10 +11,9 @@ deletes all running instances
 
 ---------
 
+#### delete specified instance ID    
 ##### input
 >instanceID
-
-deletes specified instance ID
 
 ##### output
 >`True`
