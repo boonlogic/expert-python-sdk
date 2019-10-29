@@ -32,6 +32,9 @@
 ### [get_cluster_configuration()](../Functions/get_cluster_configuration.md)
 >returns the json block containing the config parameters: mins, maxes, weights, labels (if applicable), numeric type, percent variation, streaming window size, and accuracy
 
+### [get_config_template()](../Functions/get_config_template.md)
+>returns a formatted json block from the given parameters
+
 <br/>
 
 ## Cluster
