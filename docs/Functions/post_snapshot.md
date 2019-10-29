@@ -5,7 +5,7 @@
 ##### input
 >*nano_instance_id*
 >>*ID of the instance to which the nano should be loaded*   
->*filename*   
+*filename*   
 >>*file path to the serialized nano file*
 
 ##### output
