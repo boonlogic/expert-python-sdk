@@ -16,11 +16,11 @@
 
 #### Start an instance at the given ID
 ##### input
->*nano_instance_id*    
+>nano_instance_id    
 >>*Input an integer as the desired ID for the instance*
 
 ##### output
->*If the input ID is available, the `True` along with the ID is returned*    
+>*If the input ID is available, the `True` along with `nano_instance_id` is returned*    
 
 >*If the value is an already running instance, the error code and message is printed and the function returns `False`,`None`*
 
