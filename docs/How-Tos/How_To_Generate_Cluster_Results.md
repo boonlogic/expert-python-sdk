@@ -39,8 +39,14 @@ success, results = bn.get_nano_results(instance, results={ID,RI})
 ```
 
 ##### results (as a variable)
-The second way to request results is to call it while uploading the data, as long as run_nano is also set to `True` in the `post_data` function call.
+The second way to request results is to call it while uploading the data or after running the nano. Calling it after uploading the data only works they way one would expect as long as run_nano is also set to `True` in the `post_data` function call.
 ```python
 success, results = bn.post_data(instance, 'Data.csv', run_nano=True, results=All)
 ```
 >NOTE: if run_nano is not specified to `True`, the returned results will be whatever the previous results were and not the results from clustering the most recently posted data (which hasn't been clustered yet). That means that if it is the first time clustering since the instance was instantiated, the results will be empty.
+
+or calling it after posting a nano run works the same way.
+```python
+success, results = bn.post_data(instance, 'Data.csv')
+success, results = bn.post_nano_run(instance, results=All)
+```
