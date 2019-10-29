@@ -4,7 +4,7 @@
 >None
 
 ##### output
->`True`   
+>`True`,
 >| **Name** | **Example** |
 >| -- | -----|
 >| "api-version" | "2.0.pre" |

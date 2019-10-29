@@ -14,7 +14,6 @@
 
 ##### output
 >If the input ID is available, the `True` along with the ID is returned      
-
 >If the value is an already running instance, the error code and message is printed and the function returns `False`,`None`
 
 [back to list](../Index.md)
