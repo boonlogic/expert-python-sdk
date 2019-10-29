@@ -1,16 +1,17 @@
-### get_version()
+### **get_version()**
 
+#### Get the version number of the nano
 ##### input
->None
+>*None*
 
 ##### output
->| **Name** | **Example** |
+>| ***Name*** | ***Example*** |
 >| -- | -----|
->| "api-version" | "2.0.pre" |
->| "boon-nano" | "8f8868a0" |
->| "expert-api" | "589dclef" |
->| "expert-common" | "17c5eafb" |   
+>| *"api-version"* | *"2.0.pre"* |
+>| *"boon-nano"* | *"8f8868a0"* |
+>| *"expert-api"* | *"589dclef"* |
+>| *"expert-common"* | *"17c5eafb"* |   
 
-> `False` followed by the error code and message
+>*`False` followed by the error code and message*
 
 [back to list](../Index.md)

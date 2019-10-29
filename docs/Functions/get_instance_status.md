@@ -1,13 +1,14 @@
-## get_instance_status()
+## **get_instance_status()**
 
+#### Check whether the instance ID is a valid running instance
 ##### input
->instanceID
+>_instanceID_
 
 ##### output
->`True`,`True` if the instance with the given ID is running.   
+>_`True`,`True` if the instance with the given ID is running._   
 
->`True`,`False` if there is not an instance with the given ID.   
- 
->`False`,`None` if the call failed.
+>_`True`,`False` if there is not an instance with the given ID._   
+
+>_`False`,`None` if the call failed._
 
 [back to list](../Index.md)
