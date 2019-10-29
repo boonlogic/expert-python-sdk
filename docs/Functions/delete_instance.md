@@ -3,6 +3,8 @@
 ##### input
 >None
 
+deletes all running instances
+
 ##### output
 >`True`
 
@@ -12,6 +14,8 @@
 
 ##### input
 >instanceID
+
+deletes specified instance ID
 
 ##### output
 >`True`
