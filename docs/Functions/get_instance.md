@@ -4,7 +4,7 @@
 
 ##### output
 >Returns the next available instance ID that is not currently running.
-
+-----------
 ##### input
 >Input an integer as the desired ID for the instance
 
