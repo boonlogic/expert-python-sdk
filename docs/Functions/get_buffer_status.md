@@ -8,7 +8,7 @@
 
 ##### output
 >*`True` followed by the JSON block containing the status*   
->*JSON contains:*   
+>>*JSON contains:*   
 >*- totalBytesInBuffer*   
 >*- totalBytesProcessed*   
 >*- totalBytesWritten*   
