@@ -1,9 +1,11 @@
 # Guide: BoonNano
+<br/>
 
 ## General
 ### [get_version()](../Functions/get_version.md)
 >returns the version number of the API that is currently running
 
+<br/>
 ## Instances
 ### [get_instance()](../Functions/get_instance.md)
 >initializes a nano instance (either using the given ID or using the next available index)
@@ -14,6 +16,8 @@
 ### [delete_instance()](../Functions/delete_instance.md)
 >deletes the specified instance or deletes all running instances (if no ID is given)
 
+<br/>
 ## Configuration
 
+<br/>
 ## Cluster
