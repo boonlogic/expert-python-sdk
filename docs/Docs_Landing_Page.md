@@ -15,7 +15,7 @@ Welcome to the documentation for the boon nano python client library!
 
 ## How-Tos
 
-###### [Autotune](./How-Tos/How_To_Autotune_Data.md)
+###### [Autotune Data](./How-Tos/How_To_Autotune_Data.md)
 ###### [Get Cluster Results](./How-Tos/How_To_Generate_Cluster_Results.md)
 
 ## Function pages

@@ -4,7 +4,7 @@
 
 ###### [get_instance_status()](./Functions/get_instance_status.md)
 
-###### delete_instance()
+###### [delete_instance()](./Functions/delete_instance.md)
 
 ###### get_running_instances()
 
