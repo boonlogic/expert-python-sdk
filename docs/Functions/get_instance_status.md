@@ -1,4 +1,4 @@
-## **get_instance_status()**
+# **get_instance_status()**
 <br/>
 
 #### Check whether the instance ID is a valid running instance

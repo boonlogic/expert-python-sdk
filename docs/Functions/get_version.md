@@ -1,4 +1,4 @@
-### **get_version()**
+# **get_version()**
 <br/>
 
 #### Get the version number of the nano
