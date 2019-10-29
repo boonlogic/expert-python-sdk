@@ -4,7 +4,7 @@ Welcome to the documentation for the boon nano python client library!
 ## Tutorials
 
 ###### [Getting Started](./Tutorials/Tutorial_Getting_Started.md)
-__start here__
+_start here_
 ###### [Posting a Configuration](./Tutorials/Tutorial_Posting_a_Configuration.md)
 ###### [General Pipeline](./Tutorials/Tutorial_The_General_Pipeline.md)
 
