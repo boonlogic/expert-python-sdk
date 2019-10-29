@@ -4,8 +4,9 @@
 #### Loads the settings and status of a previous nano
 ##### input
 >*nano_instance_id*
->>*ID of the instance to which the nano should be loaded*    
->*filename*
+>>*ID of the instance to which the nano should be loaded*
+
+>*filename*   
 >>*file path to the serialized nano file*
 
 ##### output
