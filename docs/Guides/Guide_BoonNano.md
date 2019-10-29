@@ -44,3 +44,5 @@
 <br/>
 
 ## Cluster
+### [post_data()](../Functions/post_data.md)
+>uploads data to the buffer to be clustered
