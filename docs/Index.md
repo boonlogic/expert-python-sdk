@@ -6,26 +6,26 @@
 
 ###### [delete_instance()](./Functions/delete_instance.md)
 
-###### get_running_instances()
+###### [get_running_instances()](./Functions/get_running_instances.md)
 
-###### save_snapshot()
+###### [save_snapshot()](./Functions/save_snapshot.md)
 
-###### post_snapshot()
+###### [post_snapshot()](./Functions/post_snapshot.md)
 
-###### get_cluster_configuration()
+###### [get_cluster_configuration()](./Functions/get_cluster_configuration.md)
 
-###### get_config_template()
+###### [get_config_template()](./Functions/get_config_template.md)
 
-###### post_cluster_configuration()
+###### [post_cluster_configuration()](./Functions/post_cluster_configuration.md)
 
-###### autotune()
+###### [autotune()](./Functions/autotune.md)
 
-###### post_data()
+###### [post_data()](./Functions/post_data.md)
 
-###### post_nano_run()
+###### [post_nano_run()](./Functions/post_nano_run.md)
 
-###### get_buffer_status()
+###### [get_buffer_status()](./Functions/get_buffer_status.md)
 
-###### get_nano_status()
+###### [get_nano_status()](./Functions/get_nano_status.md)
 
-###### get_nano_results()
+###### [get_nano_results()](./Functions/get_nano_results.md)

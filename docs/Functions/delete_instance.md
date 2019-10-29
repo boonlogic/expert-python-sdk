@@ -16,6 +16,6 @@
 ##### output
 >`True`
 
->>error code and message is printed and return `False`
+>error code and message is printed and return `False`
 
 [back to list](../Index.md)
