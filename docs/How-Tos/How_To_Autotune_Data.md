@@ -28,7 +28,7 @@ Now it is all set to call `autotune`.
 success, config = bn.autotune(instance)
 ```
 
-There are a few different options that go along with this.
+There are a few different options that go along with this:
 
 ##### by_feature
 Autotune tries to find the best min, max, and percent variation for the data posted, but the min and max might not apply to the data overall. by_feature tells autotune to set each column of data with a different min and max specific for that column. The default is false.
