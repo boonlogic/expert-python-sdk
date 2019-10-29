@@ -18,7 +18,7 @@ One the first five lines import the following libraries:
 - json
 
 the code should look like this:
-```
+```python
 import os
 import BoonNano
 import time
@@ -27,16 +27,16 @@ import json
 ```
 
 Enter down twice and define the main function on line 7.
-```
+```python
 def main():
 ```
 
 On the next line, store the BoonNano class object in a variable, bn. For the second argument, use the port number assigned to your account and the third argument is the 32 digit token key generated specifically for your account.
-```
+```python
 bn = BoonNano.BoonNano('localhost',5007,'2B69F78F61A572DBF8D1E44548B48')
 ```
 Enter down a few times and define the initiliazation call:
-```
+```python
 if __name__ == "__main__":
     main()
 ```
@@ -47,34 +47,33 @@ Save the file.
 
 ### Post the configuration
 On the next line of the main function, use the function get_config_template() to generate the json configuration block specific for a dataset.
-```
+```python
 success, config = bn.get_config_template('float', 20, -10, 15, percent_variation=0.037)
 ```
 Initializing the instance.
-```
+```python
 success, instance = bn.get_instance()
 ```
 Using that instance ID number, post the configuration by pointing it to that specific instance.
-```
+```python
 bn.postClusterConfiguration(instance, config)
 ```
 
 Once the config is posted, the nano has everything it needs to start reading in data. Download the example data file from [Gitlab](https://gitlab.boonlogic.com/development/tools/boonnanopyapi/tree/master/docs) and save it in the same folder as `NanoExample.py`. Post the data by telling it the instance to post to and the file name.
-```
+```python
 bn.post_data(instance, 'Data.csv')
 ```
 Finally, call the runNano() function to cluster the data and print out the status.
-```
+```python
 success = bn.post_nano_run(instance)
 print(success)
 ```
 Go to the terminal and cd into the folder where the .py files are saved. Run `NanoExample.py`.
-```
+```sh
 $ python3 NanoExample.py
 ```
 You should see the output:
-```
-
+```sh
 #################################
 Opening BoonNano Client
 URL:  http://localhost:5007/expert/v2/

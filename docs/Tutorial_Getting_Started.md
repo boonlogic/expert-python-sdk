@@ -18,7 +18,7 @@ One the first five lines import the following libraries:
 - json
 
 the code should look like this:
-```
+```python
 import os
 import BoonNano
 import time
@@ -27,16 +27,16 @@ import json
 ```
 
 Enter down twice and define the main function on line 8.
-```
+```python
 def main():
 ```
 
 On the next line, store the BoonNano class object in a variable, bn. For the second input argument, use the port number assigned to your account and the third input argument is the 32 digit token key generated specifically for your account.
-```
+```python
 bn = BoonNano.BoonNano('localhost',5007,'2B69F78F61A572DBF8D1E44548B48')
 ```
 Enter down three times and on line 12 and 13, define the initialization call:
-```
+```python
 if __name__ == "__main__":
     main()
 ```
@@ -45,7 +45,7 @@ Save the file.
 
 ### Get the version number
 Finally, on line 9 and 10, call the function getVersion to return which Boon Nano is associated with your account and print the result.
-```
+```python
 succeeded, ver = bn.get_version()
 print(ver)
 ```
@@ -53,11 +53,11 @@ print(ver)
 Save the file.
 
 Go to the terminal and cd into the folder where the .py files are saved. Run `NanoVersion.py`.
-```
+```sh
 $ python3 NanoVersion.py
 ```
 You should see the output:
-```
+```sh
 #################################
 Opening BoonNano Client
 URL:  http://localhost:5007/expert/v2/

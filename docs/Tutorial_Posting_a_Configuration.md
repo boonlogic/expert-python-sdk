@@ -18,7 +18,7 @@ One the first five lines import the following libraries:
 - json
 
 the code should look like this:
-```
+```python
 import os
 import BoonNano
 import time
@@ -27,16 +27,16 @@ import json
 ```
 
 Enter down twice and define the main function on line 7.
-```
+```python
 def main():
 ```
 
 On the next line, store the BoonNano class object in a variable, bn. For the second argument, use the port number assigned to your account and the third argument is the 32 digit token key generated specifically for your account.
-```
+```python
 bn = BoonNano.BoonNano('localhost',5007,'2B69F78F61A572DBF8D1E44548B48')
 ```
 Enter down seven times and on line 15 and 16, define the initiliazation call:
-```
+```python
 if __name__ == "__main__":
     main()
 ```
@@ -46,22 +46,22 @@ Save the file.
 
 ### Generate the configuration block
 On line 9, use the function get_config_template() to generate the json configuration block specific for a dataset.
-```
+```python
 success, config = bn.get_config_template('float', 20, -10, 15, percent_variation=0.037)
 ```
 Add a call to print out the configuration generated.
-```
+```python
 print(config)
 ```
 Save the file.
 
 ### Print out the configuration
 Go to the terminal and cd into the folder where the .py files are saved. Run `NanoConfig.py`.
-```
+```sh
 $ python3 NanoConfig.py
 ```
 You should see the output:
-```
+```sh
 #################################
 Opening BoonNano Client
 URL:  http://localhost:5007/expert/v2/
@@ -73,25 +73,25 @@ Closing Pool
 ### Post the configuration
 
 Now you have all the pieces to start actually using the nano. First start by initializing the instance on line 11.
-```
+```python
 success, instance = bn.get_instance()
 ```
 Using that instance ID number, post the configuration by pointing it to that specific instance.
-```
+```python
 success = bn.post_cluster_configuration(instance, config)
 ```
 Print out the  status of the post.
-```
+```python
 print(success)
 ```
 Save the file.
 
 Now, go to back to the terminal and run `NanoConfig.py` again.
-```
+```sh
 $ python3 NanoConfig.py
 ```
 You should see the output:
-```
+```sh
 #################################
 Opening BoonNano Client
 URL:  http://localhost:5007/expert/v2/

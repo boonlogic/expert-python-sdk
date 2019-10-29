@@ -3,7 +3,7 @@
 Start by downloading the python client library, importing the appropriate libraries, and defining the initialization call.
 
 Define the main function and store the BoonNano class object in a variable, bn. For the second argument, use the port number assigned to your account and the third argument is the 32 digit token key generated specifically for your account.
-```
+```python
 def main():
     bn = BoonNano.BoonNano('localhost',5007,'2B69F78F61A572DBF8D1E44548B48')
 ```
@@ -12,19 +12,19 @@ Save the file.
 
 ### Autotune
 First, start up an instance and post a config. Since the config is going to be autotuned anyway, the important parameters are the data type and number of features. The rest can be arbitrary values.
-```
+```python3
 success, instance = bn.get_instance()
 success, config = bn.get_config_template(float, 20, -10, 15) #default values for weight, percent_variation, streaming_window, and accuracy are automatically set
 success = bn.post_cluster_configuration(instance, config)
 ```
 
 In order to autotune the parameters, the pipeline needs data to train off of, so post data without running the nano.
-```
+```python
 bn.post_data(instance, 'Data.csv')
 ```
 Now it is all set to call `autotune`.
 
-```
+```python
 success, config = bn.autotune(instance)
 ```
 
