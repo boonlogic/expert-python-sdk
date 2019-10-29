@@ -29,6 +29,9 @@
 ### [post_snapshot()](../Functions/post_snapshot.md)
 >loads previous nano settings and status to the instantiated instance
 
+### [get_cluster_configuration()](../Functions/get_cluster_configuration.md)
+>returns the json block containing the config parameters: mins, maxes, weights, labels (if applicable), numeric type, percent variation, streaming window size, and accuracy
+
 <br/>
 
 ## Cluster
