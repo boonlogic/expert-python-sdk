@@ -1,4 +1,4 @@
-###### get_version()
+###### [get_version()](./Functions/get_version.md)
 
 ###### get_instance()
 
