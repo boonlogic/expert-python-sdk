@@ -27,6 +27,6 @@ or
 >*`True` followed by the json block containing the results that were requested*
 
 or
->*the error code and message prints and then returns `False`,'None'*
+>*the error code and message prints and then returns `False`,`None`*
 
 [back to list](../Index.md)

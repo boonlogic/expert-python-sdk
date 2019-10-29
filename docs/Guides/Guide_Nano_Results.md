@@ -2,6 +2,11 @@
 
 See [How-to: Generate Cluster Results](https://gitlab.boonlogic.com/development/tools/boonnanopyapi/blob/master/docs/How_To_Generate_Cluster_Results.md) for instructions on generating the results.
 
+These can be called from any of the following functions:
+- post_data
+- post_nano_run
+- get_nano_results
+
 ### Options
 The results call (no matter where you call it from) has seven options:
 - ID
