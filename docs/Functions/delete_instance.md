@@ -1,4 +1,6 @@
-# **delete_instance()**
+# **delete_instance()**   
+
+      
 
 #### Stop all running instances  
 ##### input
