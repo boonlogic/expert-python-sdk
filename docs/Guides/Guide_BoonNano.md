@@ -38,6 +38,9 @@
 ### [post_cluster_configuration()](../Functions/post_cluster_configuration.md)
 >loads the given configuration to the nano
 
+### [autotune()](../Functions/autotune.md)
+>determines ideal clustering parameters for the given data in the buffer
+
 <br/>
 
 ## Cluster

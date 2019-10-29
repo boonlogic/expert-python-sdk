@@ -3,10 +3,10 @@
 
 #### Save a serialized version of the nano
 ##### input
->nano_instance_id    
+>`nano_instance_id`    
 >>*instance ID of the nano to save*  
 >
->filename   
+>`filename`  
 >>*name of the file to save the nano to*
 
 ##### output

@@ -3,10 +3,10 @@
 
 #### Uploads the given configuration to the nano
 ##### input
->nano_instance_id
+>`nano_instance_id`
 >>*instance to upload the config to*
 >
->json_config
+>`json_config`
 >>*json block of the configuration to upload*
 
 ##### output

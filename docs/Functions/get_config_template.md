@@ -3,28 +3,28 @@
 
 #### Generate a correctly formatted config json block from the given parameters
 ##### input
->numeric_type
+>`numeric_type`
 >>*float, int, or native specifies how to read in the file*
 >
->number_of_features
+>`number_of_features`
 >>*number of columns in the data or the dimension of the vector tells how to partition the data*
 >
->min = 1
+>`min` = 1
 >>*minimum rounding cutoff for the data*
 >
->max = 10
+>`max` = 10
 >>*maximum rounding cutoff for the data*
 >
->weight = 1
+>`weight` = 1
 >>*weights for each column (will be normalized if not inputted as such)*
 >
->percent_variation = 0.05
+>`percent_variation` = 0.05
 >>*parameter to specify the granularity of the clusters*
 >
->streaming_window = 1
+>`streaming_window` = 1
 >>*how many patterns/vectors to concatenate together into one vector (as in a parametric case)*
 >
->accuracy = 0.99
+>`accuracy` = 0.99
 >>*the percentage for calculating a z value on the statistical accuracy of the clustering*
 
 ##### output

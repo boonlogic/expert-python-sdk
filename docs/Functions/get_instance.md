@@ -16,7 +16,7 @@
 
 #### Start an instance at the given ID
 ##### input
->nano_instance_id    
+>`nano_instance_id`  
 >>*Input an integer as the desired ID for the instance*
 
 ##### output

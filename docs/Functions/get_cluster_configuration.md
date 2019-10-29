@@ -3,7 +3,7 @@
 
 #### Get the current configuration being used
 ##### input
->nano_instance_id   
+>`nano_instance_id`   
 >>*ID of the instance to reference*   
 
 ##### output
