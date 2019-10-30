@@ -533,7 +533,7 @@ class BoonNano:
             print(json.loads(dataset_response.data.decode('utf-8')))
             return False, None
 
-        if not Results:
+        if not results:
             return True, None
 
         return True, json.loads(dataset_response.data.decode('utf-8'))
