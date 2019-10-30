@@ -1,3 +1,5 @@
+# Functions
+
 ###### [get_version()](./Functions/get_version.md)
 
 ###### [get_instance()](./Functions/get_instance.md)
