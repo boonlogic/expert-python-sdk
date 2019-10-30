@@ -104,3 +104,8 @@ The output here is abbreviated but in terminal the json block in the middle will
 The second to last line is the status of your configuration post.
 
 If the status is True, then congratulations!
+See [Tutorial: The General Pipeline](./Tutorial_The_General_Pipeline.md) for next steps.
+
+<br/>
+
+[Return to documentation homepage](../Python_Landing_Page.md)

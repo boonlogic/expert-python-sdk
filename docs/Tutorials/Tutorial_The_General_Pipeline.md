@@ -81,4 +81,8 @@ URL:  http://localhost:5007/expert/v2/
 True
 Closing Pool
 ```
-At this point, the data is clustered. Reference ****** for more detail on how to generate results and ***** for more details on the types of analysis.
+At this point, the data is clustered. Reference [How-to: Generate Cluster Results](../How-Tos/How_To_Generate_Cluster_Results.md) for more detail on how to generate results and [Guide: Results](../Guides/Guide_Nano_Results) or [Guide: Status](../Guides/Guide_Nano_Status.md) for more details on the types of analysis.
+
+<br/>
+
+[Return to documentation homepage](../Python_Landing_Page.md)

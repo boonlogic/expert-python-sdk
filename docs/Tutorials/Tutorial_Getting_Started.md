@@ -68,3 +68,8 @@ Closing Pool
 Where the second to last line is the version number of the BoonNano.
 
 Congratulations! The client library successfully connected to Nano API.
+See [Tutorial: Posting a Configuration](./Tutorial_Posting_a_Configuration.md) for the next step in the process.
+
+<br/>
+
+[Return to documentation homepage](../Python_Landing_Page.md)

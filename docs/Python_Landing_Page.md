@@ -1,4 +1,4 @@
-# Python SDK documentation
+# Python SDK Documentation
 Welcome to the documentation for the boon nano python client library!
 
 ## Tutorials
