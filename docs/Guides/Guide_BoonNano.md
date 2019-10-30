@@ -53,4 +53,7 @@
 ### [get_buffer_status()](../Functions/get_buffer_status.md)
 >returns the byte information about the status of the nano
 
+<br/>
+<br/>
+
 [Return to documentation homepage](../Docs_Landing_Page.md)
