@@ -57,6 +57,5 @@
 >returns status results for each pattern clustered
 
 <br/>
-<br/>
 
 [Return to documentation homepage](../Docs_Landing_Page.md)

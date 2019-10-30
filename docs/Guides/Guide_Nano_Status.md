@@ -62,4 +62,6 @@ Finally, setting results to All will return all of the options listed above as a
 
 For more statistical values, see [Guide: Nano Results](https://gitlab.boonlogic.com/development/tools/boonnanopyapi/blob/master/docs/Guide_Nano_Results.md)
 
+<br/>
+
 [Return to documentation homepage](../Docs_Landing_Page.md)
