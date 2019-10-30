@@ -53,6 +53,9 @@
 ### [get_buffer_status()](../Functions/get_buffer_status.md)
 >returns the byte information about the status of the nano
 
+### [get_nano_results()](../Functions/get_nano_results.md)
+>returns status results for each pattern clustered
+
 <br/>
 <br/>
 
