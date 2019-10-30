@@ -9,7 +9,7 @@
 >`results` = All
 >>*specifies which result types to return if run_nano is called*    
 >>*Options include: ID, RI, SI, FI, DI*     
->>*`None` is not an option for `results` in this call*     
+>>*NOTE: `None` is not an option for `results` in this call*     
 >[Guide: Results](../Guides/Guide_Nano_Results.md)
 
 ##### output
