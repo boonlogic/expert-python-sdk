@@ -427,7 +427,7 @@ class BoonNano:
 
         return True
 
-    def autotune_config(self, instance_id, by_feature=False, autotune_pv=True, autotune_range=True, exclusions={}):
+    def autotune_config(self, instance_id, autotune_pv=True, autotune_range=True, by_feature=False, exclusions={}):
         """autotunes the percent variation
         and the min and max for each feature
         """
@@ -461,7 +461,7 @@ class BoonNano:
 # CLUSTER #
 ###########
 
-    def load_data(self, instance_id, data, file_type='raw', gzip=False, metadata='', append_data=False, run_nano=False, results=''):
+    def load_data(self, instance_id, data, file_type='', gzip=False, metadata='', append_data=False, run_nano=False, results=''):
         """posts the data and clusters it if runNano is True
 
         results per pattern options:
@@ -510,7 +510,7 @@ class BoonNano:
         else:
             body = {'data': (self.filename, file_data),'metadata': metadata.replace(',','|').replace('{','').replace('}','').replace(' ','')}
         # build command
-        dataset_cmd = self.url + 'data/' + str(instance_id) + '?runNano=' + str(run_nano).lower() + '&fileType=' + ('raw' if 'bin' in self.filename else 'csv') + '&gzip=' + str(gzip).lower() + '&results=' + results_str[1:] + '&appendData=' + str(append_data).lower()
+        dataset_cmd = self.url + 'data/' + str(instance_id) + '?runNano=' + str(run_nano).lower() + '&fileType=' + (str(file_type) if file_type != '' else ('raw' if 'bin' in self.filename else 'csv')) + '&gzip=' + str(gzip).lower() + '&results=' + results_str[1:] + '&appendData=' + str(append_data).lower()
 
         # post dataset
         try:
