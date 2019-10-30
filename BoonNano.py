@@ -129,7 +129,7 @@ class BoonNano:
 # INSTANCES #
 #############
 
-    def get_instance(self, instance_id=''):
+    def create_instance(self, instance_id=''):
         """If an instance number is not given,
         the nano will return the next open number
         as a running instance
@@ -155,6 +155,8 @@ class BoonNano:
 
         # check for error
         if instance_response.status != 200 and instance_response.status != 201:
+            if instance_id != '' and instance_response.status == 400:
+                return True, instance_id
             print(json.loads(instance_response.data.decode('utf-8')))
             return False, None
 
