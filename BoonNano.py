@@ -97,7 +97,7 @@ class BoonNano:
 # GENERAL #
 ###########
 
-    def version(self):
+    def get_version(self):
         """gives the version of the api running"""
         # build command
         version_cmd = self.url[:-3] + 'version'
@@ -295,7 +295,7 @@ class BoonNano:
 
         return True
 
-    def upload_snapshot(self, instance_id, filename):
+    def load_snapshot(self, instance_id, filename):
         """deserialize existing nano
         upload file to given instance
 
