@@ -56,6 +56,9 @@
 ### [get_nano_results()](../Functions/get_nano_results.md)
 >returns status results for each pattern clustered
 
+### [get_nano_status()](../Functions/get_nano_status.md)
+>returns results for each cluster created
+
 <br/>
 
 [Return to documentation homepage](../Docs_Landing_Page.md)
