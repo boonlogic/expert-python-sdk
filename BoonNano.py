@@ -158,7 +158,7 @@ class BoonNano:
             print(json.loads(instance_response.data.decode('utf-8')))
             return False, None
 
-        return True, json.loads(instance_response.data.decode('utf-8'))['instance_id']
+        return True, json.loads(instance_response.data.decode('utf-8'))['instanceID']
 
     def is_running_instance(self, instance_id):
         """returns true if instance_id is a running instance
