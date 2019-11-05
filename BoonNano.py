@@ -34,7 +34,7 @@ class BoonNano:
         success, nano_results = bn.runNano(instance, results='All')
     """
 
-    def __init__(self, host, port, token='2B69F78F61A572DBF8D1E44548B48', timeout=60.0):
+    def __init__(self, host, port, token, timeout=60.0):
         """BoonNano __init__ method.
 
         Args:
@@ -74,7 +74,7 @@ class BoonNano:
         print('Closing Pool')
         self.http.clear()
 
-    def set_host_port(self, host, port, token='2B69F78F61A572DBF8D1E44548B48'):
+    def set_host_port(self, host, port, token):
         """Change the host and port
 
         Args:
