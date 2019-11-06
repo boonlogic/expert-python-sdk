@@ -3,6 +3,7 @@ import urllib3
 import json
 import numpy as np
 import os
+from os.path import expanduser
 
 ############################
 # BoonNano Python API v2.1 #
@@ -34,7 +35,7 @@ class BoonNano:
         success, nano_results = bn.runNano(instance, results='All')
     """
 
-    def __init__(self, host, port, token, timeout=60.0):
+    def __init__(self, host, port, authentication_path="~/.BoonLogic", timeout=60.0):
         """BoonNano __init__ method.
 
         Args:
@@ -45,6 +46,10 @@ class BoonNano:
 
 
         """
+
+        with open (expanduser(authentication_path), "r") as my_token:
+            token = my_token.read()
+
         #arguments
         self.timeout = timeout
         self.token = token
