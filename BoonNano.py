@@ -48,7 +48,7 @@ class BoonNano:
         """
 
         with open (expanduser(authentication_path), "r") as my_token:
-            token = my_token.read()
+            token = my_token.read().replace('\n','')
 
         #arguments
         self.timeout = timeout
@@ -79,7 +79,7 @@ class BoonNano:
         print('Closing Pool')
         self.http.clear()
 
-    def set_host_port(self, host, port, token):
+    def set_host_port(self, host, port, authentication_path="~/.BoonLogic"):
         """Change the host and port
 
         Args:
@@ -88,6 +88,10 @@ class BoonNano:
         Returns:
 
         """
+
+        with open (expanduser(authentication_path), "r") as my_token:
+            token = my_token.read().replace('\n','')
+
         self.host = host
         self.port = port
         self.token = token
