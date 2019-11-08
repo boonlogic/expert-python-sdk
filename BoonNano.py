@@ -98,6 +98,7 @@ class BoonNano:
         with open (expanduser(authentication_path), "r") as my_token:
             token = my_token.read().replace('\n','')
 
+        token_index = token.index('x-token = ')
         self.token = token[token_index + 10:token_index + 42]
 
         self.host = host
