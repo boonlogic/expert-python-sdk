@@ -35,7 +35,7 @@ class BoonNano:
         success, nano_results = bn.runNano(instance, results='All')
     """
 
-    def __init__(self, host, port, authentication_path="~/.BoonLogic", timeout=60.0):
+    def __init__(self, host='api.boonlogic.com:5007', port=443, authentication_path="~/.BoonLogic", timeout=60.0):
         """BoonNano __init__ method.
 
         Args:
@@ -50,12 +50,18 @@ class BoonNano:
         with open (expanduser(authentication_path), "r") as my_token:
             token = my_token.read().replace('\n','')
 
+        token_index = token.index('x-token = ')
+
         #arguments
         self.timeout = timeout
-        self.token = token
+        self.token = token[token_index + 10:token_index + 42]
 
         self.host = host
         self.port = port
+        if ':' in host:
+            self.port = host[host.index(':') + 1: ]
+            self.host = host[ :host.index(':')]
+
         self.primary = '/expert/v2/'
         self.url = 'http://' + str(self.host) + ':' + str(self.port) + self.primary
 
@@ -79,7 +85,7 @@ class BoonNano:
         print('Closing Pool')
         self.http.clear()
 
-    def set_host_port(self, host, port, authentication_path="~/.BoonLogic"):
+    def set_host_port(self, host='api.boonlogic.com', port=443, authentication_path="~/.BoonLogic"):
         """Change the host and port
 
         Args:
@@ -92,9 +98,14 @@ class BoonNano:
         with open (expanduser(authentication_path), "r") as my_token:
             token = my_token.read().replace('\n','')
 
+        self.token = token[token_index + 10:token_index + 42]
+
         self.host = host
         self.port = port
-        self.token = token
+        if ':' in host:
+            self.port = host[host.index(':') + 1: ]
+            self.host = host[ :host.index(':')]
+
         self.primary = '/expert/v2/'
         self.url = 'http://' + str(self.host) + ':' + str(self.port) + self.primary
 
