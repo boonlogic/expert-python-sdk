@@ -5,7 +5,6 @@ from .management import save_nano
 
 from .configure import get_config
 from .configure import configure_nano
-from .configure import generate_config
 from .configure import autotune_config
 
 from .cluster import load_data

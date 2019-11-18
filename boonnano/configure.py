@@ -14,17 +14,16 @@ def configure_nano(nano_handle, numeric_format="int", feature_count=10, min=1, m
     else:
         new_config = config
 
-    print(new_config)
     # post config
     try:
         config_response = nano_handle['http'].request(
             'POST',
             config_cmd,
             headers={
-                'x-token': xtoken,
+                'x-token': nano_handle['xtoken'],
                 'Content-Type': 'application/json'
             },
-            body=new_config#json.dumps(new_config).encode('utf-8')
+            body=json.dumps(new_config).encode('utf-8')
         )
 
     except Exception as e:
