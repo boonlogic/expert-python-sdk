@@ -1,17 +1,18 @@
-from .management import open_nano
-from .management import close_nano
-from .management import nano_list
-from .management import save_nano
-
-from .configure import get_config
-from .configure import configure_nano
-from .configure import generate_config
-from .configure import autotune_config
-
-from .cluster import load_data
-from .cluster import run_nano
-
-from .results import get_version
-from .results import get_buffer_status
-from .results import get_nano_status
-from .results import get_nano_results
+from .pythonapi import setup_connection
+from .pythonapi import get_version
+from .pythonapi import create_instance
+from .pythonapi import is_running_instance
+from .pythonapi import get_running_instances
+from .pythonapi import delete_instance
+from .pythonapi import save_snapshot
+from .pythonapi import load_snapshot
+from .pythonapi import get_config
+from .pythonapi import generate_config
+from .pythonapi import set_config
+from .pythonapi import autotune_config
+from .pythonapi import load_data
+from .pythonapi import get_buffer_status
+from .pythonapi import get_nano_status
+from .pythonapi import get_nano_results
+from .pythonapi import run_nano
+from .pythonapi import close_connection
