@@ -3,7 +3,7 @@ import json
 import numpy as np
 import os
 
-def set_config(nano_handle, numeric_format="int", feature_count=10, min=1, max=10, weight=1, labels="", percent_variation=0.05, streaming_window=1, accuracy=0.99, config=""):
+def configure_nano(nano_handle, numeric_format="int", feature_count=10, min=1, max=10, weight=1, labels="", percent_variation=0.05, streaming_window=1, accuracy=0.99, config=""):
     """returns the posted clustering configuration
     """
 
