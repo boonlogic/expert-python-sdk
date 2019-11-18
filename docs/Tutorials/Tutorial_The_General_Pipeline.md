@@ -1,88 +1,81 @@
 # Tutorial: The General Pipeline
 
-If the client library is already downloaded from [GitLab](https://gitlab.boonlogic.com/development/tools/boonnanopyapi), skip to [Setting up client library](#setup)
+If the client library is already downloaded from [Github](https://github.com/boonlogic/Python_API), skip to [Setting up client library](#setup)
 
 ### Download the python client library
 [Python3](https://programwithus.com/learn-to-code/install-python3-mac/) is needed to run the python client library for the Nano API.
 
-Go to the [Python API Github repository](https://gitlab.boonlogic.com/development/tools/boonnanopyapi) and download `BoonNano.py` into the directory
+Go to the [Python API Github repository](https://github.com/boonlogic/Python_API) and clone it.
 
 ### Setting up client library (Mac OS) {#setup}
-Open a text editor of your choice (one free option is [Atom](https://atom.io/)). Go up to the menu bar and under "File" -> "Save As..." save your file as `NanoExample.py` in the same folder as where `BoonNano.py` is saved.
+Open a text editor of your choice (one free option is [Atom](https://atom.io/)). Go up to the menu bar and under "File" -> "Save As..." save your file as `NanoExample.py`.
 
-One the first five lines import the following libraries:
-- os
-- BoonNano
-- time
-- numpy
-- json
-
-the code should look like this:
+One the first line import the BoonNano library:
 ```python
-import os
-import BoonNano
-import time
-import numpy as np
-import json
+import BoonNano as bn
+```
+On the next line, start the http connection to the BoonNano server. Input the user whose authentication criteria you want to use and the file path to your .BoonLogic authentication file.
+```python
+bn.setup_connection('userName','~/.BoonLogic')
 ```
 
-Enter down twice and define the main function on line 7.
+Enter down a few lines and close the connection.
 ```python
-def main():
+bn.close_connection()
 ```
-
-On the next line, store the BoonNano class object in a variable, bn. For the second argument, use the port number assigned to your account and the third argument is the 32 digit token key generated specifically for your account.
-```python
-bn = BoonNano.BoonNano('localhost',5007,'2B69F78F61A572DBF8D1E44548B48')
-```
-Enter down a few times and define the initiliazation call:
-```python
-if __name__ == "__main__":
-    main()
-```
-Every other instruction should be done within the main() function, keeping the initialization at the end of the file.
-
 Save the file.
 
+All the following code will be entered between the setup and close connection calls.
 
 ### Post the configuration
 On the next line of the main function, use the function get_config_template() to generate the json configuration block specific for a dataset.
 ```python
-success, config = bn.get_config_template('float', 20, -10, 15, percent_variation=0.037)
+success, config = bn.generate_config('float', 20, -10, 15, percent_variation=0.037)
 ```
 Initializing the instance.
 ```python
-success, instance = bn.get_instance()
+success, instance = bn.create_instance()
 ```
 Using that instance ID number, post the configuration by pointing it to that specific instance.
 ```python
-bn.postClusterConfiguration(instance, config)
+bn.set_config(instance, config)
 ```
 
-Once the config is posted, the nano has everything it needs to start reading in data. Download the example data file from [Gitlab](https://gitlab.boonlogic.com/development/tools/boonnanopyapi/tree/master/docs) and save it in the same folder as `NanoExample.py`. Post the data by telling it the instance to post to and the file name.
+Once the config is posted, the nano has everything it needs to start reading in data. Post the data by telling it the instance to post to and the file name (`Data.csv` is an example dataset that was cloned in the `Python_API` repository).
 ```python
-bn.post_data(instance, 'Data.csv')
+bn.load_data(instance, 'Data.csv')
 ```
-Finally, call the runNano() function to cluster the data and print out the status.
+Finally, call the `runNano()` function to cluster the data and print out the status.
 ```python
-success = bn.post_nano_run(instance)
+success = bn.run_nano(instance)
 print(success)
 ```
-Go to the terminal and cd into the folder where the .py files are saved. Run `NanoExample.py`.
+Go to the terminal and cd into the folder where the `NanoExample.py` file is saved. Run `NanoExample.py`.
 ```sh
 $ python3 NanoExample.py
 ```
 You should see the output:
 ```sh
-#################################
-Opening BoonNano Client
-URL:  http://localhost:5007/expert/v2/
-#################################
 True
-Closing Pool
 ```
-At this point, the data is clustered. Reference [How-to: Generate Cluster Results](../How-Tos/How_To_Generate_Cluster_Results.md) for more detail on how to generate results and [Guide: Results](../Guides/Guide_Nano_Results) or [Guide: Status](../Guides/Guide_Nano_Status.md) for more details on the types of analysis.
+At this point, the data is clustered and `NanoExample.py` should look like this:
+```python
+import BoonNano as bn
+
+bn.setup_connection('username','~/.BoonLogic')
+success, config = bn.generate_config('float', 20, -10, 15, percent_variation=0.037)
+success, instance = bn.create_instance()
+bn.set_config(instance, config)
+bn.load_data(instance, 'Data.csv')
+success = bn.run_nano(instance)
+print(success)
+bn.close_connection()
+```
+<br/>
+<br/>
+
+Reference [How-to: Generate Cluster Results](../How-Tos/How_To_Generate_Cluster_Results.md) for more detail on how to generate results and [Guide: Results](../Guides/Guide_Nano_Results) or [Guide: Status](../Guides/Guide_Nano_Status.md) for more details on the types of analysis.
 
 <br/>
 
-[Return to documentation homepage](../Python_Landing_Page.md)
+[Return to documentation homepage](../README.md)

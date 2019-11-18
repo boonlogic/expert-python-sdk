@@ -3,12 +3,12 @@
 
 #### Get metric results for each cluster created
 ##### input
->`nano_instance_id`
+>`instance_id`
 >>*instance to reference*
 >
 >`results` = All
 >>*specifies which result types to return if run_nano is called*    
->>*Options include: pca, pattern_memory, cluster_growth, cluster_sizes, anomaly_indexes, frequency_indexes, distance_indexes, total_inferences, average_inference_time, num_clusters*    
+>>*Options include: PCA, patternMemory, clusterGrowth, clusterSizes, anomalyIndexes, frequencyIndexes, distanceIndexes, totalInferences, averageInferenceTime, numClusters*    
 >>*NOTE: `None` is not an option for `results` in this call*    
 >[Guide: Status](../Guides/Guide_Nano_Status.md)
 
@@ -20,4 +20,4 @@ or
 
 <br/>
 
-[back to list](../Index.md)
+[back to list](./Index.md)

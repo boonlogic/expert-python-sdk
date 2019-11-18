@@ -3,8 +3,8 @@
 See [How-to: Generate Cluster Results](../How-Tos/How_To_Generate_Cluster_Results.md) for instructions on generating the results.
 
 These can be called from any of the following functions:
-- post_data
-- post_nano_run
+- load_data
+- run_nano
 - get_nano_results
 
 ### Options
@@ -14,7 +14,6 @@ The results call (no matter where you call it from) has seven options:
 - SI
 - FI
 - DI
-- MD
 - All
 - ""
 
@@ -43,8 +42,6 @@ Similar to the anomaly indexes, the `FI`, or frequency index, relates to the num
 ##### DI
 The distance index (`DI`), is the last of the results' statistical metrics. The values range from 0 to 1000 but instead of the values relating to the number of patterns in each cluster, they are in relation to the distance from the centroid of the pattern memory space. This is a different centroid than those generated from k-means or other clustering algorithms. This centroid is a single value for the center of a manhattan distance spanned space. Indexes closest to 1000 are furthest from the center and values close to 0 are abnormally close. Patterns in a space that are similar distances appart have values that are close to the average distance between all clusters to the centroid. On average, these values do not vary a lot in value, but that is not to say that they can't.
 
-##### MD
-`MD` stands for "metadata" and is the one result that is not the same length as the number of clustered patterns. This returns the preprocessing key that was posted with the data.
 
 ##### ''
 Setting results equal to an empty string will omit any results being returned. This is not an option when calling `get_nano_results` since that function is called only when results are desired.
@@ -57,4 +54,4 @@ For more statistical values, see [Guide: Nano Status](./Guide_Nano_Status.md)
 
 <br/>
 
-[Return to documentation homepage](../Python_Landing_Page.md)
+[Return to documentation homepage](../README.md)

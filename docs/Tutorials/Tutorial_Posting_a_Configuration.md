@@ -1,53 +1,35 @@
 # Tutorial: Posting a Configuration
 
-If the client library is already downloaded from [GitLab](https://gitlab.boonlogic.com/development/tools/boonnanopyapi), skip to [Setting up client library](#setup)
+If the client library is already downloaded from [Github](https://github.com/boonlogic/Python_API), skip to __Setting up client library__
 
 ### Download the python client library
 [Python3](https://programwithus.com/learn-to-code/install-python3-mac/) is needed to run the python client library for the Nano API.
 
-Go to the [Python API Github repository](https://gitlab.boonlogic.com/development/tools/boonnanopyapi) and download `BoonNano.py` into the directory
+Go to the [Python API Github repository](https://github.com/boonlogic/Python_API) and clone it.
 
 ### Setting up client library (Mac OS) {#setup}
-Open a text editor of your choice (one free option is [Atom](https://atom.io/)). Go up to the menu bar and under "File" -> "Save As..." save your file as `NanoConfig.py` in the same folder as where `BoonNano.py` is saved.
+Open a text editor of your choice (one free option is [Atom](https://atom.io/)). Go up to the menu bar and under "File" -> "Save As..." save your file as `NanoConfig.py`.
 
-One the first five lines import the following libraries:
-- os
-- BoonNano
-- time
-- numpy
-- json
-
-the code should look like this:
+One the first line import the BoonNano library:
 ```python
-import os
-import BoonNano
-import time
-import numpy as np
-import json
+import BoonNano as bn
 ```
-
-Enter down twice and define the main function on line 7.
+On the next line, start the http connection to the BoonNano server. Input the user whose authentication criteria you want to use and the file path to your .BoonLogic authentication file.
 ```python
-def main():
+bn.setup_connection('userName','~/.BoonLogic')
 ```
-
-On the next line, store the BoonNano class object in a variable, bn. For the second argument, use the port number assigned to your account and the third argument is the 32 digit token key generated specifically for your account.
+Enter down a few lines and close the connection.
 ```python
-bn = BoonNano.BoonNano('localhost',5007,'2B69F78F61A572DBF8D1E44548B48')
+bn.close_connection()
 ```
-Enter down seven times and on line 15 and 16, define the initiliazation call:
-```python
-if __name__ == "__main__":
-    main()
-```
-
 Save the file.
 
+All the following code will be entered between the setup and close connection calls.
 
 ### Generate the configuration block
 On line 9, use the function get_config_template() to generate the json configuration block specific for a dataset.
 ```python
-success, config = bn.get_config_template('float', 20, -10, 15, percent_variation=0.037)
+success, config = bn.generate_config('float', 20, -10, 15, percent_variation=0.037)
 ```
 Add a call to print out the configuration generated.
 ```python
@@ -62,23 +44,18 @@ $ python3 NanoConfig.py
 ```
 You should see the output:
 ```sh
-#################################
-Opening BoonNano Client
-URL:  http://localhost:5007/expert/v2/
-#################################
 {'accuracy': 0.99, 'features': [{'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}, {'maxVal': 15, 'minVal': -10, 'weight': 1}], 'numericFormat': 'float', 'percentVariation': 0.037, 'streamingWindowSize': 1}
-Closing Pool
 ```
 
 ### Post the configuration
 
 Now you have all the pieces to start actually using the nano. First start by initializing the instance on line 11.
 ```python
-success, instance = bn.get_instance()
+success, instance = bn.create_instance()
 ```
 Using that instance ID number, post the configuration by pointing it to that specific instance.
 ```python
-success = bn.post_cluster_configuration(instance, config)
+success = bn.set_config(instance, config)
 ```
 Print out the  status of the post.
 ```python
@@ -92,20 +69,29 @@ $ python3 NanoConfig.py
 ```
 You should see the output:
 ```sh
-#################################
-Opening BoonNano Client
-URL:  http://localhost:5007/expert/v2/
-#################################
 {'accuracy': 0.99, 'features': [{'maxVal': 15, 'minVal': -10, 'weight': 1}, ... {'maxVal': 15, 'minVal': -10, 'weight': 1}], 'numericFormat': 'float', 'percentVariation': 0.037, 'streamingWindowSize': 1}
 True
-Closing Pool
 ```
 The output here is abbreviated but in terminal the json block in the middle will print out all features.
 The second to last line is the status of your configuration post.
 
-If the status is True, then congratulations!   
+If the status is True, then congratulations! The end `NanoConfig.py` file is:
+```python
+import BoonNano as bn
+
+bn.setup_connection('username','~/.BoonLogic')
+success, config = bn.generate_config('float', 20, -10, 15, percent_variation=0.037)
+print(config)
+success, instance = bn.create_instance()
+success = bn.set_config(instance, config)
+print(success)
+bn.close_connection()
+```
+<br/>
+<br/>
+
 See [Tutorial: The General Pipeline](./Tutorial_The_General_Pipeline.md) for next steps.
 
 <br/>
 
-[Return to documentation homepage](../Python_Landing_Page.md)
+[Return to documentation homepage](../README.md)

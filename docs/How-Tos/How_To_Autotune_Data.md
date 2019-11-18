@@ -2,30 +2,38 @@
 
 Start by downloading the python client library, importing the appropriate libraries, and defining the initialization call.
 
-Define the main function and store the BoonNano class object in a variable, bn. For the second argument, use the port number assigned to your account and the third argument is the 32 digit token key generated specifically for your account.
+One the first line import the BoonNano library:
 ```python
-def main():
-    bn = BoonNano.BoonNano('localhost',5007,'2B69F78F61A572DBF8D1E44548B48')
+import BoonNano as bn
 ```
-
+On the next line, start the http connection to the BoonNano server. Input the user whose authentication criteria you want to use and the file path to your .BoonLogic authentication file.
+```python
+bn.setup_connection('userName','~/.BoonLogic')
+```
+Enter down a few lines and close the connection.
+```python
+bn.close_connection()
+```
 Save the file.
+
+All the following code will be entered between the setup and close connection calls.
 
 ### Autotune
 First, start up an instance and post a config. Since the config is going to be autotuned anyway, the important parameters are the data type and number of features. The rest can be arbitrary values.
-```python3
-success, instance = bn.get_instance()
-success, config = bn.get_config_template(float, 20, -10, 15) #default values for weight, percent_variation, streaming_window, and accuracy are automatically set
-success = bn.post_cluster_configuration(instance, config)
+```python
+success, instance = bn.create_instance()
+success, config = bn.generate_config(float, 20, -10, 15) #default values for weight, percent_variation, streaming_window, and accuracy are automatically set
+success = bn.set_config(instance, config)
 ```
 
 In order to autotune the parameters, the pipeline needs data to train off of, so post data without running the nano.
 ```python
-bn.post_data(instance, 'Data.csv')
+bn.load_data(instance, 'Data.csv')
 ```
 Now it is all set to call `autotune`.
 
 ```python
-success, config = bn.autotune(instance)
+success, = bn.autotune_config(instance)
 ```
 
 There are a few different options that go along with this:
@@ -44,6 +52,19 @@ Similarly, this bool variable tells whether to autotune the min and max or use t
 ##### exclusions
 This option only applies when autotuning by feature. Using one-based indexing, the exclusions are the list of column indexes that should be ignored when autotuning the min and max and the original config's min and max value are used on those columns. The default is an empty list.
 
+
+Then at the end you have the file:
+```python
+import BoonNano as bn
+
+bn.setup_connection('username','~/.BoonLogic')
+success, instance = create_instance()
+success, config = bn.generate_config(float, 20, -10, 15) #default values for weight, percent_variation, streaming_window, and accuracy are automatically set
+success = bn.set_config(instance, config)
+bn.load_data(instance, 'Data.csv')
+success = bn.autotune_config(instance)
+bn.close_connection()
+```
 <br/>
 
-[Return to documentation homepage](../Python_Landing_Page.md)
+[Return to documentation homepage](../README.md)

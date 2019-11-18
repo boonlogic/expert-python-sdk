@@ -3,7 +3,7 @@
 
 #### Gives a status check on the bytes going through the nano
 ##### input
->`nano_instance_id`
+>`instance_id`
 >>*instance to reference*
 
 ##### output
@@ -18,4 +18,4 @@ or
 
 <br/>
 
-[back to list](../Index.md)
+[back to list](./Index.md)

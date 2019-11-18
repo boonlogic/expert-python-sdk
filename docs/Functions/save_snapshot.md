@@ -3,7 +3,7 @@
 
 #### Save a serialized version of the nano
 ##### input
->`nano_instance_id`    
+>`instance_id`    
 >>*instance ID of the nano to save*  
 >
 >`filename`  
@@ -17,4 +17,4 @@ or
 
 <br/>
 
-[back to list](../Index.md)
+[back to list](./Index.md)

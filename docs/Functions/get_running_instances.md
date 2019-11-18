@@ -10,4 +10,4 @@
 
 <br/>
 
-[back to list](../Index.md)
+[back to list](./Index.md)

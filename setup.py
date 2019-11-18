@@ -1,6 +1,20 @@
-# Setup file for building the package using setuptools.
-# From np8's answer on https://stackoverflow.com/questions/6323860/sibling-package-imports/50193944#50193944
+from setuptools import setup
 
-from setuptools import setup, find_packages
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
-setup(name='boonnanopyapi', version='1.0', packages=find_packages())
+setup(
+    name='boonnano',
+    version='3.0.0',
+    author="BoonLogic",
+    author_email="elise@boonlogic.com",
+    packages=['boonnano'],
+    description="A SDK package for utilizing the BoonLogic nano API",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/boonlogic/Python_API",
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "Operating System :: OS Independent"
+    ]
+)

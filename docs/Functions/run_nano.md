@@ -1,18 +1,20 @@
-# **get_nano_results()**
+# **run_nano()**
 <br/>
 
-#### Returns a list of each metric that is requested with values correlating to each pattern clustered
+#### Clusters any existing data in the buffer
 ##### input
 >`instance_id`
 >>*instance to reference*
 >
->`results` = All
+>`results`=''
 >>*specifies which result types to return if run_nano is called*    
 >>*Options include: ID, RI, SI, FI, DI*     
->>*NOTE: `None` is not an option for `results` in this call*     
 >[Guide: Results](../Guides/Guide_Nano_Results.md)
 
 ##### output
+>*`True`,`None` if the upload was successful and no results were requested*
+
+or
 >*`True` followed by the json block containing the results that were requested*
 
 or
