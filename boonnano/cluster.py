@@ -60,7 +60,7 @@ def load_data(nano_handle, data, file_type='', gzip=False, metadata='', append_d
             'POST',
             dataset_cmd,
             headers={
-                'x-token': nano_handle['xtoken']
+                'x-token': nano_handle['x-token']
             },
             fields=body
         )
@@ -119,7 +119,7 @@ def run_nano(nano_handle, results=''):
             'POST',
             nano_cmd,
             headers={
-                'x-token': nano_handle['xtoken']
+                'x-token': nano_handle['x-token']
             }
         )
 

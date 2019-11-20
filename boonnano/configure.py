@@ -20,7 +20,7 @@ def configure_nano(nano_handle, numeric_format="int", feature_count=10, min=1, m
             'POST',
             config_cmd,
             headers={
-                'x-token': nano_handle['xtoken'],
+                'x-token': nano_handle['x-token'],
                 'Content-Type': 'application/json'
             },
             body=json.dumps(new_config).encode('utf-8')
@@ -85,7 +85,7 @@ def autotune_config(nano_handle, autotune_pv=True, autotune_range=True, by_featu
             'POST',
             config_cmd,
             headers={
-                'x-token': nano_handle['xtoken'],
+                'x-token': nano_handle['x-token'],
                 'Content-Type': 'application/json'
             }
         )
@@ -114,7 +114,7 @@ def get_config(nano_handle):
             'GET',
             config_cmd,
             headers={
-                'x-token': nano_handle['xtoken'],
+                'x-token': nano_handle['x-token'],
                 'Content-Type': 'application/json'
             }
         )

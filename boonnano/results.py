@@ -14,7 +14,7 @@ def get_version(nano_handle):
             'GET',
             version_cmd,
             headers={
-                'x-token': nano_handle['xtoken'],
+                'x-token': nano_handle['x-token'],
                 'Content-Type': 'application/json'
             }
         )
@@ -43,7 +43,7 @@ def get_buffer_status(nano_handle):
             'GET',
             results_cmd,
             headers={
-                'x-token': nano_handle['xtoken']
+                'x-token': nano_handle['x-token']
             }
         )
 
@@ -96,7 +96,7 @@ def get_nano_results(nano_handle, results='All'):
             'GET',
             results_cmd,
             headers={
-                'x-token': nano_handle['xtoken'],
+                'x-token': nano_handle['x-token'],
                 'Content-Type': 'application/json'
             }
         )
@@ -166,7 +166,7 @@ def get_nano_status(nano_handle, results='All'):
             'GET',
             results_cmd,
             headers={
-                'x-token': nano_handle['xtoken'],
+                'x-token': nano_handle['x-token'],
                 'Content-Type': 'application/json'
             }
         )

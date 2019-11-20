@@ -46,7 +46,7 @@ def close_nano(nano_handle):
             'DELETE',
             close_cmd,
             headers={
-                'x-token': nano_handle['xtoken']
+                'x-token': nano_handle['x-token']
             }
         )
 
@@ -76,7 +76,7 @@ def nano_list(nano_handle):
             'GET',
             instance_cmd,
             headers={
-                'x-token': nano_handle['xtoken'],
+                'x-token': nano_handle['x-token'],
                 'Content-Type': 'application/json'
             }
         )
@@ -106,7 +106,7 @@ def save_nano(nano_handle, filename):
             'GET',
             snapshot_cmd,
             headers={
-                'x-token': nano_handle['xtoken']
+                'x-token': nano_handle['x-token']
             }
         )
 
@@ -154,10 +154,10 @@ def load_nano(nano_handle, filename):
             'POST',
             snapshot_cmd,
             headers={
-                'x-token': xtoken
+                'x-token': nano_handle['x-token']
             },
             fields={
-                'snapshot': (filename, tar_data)
+                'snapshot': (filename, nano)
             }
         )
 
@@ -183,7 +183,7 @@ def create_instance(nano_handle, label):
             'POST',
             instance_cmd,
             headers={
-                'x-token': nano_handle['xtoken'],
+                'x-token': nano_handle['x-token'],
                 'Content-Type': 'application/json'
             }
         )
@@ -213,7 +213,7 @@ def define_nano_handle(user, authentication_path="~/.BoonLogic", timeout=60.0):
 
     #look for token in file
     try:
-        auth['xtoken'] = file_data['x-token']
+        auth['x-token'] = file_data['x-token']
     # set token to be empty string
     except Exception as e:
         print("Authorization token needed to connect")
