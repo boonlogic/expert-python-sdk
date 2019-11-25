@@ -194,6 +194,7 @@ def create_instance(nano_handle, label):
     # check for error
     if instance_response.status != 200:
         if "already exists" in json.loads(instance_response.data.decode('utf-8'))['message']:
+            print('Warning: '+json.loads(instance_response.data.decode('utf-8'))['message'])
             nano_handle['instance'] = label
             return True
         print(json.loads(instance_response.data.decode('utf-8')))
