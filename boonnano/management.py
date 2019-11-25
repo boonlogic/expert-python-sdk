@@ -30,7 +30,7 @@ def open_nano(label, user, nano_file=None, authentication_path="~/.BoonLogic", t
         return False, nano_handle
 
     if nano_file:
-        load_nano(nano_handle, nano_file)
+        return load_nano(nano_handle, nano_file), nano_handle
 
     return True, nano_handle
 
