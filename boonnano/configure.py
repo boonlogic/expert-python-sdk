@@ -3,7 +3,7 @@ import json
 import numpy as np
 import os
 
-def configure_nano(nano_handle, numeric_format="int", feature_count=10, min=1, max=10, weight=1, labels="", percent_variation=0.05, streaming_window=1, accuracy=0.99, config=''):
+def configure_nano(nano_handle, feature_count=10, numeric_format="float", min=1, max=10, weight=1, labels="", percent_variation=0.05, streaming_window=1, accuracy=0.99, config=''):
     """returns the posted clustering configuration
     """
 
@@ -31,10 +31,11 @@ def configure_nano(nano_handle, numeric_format="int", feature_count=10, min=1, m
         return False
 
     # check for error
-    if config_response.status != 200 and config_response.status != 201:
+    if config_response.status != 200:
         print(json.loads(config_response.data.decode('utf-8')))
         return False
 
+    nano_handle['numericFormat'] = numeric_format
     return True
 
 def generate_config(numeric_format, feature_count, min=1, max=10, weight=1, labels="", percent_variation=0.05, streaming_window=1, accuracy=0.99):
@@ -95,7 +96,7 @@ def autotune_config(nano_handle, autotune_pv=True, autotune_range=True, by_featu
         return False
 
     # check for error
-    if config_response.status != 200 and config_response.status != 201:
+    if config_response.status != 200:
         print(json.loads(config_response.data.decode('utf-8')))
         return False
 
@@ -124,7 +125,7 @@ def get_config(nano_handle):
         return False, None
 
     # check for error
-    if config_response.status != 200 and config_response.status != 201:
+    if config_response.status != 200:
         print(json.loads(config_response.data.decode('utf-8')))
         return False, None
 

@@ -18,11 +18,12 @@ def load_data(nano_handle, data, file_type='', gzip=False, metadata='', append_d
     filename = data
     # check filetype
     if not ".bin" in str(filename) and not '.csv' in str(filename):
-        dtype = data.dtype
-        if dtype == np.int64:
-            filename = data.astype(np.int32)
-        elif dtype == np.float64:
+        if nano_handle['numericFormat'] == 'int':
+            filename = data.astype(np.int16)
+        elif nano_handle['numericFormat'] == 'float':
             filename = data.astype(np.float32)
+        elif nano_handle['numericFormat'] == 'native':
+            filename = data.astype(np.uint16)
         file_data = data.tostring()
         filename = 'dummy_filename.bin'
     else:
@@ -70,7 +71,7 @@ def load_data(nano_handle, data, file_type='', gzip=False, metadata='', append_d
         return False, None
 
     # check for error
-    if dataset_response.status != 200 and dataset_response.status != 201:
+    if dataset_response.status != 200:
         print(json.loads(dataset_response.data.decode('utf-8')))
         return False, None
 
@@ -128,7 +129,7 @@ def run_nano(nano_handle, results=''):
         return False, None
 
     # check for error
-    if nano_response.status != 200 and nano_response.status != 201:
+    if nano_response.status != 200:
         print(json.loads(nano_response.data.decode('utf-8')))
         return False, None
 

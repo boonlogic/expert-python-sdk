@@ -24,7 +24,7 @@ def get_version(nano_handle):
         return False, None
 
     # check for error
-    if version_response.status != 200 and version_response.status != 201:
+    if version_response.status != 200:
         print(json.loads(version_response.data.decode('utf-8')))
         return False, None
 
@@ -52,7 +52,7 @@ def get_buffer_status(nano_handle):
         return False, None
 
     # check for error
-    if results_response.status != 200 and results_response.status != 201:
+    if results_response.status != 200:
         print(json.loads(results_response.data.decode('utf-8')))
         return False, None
 
@@ -106,7 +106,7 @@ def get_nano_results(nano_handle, results='All'):
         return False, None
 
     # check for error
-    if results_response.status != 200 and results_response.status != 201:
+    if results_response.status != 200:
         print(json.loads(results_response.data.decode('utf-8')))
         return False, None
 
@@ -133,7 +133,7 @@ def get_nano_status(nano_handle, results='All'):
 
     # build results command
     if str(results) == 'All':
-        results_str = ',PCA,patternMemory,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,averageInferenceTime,numClusters'
+        results_str = ',PCA,patternMemory,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,numClusters'
     else:
         results_str = ''
         if 'PCA' in str(results):
@@ -176,7 +176,7 @@ def get_nano_status(nano_handle, results='All'):
         return False, None
 
     # check for error
-    if results_response.status != 200 and results_response.status != 201:
+    if results_response.status != 200:
         print(json.loads(results_response.data.decode('utf-8')))
         return False, None
 

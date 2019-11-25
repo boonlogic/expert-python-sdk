@@ -25,7 +25,7 @@ def open_nano(label, user, nano_file="", authentication_path="~/.BoonLogic", tim
     if not success:
         return False, None
 
-    success, nano_handle['instance'] = create_instance(nano_handle, label)
+    success = create_instance(nano_handle, label)
     if not success:
         return False, nano_handle
 
@@ -55,7 +55,7 @@ def close_nano(nano_handle):
         return False
 
     # check for error
-    if close_response.status != 200 and close_response.status != 201:
+    if close_response.status != 200:
         print(json.loads(close_response.data.decode('utf-8')))
         return False
 
@@ -86,11 +86,11 @@ def nano_list(nano_handle):
         return False, None
 
     # check for error
-    if instance_response.status != 200 and instance_response.status != 201:
+    if instance_response.status != 200:
         print(json.loads(instance_response.data.decode('utf-8')))
         return False, None
 
-    return True, json.loads(instance_response.data.decode('utf-8'))
+    return True, json.loads(instance_response.data.decode('utf-8'))['instanceIDs']
 
 # store the nano for later use
 def save_nano(nano_handle, filename):
@@ -115,7 +115,7 @@ def save_nano(nano_handle, filename):
         return False
 
     # check for error
-    if snapshot_response.status != 200 and snapshot_response.status != 201:
+    if snapshot_response.status != 200:
         print(json.loads(snapshot_response.data.decode('utf-8')))
         return False
 
@@ -150,7 +150,7 @@ def load_nano(nano_handle, filename):
 
     # post serialized nano
     try:
-        snapshot_response = http.request(
+        snapshot_response = nano_handle['http'].request(
             'POST',
             snapshot_cmd,
             headers={
@@ -162,11 +162,11 @@ def load_nano(nano_handle, filename):
         )
 
     except Exception as e:
-        print('Request Timeout')
+        print("Request Timeout")
         return False
 
     # check for error
-    if snapshot_response.status != 200 and snapshot_response.status != 201:
+    if snapshot_response.status != 200:
         print(json.loads(snapshot_response.data.decode('utf-8')))
         return False
 
@@ -189,16 +189,19 @@ def create_instance(nano_handle, label):
         )
     except Exception as e:
         print('Request Timeout')
-        return False, None
+        return False
 
     # check for error
-    if instance_response.status != 200 and instance_response.status != 201:
-        if instance_response.status == 400:
-            return True, label
+    if instance_response.status != 200:
+        if "already exists" in json.loads(instance_response.data.decode('utf-8'))['message']:
+            nano_handle['instance'] = label
+            return True
         print(json.loads(instance_response.data.decode('utf-8')))
-        return False, None
+        nano_handle['instance'] = ''
+        return False
 
-    return True, str(json.loads(instance_response.data.decode('utf-8'))['instanceID'])
+    nano_handle['instance'] = json.loads(instance_response.data.decode('utf-8'))['instanceID']
+    return True
 
 def define_nano_handle(user, authentication_path="~/.BoonLogic", timeout=60.0):
     auth = {}
@@ -226,7 +229,9 @@ def define_nano_handle(user, authentication_path="~/.BoonLogic", timeout=60.0):
         print("No server is given")
         return False, None
 
-    auth['url'] = 'http://' + server + '/expert/v2/'
+    auth['url'] = server + '/expert/v3/'
+    if not "http" in server:
+        auth["url"] = "http://" + auth["url"]
 
     #create pool manager
     if(timeout == 0):
