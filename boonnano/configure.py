@@ -3,13 +3,13 @@ import json
 import numpy as np
 import os
 
-def configure_nano(nano_handle, feature_count=10, numeric_format="float", min=1, max=10, weight=1, labels="", percent_variation=0.05, streaming_window=1, accuracy=0.99, config=''):
+def configure_nano(nano_handle, feature_count=10, numeric_format="float", min=1, max=10, weight=1, labels="", percent_variation=0.05, streaming_window=1, accuracy=0.99, config=None):
     """returns the posted clustering configuration
     """
 
     # build command
     config_cmd = nano_handle['url'] + 'clusterConfig/' + nano_handle['instance']
-    if config=='':
+    if not config:
         new_config = generate_config(numeric_format, feature_count, min, max, weight, labels, percent_variation, streaming_window, accuracy)
     else:
         new_config = config

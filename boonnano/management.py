@@ -9,7 +9,7 @@ from os.path import expanduser
 ############################
 
 # start the nano and create the unique nano handle
-def open_nano(label, user, nano_file="", authentication_path="~/.BoonLogic", timeout=60.0):
+def open_nano(label, user, nano_file=None, authentication_path="~/.BoonLogic", timeout=60.0):
     """
     Args:
         label (str): name of the nano.
@@ -29,7 +29,7 @@ def open_nano(label, user, nano_file="", authentication_path="~/.BoonLogic", tim
     if not success:
         return False, nano_handle
 
-    if nano_file != "":
+    if nano_file:
         load_nano(nano_handle, nano_file)
 
     return True, nano_handle
@@ -170,7 +170,7 @@ def load_nano(nano_handle, filename):
         print(json.loads(snapshot_response.data.decode('utf-8')))
         return False
 
-    nano_handle['numericFormat'] = numeric_format
+    nano_handle['numericFormat'] = json.loads(snapshot_response.data.decode('utf-8'))['numericFormat']
     return True
 
 def create_instance(nano_handle, label):
