@@ -170,6 +170,7 @@ def load_nano(nano_handle, filename):
         print(json.loads(snapshot_response.data.decode('utf-8')))
         return False
 
+    nano_handle['numericFormat'] = numeric_format
     return True
 
 def create_instance(nano_handle, label):
