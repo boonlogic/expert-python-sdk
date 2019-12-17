@@ -14,7 +14,7 @@ def get_version(nano_handle):
             'GET',
             version_cmd,
             headers={
-                'x-token': nano_handle['x-token'],
+                'x-token': nano_handle['api-key'],
                 'Content-Type': 'application/json'
             }
         )
@@ -35,7 +35,7 @@ def get_buffer_status(nano_handle):
     """
 
     # build command
-    results_cmd = nano_handle['url'] + 'bufferStatus/' + nano_handle['instance']
+    results_cmd = nano_handle['url'] + 'bufferStatus/' + nano_handle['instance'] + '?api-tenant=' + nano_handle['api-tenant']
 
     # buffer status
     try:
@@ -43,7 +43,7 @@ def get_buffer_status(nano_handle):
             'GET',
             results_cmd,
             headers={
-                'x-token': nano_handle['x-token']
+                'x-token': nano_handle['api-key']
             }
         )
 
@@ -88,7 +88,7 @@ def get_nano_results(nano_handle, results='All'):
             results_str = results_str + ',MD'
 
     # build command
-    results_cmd = nano_handle['url'] + 'nanoResults/' + nano_handle['instance'] + '?results=' + results_str[1:]
+    results_cmd = nano_handle['url'] + 'nanoResults/' + nano_handle['instance'] + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle['api-tenant']
 
     # pattern results
     try:
@@ -96,7 +96,7 @@ def get_nano_results(nano_handle, results='All'):
             'GET',
             results_cmd,
             headers={
-                'x-token': nano_handle['x-token'],
+                'x-token': nano_handle['api-key'],
                 'Content-Type': 'application/json'
             }
         )
@@ -158,7 +158,7 @@ def get_nano_status(nano_handle, results='All'):
             results_str = results_str + ',numClusters'
 
     # build command
-    results_cmd = nano_handle['url'] + 'nanoStatus/' + nano_handle['instance'] + '?results=' + results_str[1:]
+    results_cmd = nano_handle['url'] + 'nanoStatus/' + nano_handle['instance'] + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle['api-tenant']
 
     # cluster status
     try:
@@ -166,7 +166,7 @@ def get_nano_status(nano_handle, results='All'):
             'GET',
             results_cmd,
             headers={
-                'x-token': nano_handle['x-token'],
+                'x-token': nano_handle['api-key'],
                 'Content-Type': 'application/json'
             }
         )

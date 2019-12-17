@@ -1,6 +1,6 @@
 import boonnano as bn
 
-success, nano=bn.open_nano('example','v3')
+success, nano=bn.open_nano('example','elise')
 print('\n',success,nano, '\n')
 bn.configure_nano(nano,numeric_format='float',feature_count=20,min=-10,max=15,percent_variation=0.05)
 success,config = bn.get_config(nano)

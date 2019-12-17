@@ -38,7 +38,7 @@ def open_nano(label, user, nano_file=None, authentication_path="~/.BoonLogic", t
 def close_nano(nano_handle):
     # Destructor Method.
     # build command
-    close_cmd = nano_handle['url'] + 'nanoInstance/' + nano_handle['instance']
+    close_cmd = nano_handle['url'] + 'nanoInstance/' + nano_handle['instance'] + '?api-tenant=' + nano_handle['api-tenant']
 
     # delete instance
     try:
@@ -46,7 +46,7 @@ def close_nano(nano_handle):
             'DELETE',
             close_cmd,
             headers={
-                'x-token': nano_handle['x-token']
+                'x-token': nano_handle['api-key']
             }
         )
 
@@ -68,7 +68,7 @@ def nano_list(nano_handle):
     """
 
     # build command
-    instance_cmd = nano_handle['url'] + 'nanoInstances'
+    instance_cmd = nano_handle['url'] + 'nanoInstances' + '?api-tenant=' + nano_handle['api-tenant']
 
     # list of running instances
     try:
@@ -76,7 +76,7 @@ def nano_list(nano_handle):
             'GET',
             instance_cmd,
             headers={
-                'x-token': nano_handle['x-token'],
+                'x-token': nano_handle['api-key'],
                 'Content-Type': 'application/json'
             }
         )
@@ -98,7 +98,7 @@ def save_nano(nano_handle, filename):
     """
 
     # build command
-    snapshot_cmd = nano_handle['url'] + 'snapshot/' + nano_handle['instance']
+    snapshot_cmd = nano_handle['url'] + 'snapshot/' + nano_handle['instance'] + '?api-tenant=' + nano_handle['api-tenant']
 
     # serialize nano
     try:
@@ -106,7 +106,7 @@ def save_nano(nano_handle, filename):
             'GET',
             snapshot_cmd,
             headers={
-                'x-token': nano_handle['x-token']
+                'x-token': nano_handle['api-key']
             }
         )
 
@@ -146,7 +146,7 @@ def load_nano(nano_handle, filename):
         nano = fp.read()
 
     # build command
-    snapshot_cmd = nano_handle['url'] + 'snapshot/' + nano_handle['instance']
+    snapshot_cmd = nano_handle['url'] + 'snapshot/' + nano_handle['instance'] + '?api-tenant=' + nano_handle['api-tenant']
 
     # post serialized nano
     try:
@@ -154,7 +154,7 @@ def load_nano(nano_handle, filename):
             'POST',
             snapshot_cmd,
             headers={
-                'x-token': nano_handle['x-token']
+                'x-token': nano_handle['api-key']
             },
             fields={
                 'snapshot': (filename, nano)
@@ -176,7 +176,7 @@ def load_nano(nano_handle, filename):
 def create_instance(nano_handle, label):
 
     # build command
-    instance_cmd = nano_handle['url'] + 'nanoInstance/' + label
+    instance_cmd = nano_handle['url'] + 'nanoInstance/' + label + '?api-tenant=' + nano_handle['api-tenant']
 
     # initialize instance
     try:
@@ -184,7 +184,7 @@ def create_instance(nano_handle, label):
             'POST',
             instance_cmd,
             headers={
-                'x-token': nano_handle['x-token'],
+                'x-token': nano_handle['api-key'],
                 'Content-Type': 'application/json'
             }
         )
@@ -218,7 +218,7 @@ def define_nano_handle(user, authentication_path="~/.BoonLogic", timeout=60.0):
 
     #look for token in file
     try:
-        auth['x-token'] = file_data['x-token']
+        auth['api-key'] = file_data['api-key']
     # set token to be empty string
     except Exception as e:
         print("Authorization token needed to connect")
@@ -229,6 +229,12 @@ def define_nano_handle(user, authentication_path="~/.BoonLogic", timeout=60.0):
     except Exception as e:
         #server is empty
         print("No server is given")
+        return False, None
+    try:
+        auth['api-tenant'] = file_data['api-tenant']
+    except Exception as e:
+        # no api-tenant
+        print("No api-tenant token given")
         return False, None
 
     auth['url'] = server + '/expert/v3/'

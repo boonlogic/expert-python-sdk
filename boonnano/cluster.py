@@ -53,7 +53,7 @@ def load_data(nano_handle, data, file_type='', gzip=False, metadata='', append_d
     else:
         body = {'data': (filename, file_data),'metadata': metadata.replace(',','|').replace('{','').replace('}','').replace(' ','')}
     # build command
-    dataset_cmd = nano_handle['url'] + 'data/' + nano_handle['instance'] + '?runNano=' + str(run_nano).lower() + '&fileType=' + (str(file_type) if file_type != '' else ('raw' if 'bin' in filename else 'csv')) + '&gzip=' + str(gzip).lower() + '&results=' + results_str[1:] + '&appendData=' + str(append_data).lower()
+    dataset_cmd = nano_handle['url'] + 'data/' + nano_handle['instance'] + '?runNano=' + str(run_nano).lower() + '&fileType=' + (str(file_type) if file_type != '' else ('raw' if 'bin' in filename else 'csv')) + '&gzip=' + str(gzip).lower() + '&results=' + results_str[1:] + '&appendData=' + str(append_data).lower() + '&api-tenant=' + nano_handle['api-tenant']
 
     # post dataset
     try:
@@ -61,7 +61,7 @@ def load_data(nano_handle, data, file_type='', gzip=False, metadata='', append_d
             'POST',
             dataset_cmd,
             headers={
-                'x-token': nano_handle['x-token']
+                'x-token': nano_handle['api-key']
             },
             fields=body
         )
@@ -112,7 +112,7 @@ def run_nano(nano_handle, results=''):
             results_str = results_str + ',MD'
 
     # build command
-    nano_cmd = nano_handle['url'] + 'nanoRun/' + nano_handle['instance'] + '?results=' + results_str[1:]
+    nano_cmd = nano_handle['url'] + 'nanoRun/' + nano_handle['instance'] + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle['api-tenant']
 
     # run nano
     try:
@@ -120,7 +120,7 @@ def run_nano(nano_handle, results=''):
             'POST',
             nano_cmd,
             headers={
-                'x-token': nano_handle['x-token']
+                'x-token': nano_handle['api-key']
             }
         )
 

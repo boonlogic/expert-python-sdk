@@ -8,7 +8,7 @@ def configure_nano(nano_handle, feature_count=10, numeric_format="float", min=1,
     """
 
     # build command
-    config_cmd = nano_handle['url'] + 'clusterConfig/' + nano_handle['instance']
+    config_cmd = nano_handle['url'] + 'clusterConfig/' + nano_handle['instance'] + '?api-tenant=' + nano_handle['api-tenant']
     if not config:
         new_config = generate_config(numeric_format, feature_count, min, max, weight, labels, percent_variation, streaming_window, accuracy)
     else:
@@ -20,7 +20,7 @@ def configure_nano(nano_handle, feature_count=10, numeric_format="float", min=1,
             'POST',
             config_cmd,
             headers={
-                'x-token': nano_handle['x-token'],
+                'x-token': nano_handle['api-key'],
                 'Content-Type': 'application/json'
             },
             body=json.dumps(new_config).encode('utf-8')
@@ -78,7 +78,7 @@ def autotune_config(nano_handle, autotune_pv=True, autotune_range=True, by_featu
     """
 
     # build command
-    config_cmd = nano_handle['url'] + 'autoTuneConfig/' + nano_handle['instance'] + '?byFeature=' + str(by_feature).lower() + '&autoTunePV=' + str(autotune_pv).lower() + '&autoTuneRange=' + str(autotune_range).lower() + '&exclusions=' + str(exclusions)[1:-1].replace(' ','')
+    config_cmd = nano_handle['url'] + 'autoTuneConfig/' + nano_handle['instance'] + '?byFeature=' + str(by_feature).lower() + '&autoTunePV=' + str(autotune_pv).lower() + '&autoTuneRange=' + str(autotune_range).lower() + '&exclusions=' + str(exclusions)[1:-1].replace(' ','') + '&api-tenant=' + nano_handle['api-tenant']
 
     # autotune parameters
     try:
@@ -86,7 +86,7 @@ def autotune_config(nano_handle, autotune_pv=True, autotune_range=True, by_featu
             'POST',
             config_cmd,
             headers={
-                'x-token': nano_handle['x-token'],
+                'x-token': nano_handle['api-key'],
                 'Content-Type': 'application/json'
             }
         )
@@ -107,7 +107,7 @@ def get_config(nano_handle):
     """
 
     # build command
-    config_cmd = nano_handle['url'] + 'clusterConfig/' + nano_handle['instance']
+    config_cmd = nano_handle['url'] + 'clusterConfig/' + nano_handle['instance'] + '?api-tenant=' + nano_handle['api-tenant']
 
     # get config
     try:
@@ -115,7 +115,7 @@ def get_config(nano_handle):
             'GET',
             config_cmd,
             headers={
-                'x-token': nano_handle['x-token'],
+                'x-token': nano_handle['api-key'],
                 'Content-Type': 'application/json'
             }
         )
