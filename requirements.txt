@@ -1,2 +1,4 @@
-numpy==1.15.3
-urllib3==1.24.1
+boonnano==3.0.4
+numpy==1.17.4
+urllib3==1.25.7
+simplejson==3.17.0

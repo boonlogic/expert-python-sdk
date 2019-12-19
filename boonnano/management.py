@@ -35,10 +35,12 @@ def open_nano(label, user, nano_file=None, authentication_path="~/.BoonLogic", t
     return True, nano_handle
 
 # free the nano label instance and close the http connection
-def close_nano(nano_handle):
+def close_nano(nano_handle,instance=''):
     # Destructor Method.
     # build command
-    close_cmd = nano_handle['url'] + 'nanoInstance/' + nano_handle['instance'] + '?api-tenant=' + nano_handle['api-tenant']
+    if instance == '':
+        instance = nano_handle['instance']
+    close_cmd = nano_handle['url'] + 'nanoInstance/' + instance + '?api-tenant=' + nano_handle['api-tenant']
 
     # delete instance
     try:
@@ -194,15 +196,14 @@ def create_instance(nano_handle, label):
 
     # check for error
     if instance_response.status != 200:
-        if "already exists" in json.loads(instance_response.data.decode('utf-8'))['message']:
-            print('Warning: '+json.loads(instance_response.data.decode('utf-8'))['message'])
-            nano_handle['instance'] = label
-            return True
         print(json.loads(instance_response.data.decode('utf-8')))
         nano_handle['instance'] = ''
         return False
 
-    nano_handle['instance'] = json.loads(instance_response.data.decode('utf-8'))['instanceID']
+    if "existing" in json.loads(instance_response.data.decode('utf-8'))['message']:
+        print('Warning: ' + json.loads(instance_response.data.decode('utf-8'))['message'])
+
+    nano_handle['instance'] = label
     return True
 
 def define_nano_handle(user, authentication_path="~/.BoonLogic", timeout=60.0):

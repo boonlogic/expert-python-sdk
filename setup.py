@@ -5,15 +5,18 @@ with open("README.md", "r") as fh:
 
 setup(
     name='boonnano',
-    version='3.0.4',
+    version='3.0.5',
     author="BoonLogic",
     author_email="elise@boonlogic.com",
     packages=['boonnano'],
+    install_requires=['urllib3','numpy'],
     description="A SDK package for utilizing the BoonLogic nano API",
     long_description=long_description,
+    license='MIT',
     long_description_content_type="text/markdown",
     url="https://github.com/boonlogic/Python_API",
     classifiers=[
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent"
     ]
