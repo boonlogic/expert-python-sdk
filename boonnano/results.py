@@ -6,7 +6,7 @@ import os
 def get_version(nano_handle):
     """gives the version of the api running"""
     # build command (minus the v3 portion)
-    version_cmd = nano_handle['url'][:-3] + 'version'
+    version_cmd = nano_handle['url'][:-3] + 'version' + '?api-tenant=' + nano_handle['api-tenant']
 
     # call the version number
     try:
