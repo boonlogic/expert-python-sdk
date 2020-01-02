@@ -6,15 +6,15 @@ import os
 def get_version(nano_handle):
     """gives the version of the api running"""
     # build command (minus the v3 portion)
-    version_cmd = nano_handle['url'][:-3] + 'version' + '?api-tenant=' + nano_handle['api-tenant']
+    version_cmd = nano_handle.url[:-3] + 'version' + '?api-tenant=' + nano_handle.api_tenant
 
     # call the version number
     try:
-        version_response = nano_handle['http'].request(
+        version_response = nano_handle.http.request(
             'GET',
             version_cmd,
             headers={
-                'x-token': nano_handle['api-key'],
+                'x-token': nano_handle.api_key,
                 'Content-Type': 'application/json'
             }
         )
@@ -35,15 +35,15 @@ def get_buffer_status(nano_handle):
     """
 
     # build command
-    results_cmd = nano_handle['url'] + 'bufferStatus/' + nano_handle['instance'] + '?api-tenant=' + nano_handle['api-tenant']
+    results_cmd = nano_handle.url + 'bufferStatus/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
 
     # buffer status
     try:
-        results_response = nano_handle['http'].request(
+        results_response = nano_handle.http.request(
             'GET',
             results_cmd,
             headers={
-                'x-token': nano_handle['api-key']
+                'x-token': nano_handle.api_key
             }
         )
 
@@ -88,15 +88,15 @@ def get_nano_results(nano_handle, results='All'):
             results_str = results_str + ',MD'
 
     # build command
-    results_cmd = nano_handle['url'] + 'nanoResults/' + nano_handle['instance'] + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle['api-tenant']
+    results_cmd = nano_handle.url + 'nanoResults/' + nano_handle.instance + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle.api_tenant
 
     # pattern results
     try:
-        results_response = nano_handle['http'].request(
+        results_response = nano_handle.http.request(
             'GET',
             results_cmd,
             headers={
-                'x-token': nano_handle['api-key'],
+                'x-token': nano_handle.api_key,
                 'Content-Type': 'application/json'
             }
         )
@@ -158,15 +158,15 @@ def get_nano_status(nano_handle, results='All'):
             results_str = results_str + ',numClusters'
 
     # build command
-    results_cmd = nano_handle['url'] + 'nanoStatus/' + nano_handle['instance'] + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle['api-tenant']
+    results_cmd = nano_handle.url + 'nanoStatus/' + nano_handle.instance + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle.api_tenant
 
     # cluster status
     try:
-        results_response = nano_handle['http'].request(
+        results_response = nano_handle.http.request(
             'GET',
             results_cmd,
             headers={
-                'x-token': nano_handle['api-key'],
+                'x-token': nano_handle.api_key,
                 'Content-Type': 'application/json'
             }
         )

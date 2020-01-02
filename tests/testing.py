@@ -1,6 +1,6 @@
 import boonnano as bn
 
-success, nano=bn.open_nano('example','elise')
+success, nano=bn.open_nano('example','Rod')
 print('\n',success,nano, '\n')
 
 print(bn.nano_list(nano))

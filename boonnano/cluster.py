@@ -18,11 +18,11 @@ def load_data(nano_handle, data, file_type='', gzip=False, metadata='', append_d
     filename = data
     # check filetype
     if not ".bin" in str(filename) and not '.csv' in str(filename):
-        if nano_handle['numericFormat'] == 'int':
+        if nano_handle.numericFormat == 'int':
             filename = data.astype(np.int16)
-        elif nano_handle['numericFormat'] == 'float':
+        elif nano_handle.numericFormat == 'float':
             filename = data.astype(np.float32)
-        elif nano_handle['numericFormat'] == 'native':
+        elif nano_handle.numericFormat == 'native':
             filename = data.astype(np.uint16)
         file_data = data.tostring()
         filename = 'dummy_filename.bin'
@@ -53,15 +53,15 @@ def load_data(nano_handle, data, file_type='', gzip=False, metadata='', append_d
     else:
         body = {'data': (filename, file_data),'metadata': metadata.replace(',','|').replace('{','').replace('}','').replace(' ','')}
     # build command
-    dataset_cmd = nano_handle['url'] + 'data/' + nano_handle['instance'] + '?runNano=' + str(run_nano).lower() + '&fileType=' + (str(file_type) if file_type != '' else ('raw' if 'bin' in filename else 'csv')) + '&gzip=' + str(gzip).lower() + '&results=' + results_str[1:] + '&appendData=' + str(append_data).lower() + '&api-tenant=' + nano_handle['api-tenant']
+    dataset_cmd = nano_handle.url + 'data/' + nano_handle.instance + '?runNano=' + str(run_nano).lower() + '&fileType=' + (str(file_type) if file_type != '' else ('raw' if 'bin' in filename else 'csv')) + '&gzip=' + str(gzip).lower() + '&results=' + results_str[1:] + '&appendData=' + str(append_data).lower() + '&api-tenant=' + nano_handle.api_tenant
 
     # post dataset
     try:
-        dataset_response = nano_handle['http'].request(
+        dataset_response = nano_handle.http.request(
             'POST',
             dataset_cmd,
             headers={
-                'x-token': nano_handle['api-key']
+                'x-token': nano_handle.api_key
             },
             fields=body
         )
@@ -112,15 +112,15 @@ def run_nano(nano_handle, results=''):
             results_str = results_str + ',MD'
 
     # build command
-    nano_cmd = nano_handle['url'] + 'nanoRun/' + nano_handle['instance'] + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle['api-tenant']
+    nano_cmd = nano_handle.url + 'nanoRun/' + nano_handle.instance + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle.api_tenant
 
     # run nano
     try:
-        nano_response = nano_handle['http'].request(
+        nano_response = nano_handle.http.request(
             'POST',
             nano_cmd,
             headers={
-                'x-token': nano_handle['api-key']
+                'x-token': nano_handle.api_key
             }
         )
 
