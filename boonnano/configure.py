@@ -23,20 +23,20 @@ def configure_nano(nano_handle, feature_count=10, numeric_format="float", min=1,
                 'x-token': nano_handle['api-key'],
                 'Content-Type': 'application/json'
             },
-            body=json.dumps(new_config).encode('utf-8')
+            body=json.dumps(new_config)
         )
 
     except Exception as e:
         print('Request Timeout')
-        return False
+        return False, None
 
     # check for error
     if config_response.status != 200:
         print(json.loads(config_response.data.decode('utf-8')))
-        return False
+        return False, None
 
     nano_handle['numericFormat'] = numeric_format
-    return True
+    return True, json.loads(config_response.data.decode('utf-8'))
 
 def generate_config(numeric_format, feature_count, min=1, max=10, weight=1, labels="", percent_variation=0.05, streaming_window=1, accuracy=0.99):
     """returns a json config version for the given Parameters

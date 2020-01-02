@@ -92,7 +92,7 @@ def nano_list(nano_handle):
         print(json.loads(instance_response.data.decode('utf-8')))
         return False, None
 
-    return True, json.loads(instance_response.data.decode('utf-8'))['instanceIDs']
+    return True, json.loads(instance_response.data.decode('utf-8'))
 
 # store the nano for later use
 def save_nano(nano_handle, filename):
