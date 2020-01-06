@@ -16,12 +16,12 @@ class test_management(object):
         self.nano = None
 
     def test_open_close(self):
-        success, nano = bn.open_nano('sample-instance', 'sample-user')
+        success, nano = bn.open_nano('sample-instance', 'sample-user', authentication_path="./.BoonLogic")
         assert_equal(success, True)
         nano.close_nano()
 
     def test_nano_list(self):
-        success, nano = bn.open_nano('sample-instance', 'sample-user')
+        success, nano = bn.open_nano('sample-instance', 'sample-user', authentication_path="./.BoonLogic")
         assert_equal(success, True)
         success, response = nano.nano_list()
         assert_equal(success, True)
@@ -36,7 +36,7 @@ class test_results(object):
 
     def setUp(self):
         """This method is run once before _each_ test method is executed"""
-        success, self.nano = bn.open_nano('sample-instance', 'sample-user')
+        success, self.nano = bn.open_nano('sample-instance', 'sample-user', authentication_path="./.BoonLogic")
         assert_equal(success, True)
 
     def teardown(self):
@@ -56,7 +56,7 @@ class test_configure(object):
 
     def setUp(self):
         """This method is run once before _each_ test method is executed"""
-        success, self.nano = bn.open_nano('sample-instance', 'sample-user')
+        success, self.nano = bn.open_nano('sample-instance', 'sample-user', authentication_path="./.BoonLogic")
         assert_equal(success, True)
 
     def teardown(self):
