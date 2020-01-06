@@ -6,6 +6,7 @@ from .management import nano_list
 from .management import save_nano
 
 from .configure import get_config
+from .configure import generate_config
 from .configure import configure_nano
 from .configure import autotune_config
 
@@ -24,6 +25,7 @@ setattr(NanoHandle, "save_nano", save_nano)
 
 setattr(NanoHandle, "get_config", get_config)
 setattr(NanoHandle, "configure_nano", configure_nano)
+setattr(NanoHandle, "generate_config", generate_config)
 setattr(NanoHandle, "autotune_config", autotune_config)
 
 setattr(NanoHandle, "load_data", load_data)

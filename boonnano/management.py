@@ -1,8 +1,9 @@
 from urllib3 import PoolManager
 import json
-import numpy as np
-import os
 from os.path import expanduser
+from os import path
+from os import environ
+
 
 ############################
 # BoonNano Python API v3 #
@@ -15,36 +16,60 @@ class NanoHandle:
         self.instance = ''
         self.numericFormat = ''
 
-        with open (expanduser(authentication_path), "r") as json_file:
-            file_data = json.load(json_file)
+        authentication_path = expanduser(authentication_path)
 
-        if user not in file_data.keys():
-            raise Exception("user does not exist in ~/.BoonLogic")
-        self.user = user
+        if path.exists(authentication_path):
+            try:
+                with open(authentication_path, "r") as json_file:
+                    file_data = json.load(json_file)
+            except json.JSONDecodeError as e:
+                raise Exception(
+                    "json formatting error in .BoonLogic file, {}, line: {}, col: {}".format(e.msg, e.lineno, e.colno))
 
-        license_block = file_data[user]
+        # load the user, environment gets precedence
+        if 'BOON_USER' in environ:
+            self.user = environ['BOON_USER']
+            license_block=dict()
+        else:
+            if user not in file_data:
+                raise Exception("'{}' is missing from configuration, set via BOON_USER or in ~/.BoonLogic".format(user))
+            license_block=file_data[user]
 
-        if 'api-key' not in license_block.keys():
-            raise Exception("'api-key' does not exist in ~/.BoonLogic file")
-        self.api_key = license_block['api-key']
+        # load the api-key, environment gets precedence
+        if 'BOON_API_KEY' in environ:
+            self.api_key = environ('BOON_API_KEY')
+        else:
+            if 'api-key' not in license_block.keys():
+                raise Exception("'api-key' is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic file")
+            self.api_key = license_block['api-key']
 
-        if 'server' not in license_block.keys():
-            raise Exception("'server' does not exist in ~/.BoonLogic file")
-        self.server = license_block['server']
+        # load the server, environment gets precedence
+        if 'BOON_SERVER' in environ:
+            self.server = environ("BOON_SERVER")
+        else:
+            if 'server' not in license_block.keys():
+                raise Exception("'server' is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic file")
+            self.server = license_block['server']
 
-        if 'api-tenant' not in license_block.keys():
-            raise Exception("'api-tenant' does not exist in ~/.BoonLogic file")
-        self.api_tenant = license_block['api-tenant']
+        # load the tenant, environment gets precedence
+        if 'BOON_TENANT' in environ:
+            self.api_tenant = environ("BOON_TENANT")
+        else:
+            if 'api-tenant' not in license_block.keys():
+                raise Exception("'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic file")
+            self.api_tenant = license_block['api-tenant']
 
+        # set up base url
         self.url = self.server + '/expert/v3/'
-        if not "http" in self.server:
+        if "http" not in self.server:
             self.url = "http://" + self.url
 
-        #create pool manager
-        if(timeout == 0):
+        # create pool manager
+        if timeout == 0:
             self.http = PoolManager()
         else:
             self.http = PoolManager(timeout)
+
 
 # start the nano and create the unique nano handle
 def open_nano(label, user, nano_file=None, authentication_path="~/.BoonLogic", timeout=60.0):
@@ -74,8 +99,9 @@ def open_nano(label, user, nano_file=None, authentication_path="~/.BoonLogic", t
 
     return True, nano_handle
 
+
 # free the nano label instance and close the http connection
-def close_nano(nano_handle,instance=''):
+def close_nano(nano_handle, instance=''):
     # Destructor Method.
     # build command
     if instance == '':
@@ -103,6 +129,7 @@ def close_nano(nano_handle,instance=''):
 
     nano_handle.http.clear()
     return True
+
 
 # get the labels of running nanos
 def nano_list(nano_handle):
@@ -134,13 +161,14 @@ def nano_list(nano_handle):
 
     return True, json.loads(instance_response.data.decode('utf-8'))
 
+
 # store the nano for later use
 def save_nano(nano_handle, filename):
     """serializes the nano and saves it as a tar filename
     """
 
     # build command
-    snapshot_cmd = nano_handleurl + 'snapshot/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
+    snapshot_cmd = nano_handle.url + 'snapshot/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
 
     # serialize nano
     try:
@@ -167,6 +195,7 @@ def save_nano(nano_handle, filename):
     fp.close
 
     return True
+
 
 ###########
 # PRIVATE #
@@ -215,8 +244,8 @@ def load_nano(nano_handle, filename):
     nano_handle.numericFormat = json.loads(snapshot_response.data.decode('utf-8'))['numericFormat']
     return True
 
-def create_instance(nano_handle, label):
 
+def create_instance(nano_handle, label):
     # build command
     instance_cmd = nano_handle.url + 'nanoInstance/' + label + '?api-tenant=' + nano_handle.api_tenant
 
@@ -242,5 +271,3 @@ def create_instance(nano_handle, label):
 
     nano_handle.instance = label
     return True
-
-

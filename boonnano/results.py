@@ -3,6 +3,7 @@ import json
 import numpy as np
 import os
 
+
 def get_version(nano_handle):
     """gives the version of the api running"""
     # build command (minus the v3 portion)
@@ -29,6 +30,7 @@ def get_version(nano_handle):
         return False, None
 
     return True, json.loads(version_response.data.decode('utf-8'))
+
 
 def get_buffer_status(nano_handle):
     """ results related to the bytes processed/in the buffer
@@ -57,6 +59,7 @@ def get_buffer_status(nano_handle):
         return False, None
 
     return True, json.loads(results_response.data.decode('utf-8'))
+
 
 def get_nano_results(nano_handle, results='All'):
     """ results per pattern
@@ -88,7 +91,8 @@ def get_nano_results(nano_handle, results='All'):
             results_str = results_str + ',MD'
 
     # build command
-    results_cmd = nano_handle.url + 'nanoResults/' + nano_handle.instance + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle.api_tenant
+    results_cmd = nano_handle.url + 'nanoResults/' + nano_handle.instance + '?results=' + \
+                  results_str[1:] + '&api-tenant=' + nano_handle.api_tenant
 
     # pattern results
     try:
@@ -111,6 +115,7 @@ def get_nano_results(nano_handle, results='All'):
         return False, None
 
     return True, json.loads(results_response.data.decode('utf-8'))
+
 
 def get_nano_status(nano_handle, results='All'):
     """results in relation to each cluster/overall stats
@@ -158,7 +163,8 @@ def get_nano_status(nano_handle, results='All'):
             results_str = results_str + ',numClusters'
 
     # build command
-    results_cmd = nano_handle.url + 'nanoStatus/' + nano_handle.instance + '?results=' + results_str[1:] + '&api-tenant=' + nano_handle.api_tenant
+    results_cmd = nano_handle.url + 'nanoStatus/' + nano_handle.instance + '?results=' + results_str[
+                                                                                         1:] + '&api-tenant=' + nano_handle.api_tenant
 
     # cluster status
     try:

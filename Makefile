@@ -2,6 +2,7 @@ init:
 	pip install -r requirements.txt
 
 test:
-		py.test tests
+	coverage run -m nose test_client.py
+	coverage html
 
 .PHONY: init test
