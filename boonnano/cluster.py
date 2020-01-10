@@ -1,93 +1,42 @@
-from urllib3 import PoolManager
-import json
-import numpy as np
 import os
+from .rest import simple_post
+from .rest import multipart_post
 
 
-def load_data(nano_handle, data, file_type='', gzip=False, metadata='', append_data=False, run_nano=False, results=''):
-    """posts the data and clusters it if runNano is True
-
-    results per pattern options:
-        ID = cluster ID
-        SI = smoothed anomaly index
-        RI = raw anomaly index
-        FI = frequency index
-        DI = distance index
-        MD = metadata
+def load_data(nano_handle, file, file_type, gzip=False, metadata=None, append_data=False):
+    """posts data to the nano
     """
 
-    filename = data
-    # check filetype
-    if not ".bin" in str(filename) and not '.csv' in str(filename):
-        if nano_handle.numericFormat == 'int16':
-            filename = data.astype(np.int16)
-        elif nano_handle.numericFormat == 'float32':
-            filename = data.astype(np.float32)
-        elif nano_handle.numericFormat == 'uint16':
-            filename = data.astype(np.uint16)
-        file_data = data.tostring()
-        filename = 'dummy_filename.bin'
-    else:
-        with open(filename) as fp:
-            file_data = fp.read()
-
-    # build results command
-    if str(results) == 'All':
-        results_str = ',ID,SI,RI,FI,DI'
-    else:
-        results_str = ''
-        if 'ID' in str(results):
-            results_str = results_str + ',ID'
-        if 'SI' in str(results):
-            results_str = results_str + ',SI'
-        if 'RI' in str(results):
-            results_str = results_str + ',RI'
-        if 'FI' in str(results):
-            results_str = results_str + ',FI'
-        if 'DI' in str(results):
-            results_str = results_str + ',DI'
-        if 'MD' in str(results):
-            results_str = results_str + ',MD'
-
-    if metadata != '':
-        body = {'data': (filename, file_data)}
-    else:
-        body = {'data': (filename, file_data),
-                'metadata': metadata.replace(',', '|').replace('{', '').replace('}', '').replace(' ', '')}
-    # build command
-    dataset_cmd = nano_handle.url + 'data/' + nano_handle.instance + '?runNano=' + str(
-        run_nano).lower() + '&fileType=' + (
-                      str(file_type) if file_type != '' else ('raw' if 'bin' in filename else 'csv')) + '&gzip=' + str(
-        gzip).lower() + '&results=' + results_str[1:] + '&appendData=' + str(
-        append_data).lower() + '&api-tenant=' + nano_handle.api_tenant
-
-    # post dataset
+    # load the data file
     try:
-        dataset_response = nano_handle.http.request(
-            'POST',
-            dataset_cmd,
-            headers={
-                'x-token': nano_handle.api_key
-            },
-            fields=body
-        )
+        with open(file) as fp:
+            file_data = fp.read()
+    except FileNotFoundError as e:
+        return False, e.strerror
 
-    except Exception as e:
-        print('Request Timeout')
-        return False, None
+    # verify file_type is set correctly
+    if file_type not in ['csv', 'raw']:
+        return False, 'file_type must be "csv" or "raw"'
 
-    # check for error
-    if dataset_response.status != 200:
-        print(json.loads(dataset_response.data.decode('utf-8')))
-        return False, None
+    file_name = os.path.basename(file)
 
-    if not results:
-        return True, None
+    if metadata:
+        fields = {'data': (file_name, file_data),
+                  'metadata': metadata.replace(',', '|').replace('{', '').replace('}', '').replace(' ', '')}
+    else:
+        fields = {'data': (file_name, file_data)}
 
-    return True, json.loads(dataset_response.data.decode('utf-8'))
+    # build command
+    dataset_cmd = nano_handle.url + 'data/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
+    dataset_cmd += '&runNano=' + str(run_nano).lower()
+    dataset_cmd += '&fileType=' + file_type
+    dataset_cmd += '&gzip=' + str(gzip).lower()
+    dataset_cmd += '&appendData=' + str(append_data).lower()
+
+    return multipart_post(nano_handle, dataset_cmd, fields=fields)
 
 
-def run_nano(nano_handle, results=''):
+def run_nano(nano_handle, results=None):
     """ clusters the data in the buffer
     returns any specified results
 
@@ -100,45 +49,18 @@ def run_nano(nano_handle, results=''):
         MD = metadata
     """
 
-    # build results command
+    results_str = ''
     if str(results) == 'All':
-        results_str = ',ID,SI,RI,FI,DI'
-    else:
-        results_str = ''
-        if 'ID' in str(results):
-            results_str = results_str + ',ID'
-        if 'SI' in str(results):
-            results_str = results_str + ',SI'
-        if 'RI' in str(results):
-            results_str = results_str + ',RI'
-        if 'FI' in str(results):
-            results_str = results_str + ',FI'
-        if 'DI' in str(results):
-            results_str = results_str + ',DI'
-        if 'MD' in str(results):
-            results_str = results_str + ',MD'
+        results_str = 'ID,SI,RI,FI,DI'
+    elif results:
+        for result in results.split(','):
+            if result not in ['ID', 'SI', 'RI', 'FI', 'DI', 'MD']:
+                return False, 'unknown result "{}" found in results parameter'.format(result)
+        results_str = results
 
     # build command
-    nano_cmd = nano_handle.url + 'nanoRun/' + nano_handle.instance + '?results=' + results_str[
-                                                                                   1:] + '&api-tenant=' + nano_handle.api_tenant
+    nano_cmd = nano_handle.url + 'nanoRun/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
+    if results:
+        nano_cmd += '&results=' + results_str
 
-    # run nano
-    try:
-        nano_response = nano_handle.http.request(
-            'POST',
-            nano_cmd,
-            headers={
-                'x-token': nano_handle.api_key
-            }
-        )
-
-    except Exception as e:
-        print('Request Timeout')
-        return False, None
-
-    # check for error
-    if nano_response.status != 200:
-        print(json.loads(nano_response.data.decode('utf-8')))
-        return False, None
-
-    return True, json.loads(nano_response.data.decode('utf-8'))
+    return simple_post(nano_handle, nano_cmd)

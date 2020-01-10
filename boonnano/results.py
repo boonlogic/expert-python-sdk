@@ -1,64 +1,18 @@
-from urllib3 import PoolManager
-import json
-import numpy as np
-import os
+from .rest import simple_get
 
 
 def get_version(nano_handle):
     """gives the version of the api running"""
     # build command (minus the v3 portion)
     version_cmd = nano_handle.url[:-3] + 'version' + '?api-tenant=' + nano_handle.api_tenant
-
-    # call the version number
-    try:
-        version_response = nano_handle.http.request(
-            'GET',
-            version_cmd,
-            headers={
-                'x-token': nano_handle.api_key,
-                'Content-Type': 'application/json'
-            }
-        )
-
-    except Exception as e:
-        print('Request Timeout')
-        return False, None
-
-    # check for error
-    if version_response.status != 200:
-        print(json.loads(version_response.data.decode('utf-8')))
-        return False, None
-
-    return True, json.loads(version_response.data.decode('utf-8'))
+    return simple_get(nano_handle, version_cmd)
 
 
 def get_buffer_status(nano_handle):
     """ results related to the bytes processed/in the buffer
     """
-
-    # build command
-    results_cmd = nano_handle.url + 'bufferStatus/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
-
-    # buffer status
-    try:
-        results_response = nano_handle.http.request(
-            'GET',
-            results_cmd,
-            headers={
-                'x-token': nano_handle.api_key
-            }
-        )
-
-    except Exception as e:
-        print('Request Timeout')
-        return False, None
-
-    # check for error
-    if results_response.status != 200:
-        print(json.loads(results_response.data.decode('utf-8')))
-        return False, None
-
-    return True, json.loads(results_response.data.decode('utf-8'))
+    status_cmd = nano_handle.url + 'bufferStatus/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
+    return simple_get(nano_handle, status_cmd)
 
 
 def get_nano_results(nano_handle, results='All'):
@@ -74,47 +28,18 @@ def get_nano_results(nano_handle, results='All'):
 
     # build results command
     if str(results) == 'All':
-        results_str = ',ID,SI,RI,FI,DI'
+        results_str = 'ID,SI,RI,FI,DI'
     else:
-        results_str = ''
-        if 'ID' in str(results):
-            results_str = results_str + ',ID'
-        if 'SI' in str(results):
-            results_str = results_str + ',SI'
-        if 'RI' in str(results):
-            results_str = results_str + ',RI'
-        if 'FI' in str(results):
-            results_str = results_str + ',FI'
-        if 'DI' in str(results):
-            results_str = results_str + ',DI'
-        if 'MD' in str(results):
-            results_str = results_str + ',MD'
+        for result in results.split(','):
+            if result not in ['ID', 'SI', 'RI', 'FI', 'DI', 'MD']:
+                return False, 'unknown result "{}" found in results parameter'.format(result)
+        results_str = results
 
     # build command
-    results_cmd = nano_handle.url + 'nanoResults/' + nano_handle.instance + '?results=' + \
-                  results_str[1:] + '&api-tenant=' + nano_handle.api_tenant
+    results_cmd = nano_handle.url + 'nanoResults/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
+    results_cmd += '&results=' + results_str
 
-    # pattern results
-    try:
-        results_response = nano_handle.http.request(
-            'GET',
-            results_cmd,
-            headers={
-                'x-token': nano_handle.api_key,
-                'Content-Type': 'application/json'
-            }
-        )
-
-    except Exception as e:
-        print('Request Timeout')
-        return False, None
-
-    # check for error
-    if results_response.status != 200:
-        print(json.loads(results_response.data.decode('utf-8')))
-        return False, None
-
-    return True, json.loads(results_response.data.decode('utf-8'))
+    return simple_get(nano_handle, results_cmd)
 
 
 def get_nano_status(nano_handle, results='All'):
@@ -138,52 +63,16 @@ def get_nano_status(nano_handle, results='All'):
 
     # build results command
     if str(results) == 'All':
-        results_str = ',PCA,patternMemory,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,numClusters'
+        results_str = 'PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,numClusters'
     else:
-        results_str = ''
-        if 'PCA' in str(results):
-            results_str = results_str + ',PCA'
-        if 'patternMemory' in str(results):
-            results_str = results_str + ',patternMemory'
-        if 'clusterGrowth' in str(results):
-            results_str = results_str + ',clusterGrowth'
-        if 'clusterSizes' in str(results):
-            results_str = results_str + ',clusterSizes'
-        if 'anomalyIndexes' in str(results):
-            results_str = results_str + ',anomalyIndexes'
-        if 'frequencyIndexes' in str(results):
-            results_str = results_str + ',frequencyIndexes'
-        if 'distanceIndexes' in str(results):
-            results_str = results_str + ',distanceIndexes'
-        if 'totalInferences' in str(results):
-            results_str = results_str + ',totalInferences'
-        if 'averageInferenceTime' in str(results):
-            results_str = results_str + ',averageInferenceTime'
-        if 'numClusters' in str(results):
-            results_str = results_str + ',numClusters'
+        for result in results.split(','):
+            if result not in ['PCA', 'clusterGrowth', 'clusterSizes', 'anomalyIndexes', 'frequencyIndexes',
+                              'distanceIndexes', 'totalInferences', 'numClusters', 'averageInferenceTime']:
+                return False, 'unknown result "{}" found in results parameter'.format(result)
+        results_str = results
 
     # build command
-    results_cmd = nano_handle.url + 'nanoStatus/' + nano_handle.instance + '?results=' + results_str[
-                                                                                         1:] + '&api-tenant=' + nano_handle.api_tenant
+    results_cmd = nano_handle.url + 'nanoStatus/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
+    results_cmd = results_cmd + '&results=' + results_str
 
-    # cluster status
-    try:
-        results_response = nano_handle.http.request(
-            'GET',
-            results_cmd,
-            headers={
-                'x-token': nano_handle.api_key,
-                'Content-Type': 'application/json'
-            }
-        )
-
-    except Exception as e:
-        print('Request Timeout')
-        return False, None
-
-    # check for error
-    if results_response.status != 200:
-        print(json.loads(results_response.data.decode('utf-8')))
-        return False, None
-
-    return True, json.loads(results_response.data.decode('utf-8'))
+    return simple_get(nano_handle, results_cmd)

@@ -1,5 +1,5 @@
 {
-    "sample-user": {
+    "sample-license": {
         "api-key": "no-key",
         "api-tenant": "no-tenant",
         "server": "http://localhost:5007"

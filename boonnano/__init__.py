@@ -1,9 +1,10 @@
 from .management import NanoHandle
-
 from .management import open_nano
 from .management import close_nano
 from .management import nano_list
 from .management import save_nano
+from .management import restore_nano
+from .management import json_msg
 
 from .configure import get_config
 from .configure import generate_config
@@ -22,6 +23,7 @@ setattr(NanoHandle, "open_nano", open_nano)
 setattr(NanoHandle, "close_nano", close_nano)
 setattr(NanoHandle, "nano_list", nano_list)
 setattr(NanoHandle, "save_nano", save_nano)
+setattr(NanoHandle, "restore_nano", restore_nano)
 
 setattr(NanoHandle, "get_config", get_config)
 setattr(NanoHandle, "configure_nano", configure_nano)

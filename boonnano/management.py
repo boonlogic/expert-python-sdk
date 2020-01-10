@@ -3,11 +3,23 @@ import json
 from os.path import expanduser
 from os import path
 from os import environ
+import tarfile
+from .rest import simple_get
+from .rest import simple_delete
+from .rest import simple_post
 
 
 ############################
 # BoonNano Python API v3 #
 ############################
+
+
+def json_msg(response):
+    blob = json.loads(response.data.decode('utf-8'))
+    if 'code' in blob and 'message' in blob:
+        return '{}:{}'.format(blob['code'], blob['message'])
+    return blob
+
 
 class NanoHandle:
 
@@ -29,11 +41,11 @@ class NanoHandle:
         # load the user, environment gets precedence
         if 'BOON_USER' in environ:
             self.user = environ['BOON_USER']
-            license_block=dict()
+            license_block = dict()
         else:
             if user not in file_data:
                 raise Exception("'{}' is missing from configuration, set via BOON_USER or in ~/.BoonLogic".format(user))
-            license_block=file_data[user]
+            license_block = file_data[user]
 
         # load the api-key, environment gets precedence
         if 'BOON_API_KEY' in environ:
@@ -56,7 +68,8 @@ class NanoHandle:
             self.api_tenant = environ("BOON_TENANT")
         else:
             if 'api-tenant' not in license_block.keys():
-                raise Exception("'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic file")
+                raise Exception(
+                    "'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic file")
             self.api_tenant = license_block['api-tenant']
 
         # set up base url
@@ -72,12 +85,11 @@ class NanoHandle:
 
 
 # start the nano and create the unique nano handle
-def open_nano(label, user, nano_file=None, authentication_path="~/.BoonLogic", timeout=60.0):
+def open_nano(label, user, authentication_path="~/.BoonLogic", timeout=60.0):
     """
     Args:
         label (str): name of the nano.
         user (str): user authentication.
-        nano_file (str): file of saved nano to load.
         authentication_path (str): path to the authentication file.
         timeout (float): HTTP Request Timeout
     Returns:
@@ -90,45 +102,26 @@ def open_nano(label, user, nano_file=None, authentication_path="~/.BoonLogic", t
         print(e)
         return False, None
 
-    success = create_instance(nano_handle, label)
+    success, response = create_instance(nano_handle, label)
     if not success:
-        return False, nano_handle
-
-    if nano_file:
-        return load_nano(nano_handle, nano_file), nano_handle
+        return False, None
 
     return True, nano_handle
 
 
 # free the nano label instance and close the http connection
-def close_nano(nano_handle, instance=''):
-    # Destructor Method.
+def close_nano(nano_handle, instance=None):
     # build command
-    if instance == '':
+    if not instance:
         instance = nano_handle.instance
     close_cmd = nano_handle.url + 'nanoInstance/' + instance + '?api-tenant=' + nano_handle.api_tenant
 
     # delete instance
-    try:
-        close_response = nano_handle.http.request(
-            'DELETE',
-            close_cmd,
-            headers={
-                'x-token': nano_handle.api_key
-            }
-        )
+    result, response = simple_delete(nano_handle, close_cmd)
+    if result:
+        nano_handle.http.clear()
 
-    except Exception as e:
-        print('Request Timeout')
-        return False
-
-    # check for error
-    if close_response.status != 200:
-        print(json.loads(close_response.data.decode('utf-8')))
-        return False
-
-    nano_handle.http.clear()
-    return True
+    return result, response
 
 
 # get the labels of running nanos
@@ -139,27 +132,7 @@ def nano_list(nano_handle):
     # build command
     instance_cmd = nano_handle.url + 'nanoInstances' + '?api-tenant=' + nano_handle.api_tenant
 
-    # list of running instances
-    try:
-        instance_response = nano_handle.http.request(
-            'GET',
-            instance_cmd,
-            headers={
-                'x-token': nano_handle.api_key,
-                'Content-Type': 'application/json'
-            }
-        )
-
-    except Exception as e:
-        print('Request Timeout')
-        return False, None
-
-    # check for error
-    if instance_response.status != 200:
-        print(json.loads(instance_response.data.decode('utf-8')))
-        return False, None
-
-    return True, json.loads(instance_response.data.decode('utf-8'))
+    return simple_get(nano_handle, instance_cmd)
 
 
 # store the nano for later use
@@ -179,41 +152,42 @@ def save_nano(nano_handle, filename):
                 'x-token': nano_handle.api_key
             }
         )
-
     except Exception as e:
-        print('Request Timeout')
-        return False
+        return False, "request failed"
 
     # check for error
     if snapshot_response.status != 200:
-        print(json.loads(snapshot_response.data.decode('utf-8')))
-        return False
+        return False, json_msg(snapshot_response)
 
-    # at this point, the call succeed so saves the return to a tar file
-    fp = open(filename, 'wb')
-    fp.write(snapshot_response.data)
-    fp.close
+    # at this point, the call succeeded, saves the result to a local file
+    try:
+        with open(filename, 'wb') as fp:
+            fp.write(snapshot_response.data)
+    except Exception as e:
+        return False, 'unable to write file'
 
-    return True
+    return True, None
 
 
-###########
-# PRIVATE #
-###########
-
-def load_nano(nano_handle, filename):
+def restore_nano(nano_handle, filename):
     """deserialize existing nano
     upload file to given instance
 
     NOTE: must be of type tar
     """
 
-    # check filetype
-    # if not ".tar" in filename:
-    #     print('Dataset Must Be In .tar Format')
-    #     return False
+    # verify that input file is a valid nano file (gzip'd tar with Magic Number)
+    try:
+        with tarfile.open(filename, 'r:gz') as tp:
+            with tp.extractfile('BoonNano/MagicNumber') as magic_fp:
+                magic_num = magic_fp.read()
+                if magic_num != b'\xef\xbe':
+                    return False, 'file {} is not a Boon Logic nano-formatted file, bad magic number'.format(filename)
 
-    with open(filename, "rb") as fp:
+    except KeyError as ke:
+        return False, 'file {} is not a Boon Logic nano-formatted file'.format(filename)
+
+    with open(filename, 'rb') as fp:
         nano = fp.read()
 
     # build command
@@ -233,41 +207,27 @@ def load_nano(nano_handle, filename):
         )
 
     except Exception as e:
-        print("Request Timeout")
-        return False
+        return False, 'request failed'
 
     # check for error
     if snapshot_response.status != 200:
-        print(json.loads(snapshot_response.data.decode('utf-8')))
-        return False
+        return False, json_msg(snapshot_response)
 
     nano_handle.numericFormat = json.loads(snapshot_response.data.decode('utf-8'))['numericFormat']
-    return True
 
+    return True, None
+
+
+###########
+# PRIVATE #
+###########
 
 def create_instance(nano_handle, label):
     # build command
     instance_cmd = nano_handle.url + 'nanoInstance/' + label + '?api-tenant=' + nano_handle.api_tenant
 
-    # initialize instance
-    try:
-        instance_response = nano_handle.http.request(
-            'POST',
-            instance_cmd,
-            headers={
-                'x-token': nano_handle.api_key,
-                'Content-Type': 'application/json'
-            }
-        )
-    except Exception as e:
-        print('Request Timeout')
-        return False
+    success, response = simple_post(nano_handle, instance_cmd)
+    if success:
+        nano_handle.instance = label
 
-    # check for error
-    if instance_response.status != 200:
-        print(json.loads(instance_response.data.decode('utf-8')))
-        nano_handle.instance = ''
-        return False
-
-    nano_handle.instance = label
-    return True
+    return success, response

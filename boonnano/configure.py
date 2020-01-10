@@ -1,13 +1,16 @@
-from urllib3 import PoolManager
 import json
-import numpy as np
-import os
+from .rest import simple_get
+from .rest import simple_post
 
 
 def configure_nano(nano_handle, feature_count=10, numeric_format="float32", min=1, max=10, weight=1, labels="",
                    percent_variation=0.05, streaming_window=1, accuracy=0.99, config=None):
     """returns the posted clustering configuration
     """
+
+    # verify numeric_format
+    if numeric_format not in ['float32', 'int16', 'uint16']:
+        return False, 'numeric_format must be "float32", "int16", or "uint16"'
 
     # build command
     config_cmd = nano_handle.url + 'clusterConfig/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
@@ -17,29 +20,13 @@ def configure_nano(nano_handle, feature_count=10, numeric_format="float32", min=
     else:
         new_config = config
 
-    # post config
-    try:
-        config_response = nano_handle.http.request(
-            'POST',
-            config_cmd,
-            headers={
-                'x-token': nano_handle.api_key,
-                'Content-Type': 'application/json'
-            },
-            body=json.dumps(new_config)
-        )
+    body = json.dumps(new_config)
 
-    except Exception as e:
-        print('Request Timeout')
-        return False, None
+    result, response = simple_post(nano_handle, config_cmd, body=body)
+    if result:
+        nano_handle.numericFormat = numeric_format
 
-    # check for error
-    if config_response.status != 200:
-        print(json.loads(config_response.data.decode('utf-8')))
-        return False, None
-
-    nano_handle.numericFormat = numeric_format
-    return True, json.loads(config_response.data.decode('utf-8'))
+    return result, response
 
 
 def generate_config(numeric_format, feature_count, min=1, max=10, weight=1, labels="", percent_variation=0.05,
@@ -84,59 +71,18 @@ def autotune_config(nano_handle, autotune_pv=True, autotune_range=True, by_featu
     """
 
     # build command
-    config_cmd = nano_handle.url + 'autoTuneConfig/' + nano_handle.instance + '?byFeature=' + str(
-        by_feature).lower() + '&autoTunePV=' + str(autotune_pv).lower() + '&autoTuneRange=' + str(
-        autotune_range).lower() + '&exclusions=' + str(exclusions)[1:-1].replace(' ',
-                                                                                 '') + '&api-tenant=' + nano_handle.api_tenant
+    config_cmd = nano_handle.url + 'autoTuneConfig/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
+    config_cmd += '&byFeature=' + str(by_feature).lower()
+    config_cmd += '&autoTunePV=' + str(autotune_pv).lower()
+    config_cmd += '&autoTuneRange=' + str(autotune_range).lower()
+    config_cmd += '&exclusions=' + str(exclusions)[1:-1].replace(' ', '')
 
     # autotune parameters
-    try:
-        config_response = nano_handle.http.request(
-            'POST',
-            config_cmd,
-            headers={
-                'x-token': nano_handle.api_key,
-                'Content-Type': 'application/json'
-            }
-        )
-
-    except Exception as e:
-        print('Request Timeout')
-        return False
-
-    # check for error
-    if config_response.status != 200:
-        print(json.loads(config_response.data.decode('utf-8')))
-        return False
-
-    return True
+    return simple_post(nano_handle, config_cmd)
 
 
 def get_config(nano_handle):
     """returns the posted clustering configuration
     """
-
-    # build command
     config_cmd = nano_handle.url + 'clusterConfig/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
-
-    # get config
-    try:
-        config_response = nano_handle.http.request(
-            'GET',
-            config_cmd,
-            headers={
-                'x-token': nano_handle.api_key,
-                'Content-Type': 'application/json'
-            }
-        )
-
-    except Exception as e:
-        print('Request Timeout')
-        return False, None
-
-    # check for error
-    if config_response.status != 200:
-        print(json.loads(config_response.data.decode('utf-8')))
-        return False, None
-
-    return True, json.loads(config_response.data.decode('utf-8'))
+    return simple_get(nano_handle, config_cmd)
