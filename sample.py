@@ -2,10 +2,17 @@ import boonnano as bn
 import json
 import sys
 
+# create new nano instance
+try:
+    nano = bn.NanoHandle('ge-license-1')
+except Exception as be:
+    print(be)
+    sys.exit(1)
+
 # open/attach to nano
-success, nano = bn.open_nano('sample-instance', 'ge-license-1')
+success, response = nano.open_nano('sample-instance')
 if not success:
-    print("open_nano failed")
+    print("open_nano failed: {}".format(response))
     sys.exit(1)
 
 # fetch the version information for this nano instance
@@ -109,10 +116,10 @@ if not success:
     print("close_nano failed: {}".format(response))
     sys.exit(1)
 
-# create a new nano instance
-success, nano = bn.open_nano('sample-instance-2', 'ge-license-1')
+# open/attach to nano
+success, response = nano.open_nano('sample-instance-2')
 if not success:
-    print("open_nano failed")
+    print("open_nano failed: {}".format(response))
     sys.exit(1)
 
 # load the nano

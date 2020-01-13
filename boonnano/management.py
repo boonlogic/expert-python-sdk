@@ -23,16 +23,16 @@ def json_msg(response):
 
 class NanoHandle:
 
-    def __init__(self, user, authentication_path="~/.BoonLogic", timeout=60.0):
+    def __init__(self, user, license="~/.BoonLogic", timeout=60.0):
 
         self.instance = ''
         self.numericFormat = ''
 
-        authentication_path = expanduser(authentication_path)
+        license_path = expanduser(license)
 
-        if path.exists(authentication_path):
+        if path.exists(license_path):
             try:
-                with open(authentication_path, "r") as json_file:
+                with open(license_path, "r") as json_file:
                     file_data = json.load(json_file)
             except json.JSONDecodeError as e:
                 raise Exception(
@@ -85,36 +85,38 @@ class NanoHandle:
 
 
 # start the nano and create the unique nano handle
-def open_nano(label, user, authentication_path="~/.BoonLogic", timeout=60.0):
-    """
+def open_nano(nano_handle, instance_id):
+    """Creates or attaches to a nano pod instance
+
     Args:
-        label (str): name of the nano.
-        user (str): user authentication.
-        authentication_path (str): path to the authentication file.
-        timeout (float): HTTP Request Timeout
+        nano_handle (NanoHandle): handle for this nano instance
+        instance_id (str): instance identifier to be applied to instance
+
     Returns:
         success status
-        nano dictionary handle
+        error message
+
     """
-    try:
-        nano_handle = NanoHandle(user, authentication_path, timeout)
-    except Exception as e:
-        print(e)
-        return False, None
-
-    success, response = create_instance(nano_handle, label)
+    success, response = create_instance(nano_handle, instance_id)
     if not success:
-        return False, None
+        return False, response
 
-    return True, nano_handle
+    return True, None
 
 
 # free the nano label instance and close the http connection
-def close_nano(nano_handle, instance=None):
-    # build command
-    if not instance:
-        instance = nano_handle.instance
-    close_cmd = nano_handle.url + 'nanoInstance/' + instance + '?api-tenant=' + nano_handle.api_tenant
+def close_nano(nano_handle):
+    """Closes the pod instance
+
+    Args:
+        nano_handle (NanoHandle): handle for this nano instance
+
+    Returns:
+        success status
+        error message
+
+    """
+    close_cmd = nano_handle.url + 'nanoInstance/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
 
     # delete instance
     result, response = simple_delete(nano_handle, close_cmd)
