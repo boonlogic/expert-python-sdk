@@ -1,4 +1,5 @@
 from .management import NanoHandle
+from .management import BoonException
 from .management import open_nano
 from .management import close_nano
 from .management import nano_list

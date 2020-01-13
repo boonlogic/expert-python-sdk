@@ -13,6 +13,10 @@ from .rest import simple_post
 # BoonNano Python API v3 #
 ############################
 
+class BoonException(Exception):
+    def __init__(self, message):
+        self.message = message
+
 
 def json_msg(response):
     blob = json.loads(response.data.decode('utf-8'))
@@ -35,7 +39,7 @@ class NanoHandle:
                 with open(license_path, "r") as json_file:
                     file_data = json.load(json_file)
             except json.JSONDecodeError as e:
-                raise Exception(
+                raise BoonException(
                     "json formatting error in .BoonLogic file, {}, line: {}, col: {}".format(e.msg, e.lineno, e.colno))
 
         # load the user, environment gets precedence
@@ -44,7 +48,7 @@ class NanoHandle:
             license_block = dict()
         else:
             if user not in file_data:
-                raise Exception("'{}' is missing from configuration, set via BOON_USER or in ~/.BoonLogic".format(user))
+                raise BoonException("'{}' is missing from configuration, set via BOON_USER or in ~/.BoonLogic".format(user))
             license_block = file_data[user]
 
         # load the api-key, environment gets precedence
@@ -52,7 +56,7 @@ class NanoHandle:
             self.api_key = environ('BOON_API_KEY')
         else:
             if 'api-key' not in license_block.keys():
-                raise Exception("'api-key' is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic file")
+                raise BoonException("'api-key' is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic file")
             self.api_key = license_block['api-key']
 
         # load the server, environment gets precedence
@@ -60,7 +64,7 @@ class NanoHandle:
             self.server = environ("BOON_SERVER")
         else:
             if 'server' not in license_block.keys():
-                raise Exception("'server' is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic file")
+                raise BoonException("'server' is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic file")
             self.server = license_block['server']
 
         # load the tenant, environment gets precedence
@@ -68,7 +72,7 @@ class NanoHandle:
             self.api_tenant = environ("BOON_TENANT")
         else:
             if 'api-tenant' not in license_block.keys():
-                raise Exception(
+                raise BoonException(
                     "'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic file")
             self.api_tenant = license_block['api-tenant']
 

@@ -5,7 +5,7 @@ import sys
 # create new nano instance
 try:
     nano = bn.NanoHandle('ge-license-1')
-except Exception as be:
+except bn.BoonException as be:
     print(be)
     sys.exit(1)
 
