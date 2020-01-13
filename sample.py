@@ -76,8 +76,8 @@ with open('Data.csv') as csv_file:
     for row in csv_reader:
         dataBlob = dataBlob + row
 
-npa = np.asarray(dataBlob, dtype=np.float32)
-success, response = nano.load_data(data=npa, append_data=True)
+# load data, data can be either list or nparray
+success, response = nano.load_data(data=dataBlob, append_data=True)
 if not success:
     print("load_data failed: {}".format(response))
     sys.exit(1)

@@ -38,21 +38,29 @@ def load_file(nano_handle, file, file_type, gzip=False, metadata=None, append_da
 
 def load_data(nano_handle, data, metadata=None, append_data=False):
 
+    if not isinstance(data, np.ndarray):
+        if nano_handle.numeric_format == 'int16':
+            data = np.asarray(data, dtype=np.int16)
+        elif nano_handle.numeric_format == 'float32':
+            data = np.asarray(data, dtype=np.float32)
+        elif nano_handle.numeric_format == 'uint16':
+            data = np.asarray(data, dtype=np.uint16)
+
     if nano_handle.numeric_format == 'int16':
-        converted_data = data.astype(np.int16)
+        data = data.astype(np.int16)
     elif nano_handle.numeric_format == 'float32':
-        converted_data = data.astype(np.float32)
+        data = data.astype(np.float32)
     elif nano_handle.numeric_format == 'uint16':
-        converted_data = data.astype(np.uint16)
-    converted_data = data.tostring()
+        data = data.astype(np.uint16)
+    data = data.tostring()
     file_name = 'dummy_filename.bin'
     file_type = 'raw'
 
     if metadata:
-        fields = {'data': (file_name, converted_data),
+        fields = {'data': (file_name, data),
                   'metadata': metadata.replace(',', '|').replace('{', '').replace('}', '').replace(' ', '')}
     else:
-        fields = {'data': (file_name, converted_data)}
+        fields = {'data': (file_name, data)}
 
     # build command
     dataset_cmd = nano_handle.url + 'data/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
