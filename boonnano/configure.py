@@ -24,7 +24,7 @@ def configure_nano(nano_handle, feature_count=10, numeric_format="float32", min=
 
     result, response = simple_post(nano_handle, config_cmd, body=body)
     if result:
-        nano_handle.numericFormat = numeric_format
+        nano_handle.numeric_format = numeric_format
 
     return result, response
 

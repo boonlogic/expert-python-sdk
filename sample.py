@@ -1,10 +1,12 @@
 import boonnano as bn
 import json
 import sys
+import csv
+import numpy as np
 
 # create new nano instance
 try:
-    nano = bn.NanoHandle('ge-license-1')
+    nano = bn.NanoHandle('sample-license')
 except bn.BoonException as be:
     print(be)
     sys.exit(1)
@@ -54,15 +56,28 @@ print(json.dumps(response, indent=4))
 
 # load a csv file
 dataFile = 'Data.csv'
-success, response = nano.load_data(file=dataFile, file_type='csv')
+success, response = nano.load_file(file=dataFile, file_type='csv')
 if not success:
-    print("load_data failed: {}".format(response))
+    print("load_file failed: {}".format(response))
     sys.exit(1)
 print(json.dumps(response, indent=4))
 
-# load the csv file again, append to previous data
-dataFile = 'Data.csv'
-success, response = nano.load_data(file=dataFile, file_type='csv', append_data=True)
+success, response = nano.get_buffer_status()
+if not success:
+    print("get_buffer_status failed: {}".format(response))
+    sys.exit(1)
+print(json.dumps(response, indent=4))
+
+# load Data.csv and convert to list of floats
+dataBlob = list()
+with open('Data.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        dataBlob = dataBlob + row
+
+npa = np.asarray(dataBlob, dtype=np.float32)
+success, response = nano.load_data(data=npa, append_data=True)
 if not success:
     print("load_data failed: {}".format(response))
     sys.exit(1)

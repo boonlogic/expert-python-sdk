@@ -30,7 +30,7 @@ class NanoHandle:
     def __init__(self, user, license="~/.BoonLogic", timeout=60.0):
 
         self.instance = ''
-        self.numericFormat = ''
+        self.numeric_format = ''
 
         license_path = expanduser(license)
 
@@ -219,7 +219,7 @@ def restore_nano(nano_handle, filename):
     if snapshot_response.status != 200:
         return False, json_msg(snapshot_response)
 
-    nano_handle.numericFormat = json.loads(snapshot_response.data.decode('utf-8'))['numericFormat']
+    nano_handle.numeric_format = json.loads(snapshot_response.data.decode('utf-8'))['numericFormat']
 
     return True, None
 

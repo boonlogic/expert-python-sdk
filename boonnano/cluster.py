@@ -1,9 +1,10 @@
 import os
+import numpy as np
 from .rest import simple_post
 from .rest import multipart_post
 
 
-def load_data(nano_handle, file, file_type, gzip=False, metadata=None, append_data=False):
+def load_file(nano_handle, file, file_type, gzip=False, metadata=None, append_data=False):
     """posts data to the nano
     """
 
@@ -28,9 +29,34 @@ def load_data(nano_handle, file, file_type, gzip=False, metadata=None, append_da
 
     # build command
     dataset_cmd = nano_handle.url + 'data/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
-    dataset_cmd += '&runNano=' + str(run_nano).lower()
     dataset_cmd += '&fileType=' + file_type
     dataset_cmd += '&gzip=' + str(gzip).lower()
+    dataset_cmd += '&appendData=' + str(append_data).lower()
+
+    return multipart_post(nano_handle, dataset_cmd, fields=fields)
+
+
+def load_data(nano_handle, data, metadata=None, append_data=False):
+
+    if nano_handle.numeric_format == 'int16':
+        converted_data = data.astype(np.int16)
+    elif nano_handle.numeric_format == 'float32':
+        converted_data = data.astype(np.float32)
+    elif nano_handle.numeric_format == 'uint16':
+        converted_data = data.astype(np.uint16)
+    converted_data = data.tostring()
+    file_name = 'dummy_filename.bin'
+    file_type = 'raw'
+
+    if metadata:
+        fields = {'data': (file_name, converted_data),
+                  'metadata': metadata.replace(',', '|').replace('{', '').replace('}', '').replace(' ', '')}
+    else:
+        fields = {'data': (file_name, converted_data)}
+
+    # build command
+    dataset_cmd = nano_handle.url + 'data/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
+    dataset_cmd += '&fileType=' + file_type
     dataset_cmd += '&appendData=' + str(append_data).lower()
 
     return multipart_post(nano_handle, dataset_cmd, fields=fields)

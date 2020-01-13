@@ -13,6 +13,7 @@ from .configure import configure_nano
 from .configure import autotune_config
 
 from .cluster import load_data
+from .cluster import load_file
 from .cluster import run_nano
 
 from .results import get_version
@@ -32,6 +33,7 @@ setattr(NanoHandle, "generate_config", generate_config)
 setattr(NanoHandle, "autotune_config", autotune_config)
 
 setattr(NanoHandle, "load_data", load_data)
+setattr(NanoHandle, "load_file", load_file)
 setattr(NanoHandle, "run_nano", run_nano)
 
 setattr(NanoHandle, "get_version", get_version)
