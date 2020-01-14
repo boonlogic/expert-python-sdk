@@ -5,7 +5,7 @@ from .management import close_nano
 from .management import nano_list
 from .management import save_nano
 from .management import restore_nano
-from .management import json_msg
+from .management import http_msg
 
 from .configure import get_config
 from .configure import generate_config

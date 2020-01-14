@@ -1,4 +1,5 @@
 from urllib3 import PoolManager
+from urllib3 import Timeout
 import json
 from os.path import expanduser
 from os import path
@@ -18,11 +19,8 @@ class BoonException(Exception):
         self.message = message
 
 
-def json_msg(response):
-    blob = json.loads(response.data.decode('utf-8'))
-    if 'code' in blob and 'message' in blob:
-        return '{}:{}'.format(blob['code'], blob['message'])
-    return blob
+def http_msg(response):
+    return '{}:{}'.format(response.status, response.reason)
 
 
 class NanoHandle:
@@ -82,10 +80,8 @@ class NanoHandle:
             self.url = "http://" + self.url
 
         # create pool manager
-        if timeout == 0:
-            self.http = PoolManager()
-        else:
-            self.http = PoolManager(timeout)
+        timeoutInst = Timeout(connect=30.0, read=timeout)
+        self.http = PoolManager(timeout=timeoutInst)
 
 
 # start the nano and create the unique nano handle
@@ -163,7 +159,7 @@ def save_nano(nano_handle, filename):
 
     # check for error
     if snapshot_response.status != 200:
-        return False, json_msg(snapshot_response)
+        return False, http_msg(snapshot_response)
 
     # at this point, the call succeeded, saves the result to a local file
     try:
@@ -217,7 +213,7 @@ def restore_nano(nano_handle, filename):
 
     # check for error
     if snapshot_response.status != 200:
-        return False, json_msg(snapshot_response)
+        return False, http_msg(snapshot_response)
 
     nano_handle.numeric_format = json.loads(snapshot_response.data.decode('utf-8'))['numericFormat']
 

@@ -19,7 +19,7 @@ def simple_get(nano_handle, get_cmd):
 
     # check for error
     if response.status != 200:
-        return False, boonnano.json_msg(response)
+        return False, boonnano.http_msg(response)
 
     return True, json.loads(response.data.decode('utf-8'))
 
@@ -41,7 +41,7 @@ def multipart_post(nano_handle, post_cmd, fields=None):
         return False, 'request failed: {}'.format(e)
 
     if response.status != 200:
-        return False, boonnano.json_msg(response)
+        return False, boonnano.http_msg(response)
 
     if len(response.data) == 0:
         return True, ''
@@ -61,12 +61,12 @@ def simple_post(nano_handle, post_cmd, body=None):
             },
             body=body
         )
-    except urllib3.exceptions as e:
+    except Exception as e:
         return False, 'request failed: {}'.format(e)
 
     # check for error
     if response.status != 200:
-        return False, boonnano.json_msg(response)
+        return False, boonnano.http_msg(response)
 
     if len(response.data) == 0:
         return True, ''
@@ -89,6 +89,6 @@ def simple_delete(nano_handle, delete_cmd):
 
     # check for error
     if response.status != 200:
-        return False, boonnano.json_msg(response)
+        return False, boonnano.http_msg(response)
 
     return True, json.loads(response.data.decode('utf-8'))
