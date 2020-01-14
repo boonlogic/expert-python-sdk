@@ -25,7 +25,7 @@ def http_msg(response):
 
 class NanoHandle:
 
-    def __init__(self, user, license="~/.BoonLogic", timeout=60.0):
+    def __init__(self, user, license="~/.BoonLogic", timeout=120.0):
 
         self.instance = ''
         self.numeric_format = ''
