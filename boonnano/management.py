@@ -2,6 +2,7 @@ from urllib3 import PoolManager
 from urllib3 import Timeout
 import json
 from os.path import expanduser
+from os import getenv
 from os import path
 from os import environ
 import tarfile
@@ -26,12 +27,16 @@ def http_msg(response):
 
 class NanoHandle:
 
-    def __init__(self, user, license="~/.BoonLogic", timeout=120.0):
+    def __init__(self, license_id=None, license_file="~/.BoonLogic", timeout=120.0):
 
+        self.license_file = license_file
+        self.license_id = None
+        self.api_key = None
+        self.api_tenant = None
         self.instance = ''
         self.numeric_format = ''
 
-        license_path = expanduser(license)
+        license_path = expanduser(license_file)
 
         if path.exists(license_path):
             try:
@@ -40,36 +45,49 @@ class NanoHandle:
             except json.JSONDecodeError as e:
                 raise BoonException(
                     "json formatting error in .BoonLogic file, {}, line: {}, col: {}".format(e.msg, e.lineno, e.colno))
-
-        # load the user, environment gets precedence
-        if 'BOON_USER' in environ:
-            self.user = environ['BOON_USER']
-            license_block = dict()
         else:
-            if user not in file_data:
-                raise BoonException("'{}' is missing from configuration, set via BOON_USER or in ~/.BoonLogic".format(user))
-            license_block = file_data[user]
+            raise BoonException("file {} does not exist".format(license_path))
+
+        # load the license block, environment gets precedence
+        license_env = getenv('BOON_LICENSE_ID')
+        if license_env:
+            # license id was specified through environment
+            if license_env in file_data:
+                self.license_id = license_env
+            else:
+                raise BoonException("BOON_LICENSE_ID value of '{}' not found in .BoonLogic file".format(license_env))
+        elif self.license_id:
+            # license was specified as argument
+            if license_id in file_data:
+                self.license_id = license_id
+            else:
+                raise BoonException("license_id '{}' not found in .BoonLogic file".format(license_id))
+        else:
+            # no license specified, attempt to load only license in .BoonLogic
+            if len(file_data.keys()) == 1:
+                self.license_id = list(file_data.keys())[0]
+            else:
+                raise BoonException("must specify license_id when multiple licenses reside in license_file")
+
+        license_block = file_data[self.license_id]
 
         # load the api-key, environment gets precedence
-        if 'BOON_API_KEY' in environ:
-            self.api_key = environ('BOON_API_KEY')
-        else:
+        self.api_key = getenv('BOON_API_KEY')
+        if not self.api_key:
             if 'api-key' not in license_block.keys():
                 raise BoonException("'api-key' is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic file")
             self.api_key = license_block['api-key']
 
         # load the server, environment gets precedence
-        if 'BOON_SERVER' in environ:
-            self.server = environ("BOON_SERVER")
-        else:
+        self.server = getenv('BOON_SERVER')
+        if not self.server:
             if 'server' not in license_block.keys():
                 raise BoonException("'server' is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic file")
             self.server = license_block['server']
 
         # load the tenant, environment gets precedence
-        if 'BOON_TENANT' in environ:
-            self.api_tenant = environ("BOON_TENANT")
-        else:
+        self.api_tenant = getenv('BOON_TENANT')
+        if not self.api_tenant:
             if 'api-tenant' not in license_block.keys():
                 raise BoonException(
                     "'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic file")

@@ -6,7 +6,7 @@ import numpy as np
 
 # create new nano instance
 try:
-    nano = bn.NanoHandle('sample-license')
+    nano = bn.NanoHandle()
 except bn.BoonException as be:
     print(be)
     sys.exit(1)
