@@ -8,6 +8,7 @@ import tarfile
 from .rest import simple_get
 from .rest import simple_delete
 from .rest import simple_post
+from .rest import multipart_post
 
 
 ############################
@@ -146,25 +147,14 @@ def save_nano(nano_handle, filename):
     snapshot_cmd = nano_handle.url + 'snapshot/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
 
     # serialize nano
-    try:
-        snapshot_response = nano_handle.http.request(
-            'GET',
-            snapshot_cmd,
-            headers={
-                'x-token': nano_handle.api_key
-            }
-        )
-    except Exception as e:
-        return False, "request failed"
-
-    # check for error
-    if snapshot_response.status != 200:
-        return False, http_msg(snapshot_response)
+    result, response = simple_get(nano_handle, snapshot_cmd)
+    if not result:
+        return result, response
 
     # at this point, the call succeeded, saves the result to a local file
     try:
         with open(filename, 'wb') as fp:
-            fp.write(snapshot_response.data)
+            fp.write(response)
     except Exception as e:
         return False, 'unable to write file'
 
@@ -195,29 +185,16 @@ def restore_nano(nano_handle, filename):
     # build command
     snapshot_cmd = nano_handle.url + 'snapshot/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
 
-    # post serialized nano
-    try:
-        snapshot_response = nano_handle.http.request(
-            'POST',
-            snapshot_cmd,
-            headers={
-                'x-token': nano_handle.api_key
-            },
-            fields={
-                'snapshot': (filename, nano)
-            }
-        )
+    fields = {'snapshot': (filename, nano)}
 
-    except Exception as e:
-        return False, 'request failed'
+    result, response = multipart_post(nano_handle, snapshot_cmd, fields=fields)
 
-    # check for error
-    if snapshot_response.status != 200:
-        return False, http_msg(snapshot_response)
+    if not result:
+        return result, response
 
-    nano_handle.numeric_format = json.loads(snapshot_response.data.decode('utf-8'))['numericFormat']
+    nano_handle.numeric_format = response['numericFormat']
 
-    return True, None
+    return True, response
 
 
 ###########

@@ -3,6 +3,25 @@ import boonnano
 import urllib3
 
 
+def outgoing_data(response):
+
+    if response.status != 200:
+        return False, boonnano.http_msg(response)
+    try:
+        content_type = response.headers['Content-Type']
+        if content_type == 'application/json':
+            if response.data == b'':
+                return True, '{}'
+            return True, json.loads(response.data.decode('utf-8'))
+        elif content_type == 'application/octet-stream':
+            return True, response.data
+        else:
+            return False, "unhandled Content-Type: {}".format(content_type)
+
+    except Exception as e:
+        return False, e
+
+
 def simple_get(nano_handle, get_cmd):
 
     try:
@@ -17,11 +36,7 @@ def simple_get(nano_handle, get_cmd):
     except Exception as e:
         return False, 'request failed'
 
-    # check for error
-    if response.status != 200:
-        return False, boonnano.http_msg(response)
-
-    return True, json.loads(response.data.decode('utf-8'))
+    return outgoing_data(response)
 
 
 def multipart_post(nano_handle, post_cmd, fields=None):
@@ -40,13 +55,7 @@ def multipart_post(nano_handle, post_cmd, fields=None):
     except Exception as e:
         return False, 'request failed: {}'.format(e)
 
-    if response.status != 200:
-        return False, boonnano.http_msg(response)
-
-    if len(response.data) == 0:
-        return True, ''
-
-    return True, json.loads(response.data.decode('utf-8'))
+    return outgoing_data(response)
 
 
 def simple_post(nano_handle, post_cmd, body=None):
@@ -64,14 +73,7 @@ def simple_post(nano_handle, post_cmd, body=None):
     except Exception as e:
         return False, 'request failed: {}'.format(e)
 
-    # check for error
-    if response.status != 200:
-        return False, boonnano.http_msg(response)
-
-    if len(response.data) == 0:
-        return True, ''
-
-    return True, json.loads(response.data.decode('utf-8'))
+    return outgoing_data(response)
 
 
 def simple_delete(nano_handle, delete_cmd):
@@ -87,8 +89,4 @@ def simple_delete(nano_handle, delete_cmd):
     except Exception as e:
         return False, 'request failed: {}'.format(e)
 
-    # check for error
-    if response.status != 200:
-        return False, boonnano.http_msg(response)
-
-    return True, json.loads(response.data.decode('utf-8'))
+    return outgoing_data(response)
