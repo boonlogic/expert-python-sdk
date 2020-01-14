@@ -5,7 +5,21 @@ from .rest import multipart_post
 
 
 def load_file(nano_handle, file, file_type, gzip=False, metadata=None, append_data=False):
-    """posts data to the nano
+    """load nano data from a file
+
+    Args:
+        nano_handle (NanoHandle): handle for this nano pod instance
+        file (str): local path to data file
+        file_type (str): file type specifier, must be either 'cvs' or 'raw'
+        gzip (boolean): true if file is gzip'd, false if not gzip'd
+        metadata (list): list of data labels to attach to data fields
+        append_data (boolean): true if data should be appended to previous data, false if existing
+            data should be truncated
+
+    Returns:
+        result (boolean): true if successful (file was successful loaded into nano pod instance)
+        response (str): None when result is true, error string when result=false
+
     """
 
     # load the data file
@@ -37,6 +51,20 @@ def load_file(nano_handle, file, file_type, gzip=False, metadata=None, append_da
 
 
 def load_data(nano_handle, data, metadata=None, append_data=False):
+    """load nano data from an existing numpy array or simple python list
+
+    Args:
+        nano_handle (NanoHandle): handle for this nano pod instance
+        data (np.ndarray or list): numpy array or list of data values
+        metadata (list): list of data labels to attach to data fields
+        append_data (boolean): true if data should be appended to previous data, false if existing
+            data should be truncated
+
+    Returns:
+        result (boolean): true if successful (data was successful loaded into nano pod instance)
+        response (str): None when result is true, error string when result=false
+
+    """
 
     if not isinstance(data, np.ndarray):
         if nano_handle.numeric_format == 'int16':
@@ -71,16 +99,22 @@ def load_data(nano_handle, data, metadata=None, append_data=False):
 
 
 def run_nano(nano_handle, results=None):
-    """ clusters the data in the buffer
-    returns any specified results
+    """ clusters the data in the nano pod buffer and returns the specified results
 
-    results per pattern options:
-        ID = cluster ID
-        SI = smoothed anomaly index
-        RI = raw anomaly index
-        FI = frequency index
-        DI = distance index
-        MD = metadata
+    Args:
+        nano_handle (NanoHandle): handle for this nano pod instance
+        results (str): comma separated list of result specifiers
+            ID = cluster ID
+            SI = smoothed anomaly index
+            RI = raw anomaly index
+            FI = frequency index
+            DI = distance index
+            MD = metadata
+
+    Returns:
+        result (boolean): true if successful (nano was successfully run)
+        response (dict or str): dictionary of results when result is true, error message when result = false
+
     """
 
     results_str = ''

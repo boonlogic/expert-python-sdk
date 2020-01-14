@@ -6,7 +6,25 @@ from .rest import simple_post
 def configure_nano(nano_handle, feature_count=10, numeric_format="float32", min=1, max=10, weight=1, labels="",
                    percent_variation=0.05, streaming_window=1, accuracy=0.99, config=None):
     """returns the posted clustering configuration
-    """
+
+     Args:
+         nano_handle (NanoHandle): handle for this nano pod instance
+         feature_count (int): number of features per vector
+         numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
+         min (float):
+         max (float):
+         weight (float):
+         labels (list):
+         percent_variation (float):
+         streaming_window (integer):
+         accuracy (float):
+         config (dict):
+
+     Returns:
+         result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
+         response (dict or str): configuration dictionary when result is true, error string when result is false
+
+     """
 
     # verify numeric_format
     if numeric_format not in ['float32', 'int16', 'uint16']:
@@ -31,7 +49,24 @@ def configure_nano(nano_handle, feature_count=10, numeric_format="float32", min=
 
 def generate_config(numeric_format, feature_count, min=1, max=10, weight=1, labels="", percent_variation=0.05,
                     streaming_window=1, accuracy=0.99):
-    """returns a json config version for the given Parameters
+    """generate a configuration dictionary for the given parameters, config is not committed to pod instance
+
+    Args:
+        feature_count (int): number of features per vector
+        numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
+        min (float):
+        max (float):
+        weight (float):
+        labels (list):
+        percent_variation (float):
+        streaming_window (integer):
+        accuracy (float):
+        config (dict):
+
+    Returns:
+        result (boolean): true if successful (configuration was successfully created)
+        response (dict or str): configuration dictionary when result is true, error string when result is false
+
     """
     config = {}
     config['accuracy'] = accuracy
@@ -66,8 +101,19 @@ def generate_config(numeric_format, feature_count, min=1, max=10, weight=1, labe
 
 
 def autotune_config(nano_handle, autotune_pv=True, autotune_range=True, by_feature=False, exclusions={}):
-    """autotunes the percent variation
-    and the min and max for each feature
+    """autotunes the percent variation, min and max for each feature
+
+    Args:
+        nano_handle (NanoHandle): handle for this nano pod instance
+        autotune_pv (boolean):
+        autotune_range (boolean):
+        by_feature (boolean):
+        exclusions (boolean):
+
+    Returns:
+        result (boolean): true if successful (autotuning was completed)
+        response (dict or str): configuration dictionary when result is true, error string when result is false
+
     """
 
     # build command
@@ -82,7 +128,15 @@ def autotune_config(nano_handle, autotune_pv=True, autotune_range=True, by_featu
 
 
 def get_config(nano_handle):
-    """returns the posted clustering configuration
+    """gets the configuration for this nano pod instance
+
+    Args:
+        nano_handle (NanoHandle):
+
+    Returns:
+        result (boolean): true if successful (configuration was found)
+        response (dict or str): configuration dictionary when result is true, error string when result is false
+
     """
     config_cmd = nano_handle.url + 'clusterConfig/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
     return simple_get(nano_handle, config_cmd)

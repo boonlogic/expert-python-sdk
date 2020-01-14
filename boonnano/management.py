@@ -21,13 +21,21 @@ class BoonException(Exception):
         self.message = message
 
 
-def http_msg(response):
-    return '{}:{}'.format(response.status, response.reason)
-
-
 class NanoHandle:
 
     def __init__(self, license_id=None, license_file="~/.BoonLogic", timeout=120.0):
+        """Primary handle for BoonNano Pod instances
+
+        The is the primary handle to manage a nano pod instance
+
+        Note:
+            Do not include the `self` parameter in the ``Args`` section.
+
+        Args:
+            license_id (str): license identifier label found within the .BoonLogic configuration file
+            license_file (str): path to .BoonLogic license file
+
+        """
 
         self.license_file = license_file
         self.license_id = None
@@ -99,8 +107,8 @@ class NanoHandle:
             self.url = "http://" + self.url
 
         # create pool manager
-        timeoutInst = Timeout(connect=30.0, read=timeout)
-        self.http = PoolManager(timeout=timeoutInst)
+        timeout_inst = Timeout(connect=30.0, read=timeout)
+        self.http = PoolManager(timeout=timeout_inst)
 
 
 # start the nano and create the unique nano handle
@@ -108,12 +116,12 @@ def open_nano(nano_handle, instance_id):
     """Creates or attaches to a nano pod instance
 
     Args:
-        nano_handle (NanoHandle): handle for this nano instance
-        instance_id (str): instance identifier to be applied to instance
+        nano_handle (NanoHandle): handle for this nano pod instance
+        instance_id (str): instance identifier to be assigned
 
     Returns:
-        success status
-        error message
+        result (boolean): true if successful (instance is created or attached)
+        response (str): None when result is true, error string when result=false
 
     """
     success, response = create_instance(nano_handle, instance_id)
@@ -128,26 +136,35 @@ def close_nano(nano_handle):
     """Closes the pod instance
 
     Args:
-        nano_handle (NanoHandle): handle for this nano instance
+        nano_handle (NanoHandle): handle for this nano pod instance
 
     Returns:
-        success status
-        error message
+        result (boolean):  true if successful (nano pod instance was closed)
+        response (str): None when result is true, error string when result=false
 
     """
     close_cmd = nano_handle.url + 'nanoInstance/' + nano_handle.instance + '?api-tenant=' + nano_handle.api_tenant
 
     # delete instance
     result, response = simple_delete(nano_handle, close_cmd)
-    if result:
-        nano_handle.http.clear()
+    if not result:
+        return result, response
 
-    return result, response
+    nano_handle.http.clear()
+    return result, None
 
 
 # get the labels of running nanos
 def nano_list(nano_handle):
-    """returns list of nano instances running
+    """returns list of nano instances allocated for a pod
+
+    Args:
+        nano_handle (NanoHandle): handle for this nano pod instance
+
+    Returns:
+        result (boolean):  true if successful (list was returned)
+        response (str): json dictionary of pod instances when result=true, error string when result=false
+
     """
 
     # build command
@@ -158,7 +175,16 @@ def nano_list(nano_handle):
 
 # store the nano for later use
 def save_nano(nano_handle, filename):
-    """serializes the nano and saves it as a tar filename
+    """serialize a nano pod instance and save to a local file
+
+    Args:
+        nano_handle (NanoHandle): handle for this nano instance
+        filename (str): path to local file where saved pod instance should be written
+
+    Returns:
+        result (boolean):  true if successful (pod instance was written)
+        response (str): None when result is true, error string when result=false
+
     """
 
     # build command
@@ -174,16 +200,22 @@ def save_nano(nano_handle, filename):
         with open(filename, 'wb') as fp:
             fp.write(response)
     except Exception as e:
-        return False, 'unable to write file'
+        return False, e
 
     return True, None
 
 
 def restore_nano(nano_handle, filename):
-    """deserialize existing nano
-    upload file to given instance
+    """restore a nano pod instance from local file
 
-    NOTE: must be of type tar
+    Args:
+        nano_handle (NanoHandle): handle for this nano pod instance
+        filename (str): path to local file containing saved pod instance
+
+    Returns:
+        result (boolean):  true if successful (nano pod instance was restored)
+        response (str): None when result is true, error string when result=false
+
     """
 
     # verify that input file is a valid nano file (gzip'd tar with Magic Number)

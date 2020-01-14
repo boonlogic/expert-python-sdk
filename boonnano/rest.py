@@ -6,7 +6,7 @@ import urllib3
 def outgoing_data(response):
 
     if response.status != 200:
-        return False, boonnano.http_msg(response)
+        return False, '{}:{}'.format(response.status, response.reason)
     try:
         content_type = response.headers['Content-Type']
         if content_type == 'application/json':
