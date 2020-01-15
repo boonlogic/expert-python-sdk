@@ -131,7 +131,7 @@ def get_config(nano_handle):
     """gets the configuration for this nano pod instance
 
     Args:
-        nano_handle (NanoHandle):
+        nano_handle (NanoHandle): handle for this nano pod instance
 
     Returns:
         result (boolean): true if successful (configuration was found)

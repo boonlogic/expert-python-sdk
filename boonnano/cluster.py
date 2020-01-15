@@ -104,11 +104,17 @@ def run_nano(nano_handle, results=None):
     Args:
         nano_handle (NanoHandle): handle for this nano pod instance
         results (str): comma separated list of result specifiers
+
             ID = cluster ID
+
             SI = smoothed anomaly index
+
             RI = raw anomaly index
+
             FI = frequency index
+
             DI = distance index
+
             MD = metadata
 
     Returns:
