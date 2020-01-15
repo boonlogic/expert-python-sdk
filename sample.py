@@ -2,7 +2,6 @@ import boonnano as bn
 import json
 import sys
 import csv
-import numpy as np
 
 # create new nano instance
 try:

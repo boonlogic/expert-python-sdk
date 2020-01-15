@@ -2,6 +2,7 @@ import json
 import boonnano
 import urllib3
 
+"""a collection of methods to standardize/isolate http request/response"""
 
 def outgoing_data(response):
 
