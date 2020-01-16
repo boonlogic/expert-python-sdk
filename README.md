@@ -14,27 +14,33 @@ pip install boonnano
 ```
 
 ------------
-### License setup
-1. Create a file in the user home directory (ie Mac: /Users/'username' or Windows: C:\\Users\\'username')
-2. Title the file `.BoonLogic`
-3. Copy and paste the following json format into the file
+### License Configuration
+
+Note: A license must be obtained from Boon Logic to use the BoonNano Python SDK
+
+The license should be placed in a file named ~/.BoonLogic
+
 ```json
 {
-  "<LICENSE_NAME>": {
-    "api-key": "<API-KEY>",
-    "server": "<ADDRESS>",
-    "api-tenant": "<API-TENANT>"
+  "default": {
+    "api-key": "API-KEY",
+    "server": "WEB ADDRESS",
+    "api-tenant": "API-TENANT"
   }
 }
 ```
-4. Fill in the text with all caps with the values provided by Boon Logic specific for your account. These can be found in the email from @boonlogic.com.
-5. Save the file
 
-This file is what the SDK's look for to access the API. If it is placed somewhere other than the home directory, when opening a new nano, the file path will have to be specified.
+The *API-KEY*, *WEB ADDRESS*, and *API-TENANT* will be unique to your obtained license.
+
+The .BoonLogic file will be consulted by the BoonNano Python SDK to successfully find and authenticate with your designated server.
 
 ---------------
-### Setting up client library
-The base for the file should be:
+### Connectivity Test
+
+The following Python script provides a basic proof-of-connectivity:
+
+**connect-example.py**
+
 ```python
 import boonnano as bn
 import json
@@ -42,10 +48,11 @@ import sys
 
 # create new nano instance
 try:
-    nano = bn.NanoHandle('my-license')
+    nano = bn.NanoHandle('default')
 except bn.BoonException as be:
     print(be)
     sys.exit(1)
+
 # open/attach to nano
 success, response = nano.open_nano('my-instance')
 if not success:
@@ -66,3 +73,16 @@ if not success:
     sys.exit(1)
 
 ```
+
+Running the **connect-example.py** script should yield something like:
+
+```sh
+% python connect-example.py
+{
+    "api-version": "/expert/v3",
+    "boon-nano": "e5d221de",
+    "expert-api": "18a5ddfa",
+    "expert-common": "f3215f72"
+}
+```
+
