@@ -5,7 +5,9 @@ This python package allows ease of access to calls to the BoonLogic Nano API.
 from Boon Logic, Inc.  A startup email will be sent providing the details
 for using this package.
 
-- __Website__: http://boonlogic.com
+- __Website__: [https://boonlogic.com](https://github.com/boonlogic/expert-python-sdk)
+- __Documentation__: [https://github.com/boonlogic/expert-python-sdk](https://github.com/boonlogic/expert-python-sdk)
+
 
 ------------
 ### Installation of BoonNano
