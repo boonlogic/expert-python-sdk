@@ -24,7 +24,7 @@ class BoonException(Exception):
 
 class NanoHandle:
 
-    def __init__(self, license_id=None, license_file="~/.BoonLogic", timeout=120.0):
+    def __init__(self, license_id='default', license_file="~/.BoonLogic", timeout=120.0):
         """Primary handle for BoonNano Pod instances
 
         The is the primary handle to manage a nano pod instance
@@ -62,18 +62,11 @@ class NanoHandle:
                 self.license_id = license_env
             else:
                 raise BoonException("BOON_LICENSE_ID value of '{}' not found in .BoonLogic file".format(license_env))
-        elif self.license_id:
-            # license was specified as argument
+        else:
             if license_id in file_data:
                 self.license_id = license_id
             else:
                 raise BoonException("license_id '{}' not found in .BoonLogic file".format(license_id))
-        else:
-            # no license specified, attempt to load only license in .BoonLogic
-            if len(file_data.keys()) == 1:
-                self.license_id = list(file_data.keys())[0]
-            else:
-                raise BoonException("must specify license_id when multiple licenses reside in license_file")
 
         license_block = file_data[self.license_id]
 
