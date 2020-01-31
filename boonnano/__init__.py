@@ -330,8 +330,8 @@ class NanoHandle:
             return False, e.strerror
 
         # verify file_type is set correctly
-        if file_type not in ['csv', 'raw']:
-            return False, 'file_type must be "csv" or "raw"'
+        if file_type not in ['csv', 'csv-c', 'raw', 'raw-n']:
+            return False, 'file_type must be "csv", "csv-c", "raw" or "raw-n"'
 
         file_name = os.path.basename(file)
 
@@ -411,8 +411,6 @@ class NanoHandle:
 
                 DI = distance index
 
-                MD = metadata
-
         Returns:
             result (boolean): true if successful (nano was successfully run)
             response (dict or str): dictionary of results when result is true, error message when result = false
@@ -424,7 +422,7 @@ class NanoHandle:
             results_str = 'ID,SI,RI,FI,DI'
         elif results:
             for result in results.split(','):
-                if result not in ['ID', 'SI', 'RI', 'FI', 'DI', 'MD']:
+                if result not in ['ID', 'SI', 'RI', 'FI', 'DI']:
                     return False, 'unknown result "{}" found in results parameter'.format(result)
             results_str = results
 
@@ -475,9 +473,7 @@ class NanoHandle:
 
                 DI: distance index
 
-                MD: metadata
-
-                All: ID,SI,RI,FI,DI,MD
+                All: ID,SI,RI,FI,DI
 
         """
         # build results command
@@ -485,7 +481,7 @@ class NanoHandle:
             results_str = 'ID,SI,RI,FI,DI'
         else:
             for result in results.split(','):
-                if result not in ['ID', 'SI', 'RI', 'FI', 'DI', 'MD']:
+                if result not in ['ID', 'SI', 'RI', 'FI', 'DI']:
                     return False, 'unknown result "{}" found in results parameter'.format(result)
             results_str = results
 
