@@ -42,6 +42,10 @@ class NanoHandle:
         self.instance = ''
         self.numeric_format = ''
 
+        # when license_id comes in as None, use 'default'
+        if license_id == None:
+            license_id = 'default'
+
         license_path = os.path.expanduser(license_file)
 
         if os.path.exists(license_path):
@@ -602,4 +606,3 @@ def generate_config(numeric_format, feature_count, minVal=1, maxVal=10, weight=1
     config['streamingWindowSize'] = streaming_window
 
     return config
-
