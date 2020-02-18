@@ -24,7 +24,7 @@ class BoonException(Exception):
 
 class NanoHandle:
 
-    def __init__(self, license_id='default', license_file="~/.BoonLogic", timeout=120.0):
+    def __init__(self, license_id='default', license_file="~/.BoonLogic.license", timeout=120.0):
         """Primary handle for BoonNano Pod instances
 
         The is the primary handle to manage a nano pod instance

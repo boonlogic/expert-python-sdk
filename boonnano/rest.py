@@ -7,7 +7,10 @@ import urllib3
 def outgoing_data(response):
 
     if response.status != 200:
-        return False, '{}:{}'.format(response.status, response.reason)
+        decoded = json.loads(response.data.decode('utf-8'))
+        if 'code' in decoded and 'message' in decoded:
+            return False, '{}: {}'.format(decoded['code'], decoded['message'])
+        return False, decoded
     try:
         content_type = response.headers['Content-Type']
         if content_type == 'application/json':

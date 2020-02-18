@@ -1,4 +1,3 @@
-boonnano==3.0.4
 coverage==5.0.2
 nose==1.3.7
 numpy==1.17.4
