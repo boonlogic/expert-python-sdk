@@ -21,7 +21,7 @@ pip install boonnano
 
 Note: A license must be obtained from Boon Logic to use the BoonNano Python SDK
 
-The license should be placed in a file named ~/.BoonLogic
+The license should be placed in a file named ~/.BoonLogic.license
 
 ```json
 {
@@ -35,7 +35,7 @@ The license should be placed in a file named ~/.BoonLogic
 
 The *API-KEY*, *WEB ADDRESS*, and *API-TENANT* will be unique to your obtained license.
 
-The .BoonLogic file will be consulted by the BoonNano Python SDK to successfully find and authenticate with your designated server.
+The .BoonLogic.license file will be consulted by the BoonNano Python SDK to successfully find and authenticate with your designated server.
 
 ---------------
 ### Connectivity Test
