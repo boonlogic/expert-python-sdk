@@ -30,7 +30,7 @@ class NanoHandle:
         The is the primary handle to manage a nano pod instance
 
         Args:
-            license_id (str): license identifier label found within the .BoonLogic configuration file
+            license_id (str): license identifier label found within the .BoonLogic.license configuration file
             license_file (str): path to .BoonLogic license file
             timeout (float): read timeout for http requests
 
@@ -54,7 +54,8 @@ class NanoHandle:
                     file_data = json.load(json_file)
             except json.JSONDecodeError as e:
                 raise BoonException(
-                    "json formatting error in .BoonLogic file, {}, line: {}, col: {}".format(e.msg, e.lineno, e.colno))
+                    "json formatting error in .BoonLogic.license file, {}, line: {}, col: {}".format(e.msg, e.lineno,
+                                                                                                     e.colno))
         else:
             raise BoonException("file {} does not exist".format(license_path))
 
@@ -65,12 +66,13 @@ class NanoHandle:
             if license_env in file_data:
                 self.license_id = license_env
             else:
-                raise BoonException("BOON_LICENSE_ID value of '{}' not found in .BoonLogic file".format(license_env))
+                raise BoonException(
+                    "BOON_LICENSE_ID value of '{}' not found in .BoonLogic.license file".format(license_env))
         else:
             if license_id in file_data:
                 self.license_id = license_id
             else:
-                raise BoonException("license_id '{}' not found in .BoonLogic file".format(license_id))
+                raise BoonException("license_id '{}' not found in .BoonLogic.license file".format(license_id))
 
         license_block = file_data[self.license_id]
 
@@ -79,7 +81,7 @@ class NanoHandle:
         if not self.api_key:
             if 'api-key' not in license_block.keys():
                 raise BoonException(
-                    "'api-key' is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic file")
+                    "'api-key' is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic.license file")
             self.api_key = license_block['api-key']
 
         # load the server, environment gets precedence
@@ -87,7 +89,7 @@ class NanoHandle:
         if not self.server:
             if 'server' not in license_block.keys():
                 raise BoonException(
-                    "'server' is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic file")
+                    "'server' is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic.license file")
             self.server = license_block['server']
 
         # load the tenant, environment gets precedence
@@ -95,7 +97,7 @@ class NanoHandle:
         if not self.api_tenant:
             if 'api-tenant' not in license_block.keys():
                 raise BoonException(
-                    "'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic file")
+                    "'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic.license file")
             self.api_tenant = license_block['api-tenant']
 
         # set up base url
@@ -230,8 +232,8 @@ class NanoHandle:
 
         return True, response
 
-    def configure_nano(self, feature_count=10, numeric_format="float32", min=1, max=10, weight=1, labels="",
-                       percent_variation=0.05, streaming_window=1, accuracy=0.99, config=None):
+    def configure_nano(self, feature_count, numeric_format, min, max, weight, labels,
+                       percent_variation, streaming_window, accuracy, config=None):
         """returns the posted clustering configuration
 
          Args:
@@ -240,7 +242,7 @@ class NanoHandle:
              min (float):
              max (float):
              weight (float):
-             labels (list):
+             labels (str,list):
              percent_variation (float):
              streaming_window (integer):
              accuracy (float):
@@ -259,8 +261,13 @@ class NanoHandle:
         # build command
         config_cmd = self.url + 'clusterConfig/' + self.instance + '?api-tenant=' + self.api_tenant
         if not config:
-            new_config = generate_config(numeric_format, feature_count, min, max, weight, labels, percent_variation,
-                                         streaming_window, accuracy)
+            result, result = self.get_config_template(numeric_format=numeric_format, feature_count=feature_count,
+                                                      min=min, max=max, weight=weight, labels=labels,
+                                                      percent_variation=percent_variation,
+                                                      streaming_window=streaming_window, accuracy=accuracy)
+            if not result:
+                return False, result
+            new_config = result
         else:
             new_config = config
 
@@ -545,64 +552,53 @@ class NanoHandle:
 
         return simple_get(self, results_cmd)
 
+    def get_config_template(self, feature_count, numeric_format, min, max, weight,
+                            labels, percent_variation, streaming_window, accuracy):
+        """generate a configuration template for the given parameters
 
-###########
-# PRIVATE #
-###########
+        A discrete configuration is specified as a list of min, max, weights, and labels
 
+        Args:
+            feature_count (int): number of features per vector
+            numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
+            min (list): the value that should be considered the minimum value for this feature. This
+                can be set to a value larger than the actual min if you want to treat all value less
+                than that as the same (for instance, to keep a noise spike from having undue influence
+                in the clustering
+            max (list): corresponding maximum value
+            weight (list): weight for this feature, if a list of 1 is specified, all weights are one
+            labels (list):
+            percent_variation (float):
+            streaming_window (integer):
+            accuracy (float):
 
-def generate_config(numeric_format, feature_count, minVal=1, maxVal=10, weight=1, labels=None,
-                    percent_variation=0.05, streaming_window=1, accuracy=0.99):
-    """generate a configuration for the given parameters
+        Returns:
+            result (boolean): true if successful (configuration was successfully created)
+            response (dict or str): configuration dictionary when result is true, error string when result is false
 
-    A discrete configuration is specified as a list of minVal, maxVal, weights, and labels
+        """
+        template_cmd = self.url + 'configTemplate/' + '?api-tenant=' + self.api_tenant
+        template_cmd += '&featureCount=' + str(feature_count)
+        template_cmd += '&numericFormat=' + str(numeric_format)
+        if isinstance(min, list):
+            template_cmd += '&minVal=' + ",".join([str(s) for s in min])
+        else:
+            template_cmd += '&minVal=' + str(min)
+        if isinstance(max, list):
+            template_cmd += '&maxVal=' + ",".join([str(s) for s in max])
+        else:
+            template_cmd += '&maxVal=' + str(max)
+        if isinstance(weight, list):
+            template_cmd += '&weight=' + ",".join([str(s) for s in weight])
+        else:
+            template_cmd += '&weight=' + str(weight)
+        if isinstance(labels, list):
+            template_cmd += '&label=' + ",".join([str(s) for s in labels])
+        elif labels:
+            template_cmd += '&label=' + str(labels)
+        template_cmd += '&percentVariation=' + str(percent_variation)
+        template_cmd += '&streamingWindowSize=' + str(streaming_window)
+        template_cmd += '&accuracy=' + str(accuracy)
 
-    Args:
-        feature_count (int): number of features per vector
-        numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
-        minVal (list): the value that should be considered the minimum value for this feature. This
-            can be set to a value larger than the actual min if you want to treat all value less
-            than that as the same (for instance, to keep a noise spike from having undue influence
-            in the clustering
-        maxVal (list): corresponding maximum value
-        weight (list): weight for this feature, if a list of 1 is specified, all weights are one
-        labels (list):
-        percent_variation (float):
-        streaming_window (integer):
-        accuracy (float):
+        return simple_get(self, template_cmd)
 
-    Returns:
-        result (boolean): true if successful (configuration was successfully created)
-        response (dict or str): configuration dictionary when result is true, error string when result is false
-
-    """
-    config = {}
-    config['accuracy'] = accuracy
-    temp_array = []
-    for x in range(feature_count):
-        temp_feature = {}
-        # max
-        if len([max]) == 1:
-            temp_feature['maxVal'] = maxVal
-        else:  # the max vals are given as a list
-            temp_feature['maxVal'] = maxVal[x]
-        # min
-        if len([min]) == 1:
-            temp_feature['minVal'] = minVal
-        else:  # the min vals are given as a list
-            temp_feature['minVal'] = minVal[x]
-        # weights
-        if len([weight]) == 1:
-            temp_feature['weight'] = weight
-        else:  # the weight vals are given as a list
-            temp_feature['weight'] = weight[x]
-        # labels
-        if labels != "" and labels[x] != "":
-            temp_feature['label'] = labels[x]
-        temp_array.append(temp_feature)
-    config['features'] = temp_array
-    config['numericFormat'] = str(numeric_format)
-    config['percentVariation'] = percent_variation
-    config['streamingWindowSize'] = streaming_window
-
-    return config

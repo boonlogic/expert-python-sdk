@@ -1,92 +1,207 @@
 import boonnano as bn
-import json
+import sys
 
 import nose
 from nose.tools import assert_equal
+from nose.tools import assert_list_equal
+import os
+import json
+from nose.tools import assert_false
+from nose.tools import raises
 from nose.tools import assert_not_equal
 from nose.tools import assert_raises
 from nose.tools import raises
 
 
-class test_management(object):
+def clean_nano_instances(nano):
+    # clean out nano instances
+    success, nano_list = nano.nano_list()
+    for nano_inst in nano_list:
+        nano.open_nano(nano_inst['instanceID'])
+        nano.close_nano()
 
-    # these tests are verfiying the open and close functionality and
-    # don't use the setUp/teardown methods
-    def __init__(self):
-        self.nano = None
+
+class TestManagement(object):
+
+    # This test class verifies the NanoHandle/open/close functionality
+    # Setup is skipped
+
+    def test_nano_handle(self):
+
+        # successful nano-handle created with default options
+        try:
+            nano = bn.NanoHandle(license_file="./.BoonLogic.license")
+            assert_equal(nano.license_id, 'default')
+        except bn.BoonException as be:
+            assert nose.tools.assert_false('test for default license_id failed')
+
+        # clean house
+        clean_nano_instances(nano)
+
+        # successful nano-handle created with None specified for license_id, should equate to default
+        try:
+            nano = bn.NanoHandle(license_file=".BoonLogic.license", license_id=None)
+            assert_equal(nano.license_id, 'default')
+        except bn.BoonException as be:
+            assert nose.tools.assert_false('test for license_id = None failed')
+
+        # successful nano-handle created with non-default specified, license_id=localhost
+        try:
+            nano = bn.NanoHandle(license_file=".BoonLogic.license", license_id='sample-license')
+            assert_equal(nano.license_id, 'sample-license')
+            assert_equal(nano.api_key, 'sample-key')
+            assert_equal(nano.api_tenant, 'sample-tenant')
+            assert_equal(nano.server, 'http://samplehost:5007')
+        except bn.BoonException as be:
+            assert nose.tools.assert_false('test for license_id = localhost failed')
+
+        # override license_id through environment
+        os.environ['BOON_LICENSE_ID'] = 'sample-license'
+        try:
+            nano = bn.NanoHandle(license_file=".BoonLogic.license")
+            assert_equal(nano.license_id, 'sample-license')
+            assert_equal(nano.api_key, 'sample-key')
+            assert_equal(nano.api_tenant, 'sample-tenant')
+            assert_equal(nano.server, 'http://samplehost:5007')
+        except bn.BoonException as be:
+            assert nose.tools.assert_false('test for BOON_LICENSE_ID = sample-license failed')
+        os.environ.pop('BOON_LICENSE_ID')
+
+        # override BOON_API_KEY, BOON_TENANT and BOON_SERVER
+        os.environ['BOON_API_KEY'] = 'new-key'
+        os.environ['BOON_TENANT'] = 'new-tenant'
+        os.environ['BOON_SERVER'] = 'new-server:9999'
+        try:
+            nano = bn.NanoHandle(license_file=".BoonLogic.license")
+            assert_equal(nano.license_id, 'default')
+            assert_equal(nano.api_key, 'new-key')
+            assert_equal(nano.api_tenant, 'new-tenant')
+            assert_equal(nano.server, 'new-server:9999')
+        except bn.BoonException as be:
+            assert nose.tools.assert_false('test for environment override failed')
+        os.environ.pop('BOON_API_KEY')
+        os.environ.pop('BOON_TENANT')
+        os.environ.pop('BOON_SERVER')
 
     def test_open_close(self):
-        success, nano = bn.open_nano('sample-instance', 'sample-user', authentication_path="./.BoonLogic")
-        assert_equal(success, True)
-        nano.close_nano()
 
-    def test_nano_list(self):
-        success, nano = bn.open_nano('sample-instance', 'sample-user', authentication_path="./.BoonLogic")
-        assert_equal(success, True)
-        success, response = nano.nano_list()
-        assert_equal(success, True)
-        assert len(response) > 0
-        nano.close_nano()
+        # allocate four nano handles and open an instance for each
+        nano_dict = dict()
+        try:
+            for cnt in range(1, 5):
+                nano_key = 'nano-' + str(cnt)
+                nano_inst = 'nano-instance-' + str(cnt)
+                nano_dict[nano_key] = bn.NanoHandle(license_file=".BoonLogic.license")
+                assert_equal(nano_dict[nano_key].license_id, 'default')
+                success, response = nano_dict[nano_key].open_nano(nano_inst)
+                assert_equal(success, True)
+                assert_equal(response['instanceID'], nano_inst)
+        except bn.BoonException as be:
+            assert nose.tools.assert_false('creation of 4 nano handles failed')
+
+        # create one more NanoHandle
+        try:
+            nano = bn.NanoHandle(license_file=".BoonLogic.license")
+            assert_equal(nano.license_id, 'default')
+        except bn.BoonException as be:
+            assert nose.tools.assert_false('test for default license_id failed')
+
+        # attaching to 1 more instance should cause an error
+        success, response = nano.open_nano('1-too-many')
+        assert_equal(success, False)
+        assert_equal(response, '400: All nano instance objects are allocated (total number = 4)')
 
 
-class test_results(object):
+class TestResults(object):
 
     def __init__(self):
-        self.nano = None
+        try:
+            self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
+            assert_equal(self.nano.license_id, 'default')
+        except bn.BoonException as be:
+            assert nose.tools.assert_false('test for default license_id failed')
 
     def setUp(self):
-        """This method is run once before _each_ test method is executed"""
-        success, self.nano = bn.open_nano('sample-instance', 'sample-user', authentication_path="./.BoonLogic")
+        clean_nano_instances(self.nano)
+        success, response = self.nano.open_nano('instance-1')
         assert_equal(success, True)
+        assert_equal(response['instanceID'], 'instance-1')
 
     def teardown(self):
-        """This method is run once after _each_ test method is executed"""
         self.nano.close_nano()
 
     def test_get_version(self):
         success, response = self.nano.get_version()
         assert_equal(success, True)
-        assert_equal(list(response.keys()), ['api-version', 'boon-nano', 'expert-api', 'expert-common'])
+        assert_list_equal(list(response.keys()),
+                          ['release', 'api-version', 'nano-secure', 'builder', 'expert-api', 'expert-common',
+                           'swagger-ui'])
 
 
-class test_configure(object):
+class TestConfigure(object):
 
     def __init__(self):
-        self.nano = None
+        try:
+            self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
+            assert_equal(self.nano.license_id, 'default')
+        except bn.BoonException as be:
+            assert nose.tools.assert_false('test for default license_id failed')
 
     def setUp(self):
-        """This method is run once before _each_ test method is executed"""
-        success, self.nano = bn.open_nano('sample-instance', 'sample-user', authentication_path="./.BoonLogic")
+        clean_nano_instances(self.nano)
+        success, response = self.nano.open_nano('instance-1')
         assert_equal(success, True)
+        assert_equal(response['instanceID'], 'instance-1')
 
     def teardown(self):
-        """This method is run once after _each_ test method is executed"""
         self.nano.close_nano()
 
     def test_configure(self):
         # set a configuration
-        success, response = self.nano.configure_nano(numeric_format='float32', feature_count=20, min=-10, max=15,
-                                                     percent_variation=0.05)
+        success, response = self.nano.configure_nano(numeric_format='float32', feature_count=5, min=-10, max=15,
+                                                     weight=1, labels="same", streaming_window=1,
+                                                     percent_variation=0.05,
+                                                     accuracy=0.99)
         assert_equal(success, True)
         assert_equal(response['numericFormat'], 'float32')
         assert_equal(response['accuracy'], 0.99)
         assert_equal(response['streamingWindowSize'], 1)
         assert_equal(response['percentVariation'], 0.05)
-        assert_equal(len(response['features']), 20)
+        assert_equal(len(response['features']), 5)
 
         # query the configuration, should match the above response
         success, get_response = self.nano.get_config()
         assert_equal(success, True)
         assert_equal(response, get_response)
 
-        # generate a configuration, it shoulld match the others
-        gen_response = bn.generate_config(numeric_format='float32', feature_count=20, min=-10, max=15,
-                                          percent_variation=0.05)
+        success, gen_response = self.nano.get_config_template(numeric_format='float32', feature_count=5, min=[-10],
+                                                              max=[15], weight=[1], labels=None, streaming_window=1,
+                                                              percent_variation=0.05,
+                                                              accuracy=0.99)
         assert_equal(success, True)
         assert_equal(response, gen_response)
 
+        # use the configuration template generator to create a per feature template
+        success, gen_response = self.nano.get_config_template(numeric_format='int16', feature_count=4,
+                                                              min=[-15, -14, -13, -12], max=[15.0, 14, 13, 12],
+                                                              weight=[1, 1, 2, 1], labels=["l1", "l2", "l3", "l4"],
+                                                              percent_variation=0.04,
+                                                              streaming_window=1, accuracy=0.99)
+        expected_features = [{"minVal": -15, "maxVal": 15, "weight": 1, "label": "l1"},
+                             {"minVal": -14, "maxVal": 14, "weight": 1, "label": "l2"},
+                             {"minVal": -13, "maxVal": 13, "weight": 2, "label": "l3"},
+                             {"minVal": -12, "maxVal": 12, "weight": 1, "label": "l4"}
+                             ]
+        assert_equal(success, True)
+        assert_equal(gen_response['accuracy'], 0.99)
+        assert_equal(gen_response['features'], expected_features)
+        assert_equal(gen_response['numericFormat'], 'int16')
+        assert_equal(gen_response['percentVariation'], 0.04)
+        assert_equal(gen_response['accuracy'], 0.99)
+        assert_equal(gen_response['streamingWindowSize'], 1)
 
-class test_cluster(object):
+
+class TestCluster(object):
 
     @classmethod
     def setup_class(klass):
@@ -98,7 +213,8 @@ class test_cluster(object):
 
 
 if __name__ == '__main__':
-    nose.run(defaultTest=__name__ + ':test_management')
-    nose.run(defaultTest=__name__ + ':test_configure')
-    nose.run(defaultTest=__name__ + ':test_results')
-    nose.run(defaultTest=__name__ + ':test_cluster')
+    myargv = ['nosetests', '--verbosity=2']
+    nose.run(defaultTest=__name__ + ':TestManagement', argv=myargv)
+    nose.run(defaultTest=__name__ + ':TestResults', argv=myargv)
+    nose.run(defaultTest=__name__ + ':TestConfigure', argv=myargv)
+    # nose.run(defaultTest=__name__ + ':TestCluster', argv=myargv)
