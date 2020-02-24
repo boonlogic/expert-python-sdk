@@ -364,12 +364,65 @@ class TestCluster(object):
         assert_equal(success, True)
         assert_list_equal(list(response.keys()), ['ID', 'SI', 'RI', 'FI', 'DI'])
 
+        # ask again for the the nano results
+        success, response2 = self.nano.get_nano_results(results='All')
+        assert_equal(success, True)
+        assert_dict_equal(response, response2)
+
         # run the nano, ask for just ID
         success, response = self.nano.run_nano(results='ID')
         assert_equal(success, True)
         assert_list_equal(list(response.keys()), ['ID'])
 
-        # save the nano
+        # ask again for the the nano results
+        success, response2 = self.nano.get_nano_results(results='ID')
+        assert_equal(success, True)
+        assert_dict_equal(response, response2)
+
+        # fetch the buffer status
+        success, response = self.nano.get_buffer_status()
+        assert_equal(success, True)
+
+        # fetch additional nano status 'All'
+        success, response = self.nano.get_nano_status(results='All')
+        assert_equal(success, True)
+        assert_list_equal(list(response.keys()), ['PCA', 'clusterGrowth', 'clusterSizes', 'anomalyIndexes',
+                                                  'frequencyIndexes', 'distanceIndexes', 'totalInferences',
+                                                  'numClusters'])
+
+        # fetch additional nano status 'PCA'
+        success, response = self.nano.get_nano_status(results='PCA')
+        assert_equal(success, True)
+        assert_list_equal(list(response.keys()), ['PCA'])
+
+        # test autotune
+        success, response = self.nano.autotune_config(autotune_pv=True, autotune_range=True, by_feature=False)
+        assert_equal(success, True)
+
+        # test autotune but exclude features 1 and 3
+        success, response = self.nano.autotune_config(autotune_pv=True, autotune_range=True, by_feature=False,
+                                                      exclusions=[1, 3])
+        assert_equal(success, True)
+
+        # do a quick negative test where exclusions is not a list
+        # test autotune but exclude features 1 and 3
+        success, response = self.nano.autotune_config(autotune_pv=True, autotune_range=True, by_feature=False,
+                                                      exclusions=10)
+        assert_equal(success, False)
+        assert_equal(response, 'exclusions must be a list')
+
+        # save the configuration
+        success, response = self.nano.save_nano('saved-nano-1')
+        assert_equal(success, True)
+
+        # restore the configuration
+        success, response = self.nano.restore_nano('saved-nano-1')
+        assert_equal(success, True)
+
+        # attempt to restore a corrupt saved nano
+        success, response = self.nano.restore_nano('bad-magic.tgz')
+        assert_equal(success, False)
+        assert_equal(response, 'corrupt file bad-magic.tgz')
 
     def test_load_data_negative(self):
 
@@ -396,4 +449,4 @@ if __name__ == '__main__':
     nose.run(defaultTest=__name__ + ':TestManagement', argv=myargv)
     nose.run(defaultTest=__name__ + ':TestResults', argv=myargv)
     nose.run(defaultTest=__name__ + ':TestConfigure', argv=myargv)
-    # nose.run(defaultTest=__name__ + ':TestCluster', argv=myargv)
+    nose.run(defaultTest=__name__ + ':TestCluster', argv=myargv)

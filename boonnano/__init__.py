@@ -297,9 +297,10 @@ class NanoHandle:
                     if magic_num != b'\xef\xbe':
                         return False, 'file {} is not a Boon Logic nano-formatted file, bad magic number'.format(
                             filename)
-
         except KeyError:
             return False, 'file {} is not a Boon Logic nano-formatted file'.format(filename)
+        except Exception as e:
+            return False, 'corrupt file {}'.format(filename)
 
         with open(filename, 'rb') as fp:
             nano = fp.read()
@@ -325,7 +326,7 @@ class NanoHandle:
             autotune_pv (boolean):
             autotune_range (boolean):
             by_feature (boolean):
-            exclusions (boolean):
+            exclusions (list):
 
         Returns:
             result (boolean): true if successful (autotuning was completed)
@@ -338,8 +339,10 @@ class NanoHandle:
         config_cmd += '&byFeature=' + str(by_feature).lower()
         config_cmd += '&autoTunePV=' + str(autotune_pv).lower()
         config_cmd += '&autoTuneRange=' + str(autotune_range).lower()
-        if exclusions:
-            config_cmd += '&exclusions=' + str(exclusions)[1:-1].replace(' ', '')
+        if isinstance(exclusions, list):
+            config_cmd += '&exclusions=' + ",".join([str(s) for s in exclusions])
+        elif exclusions:
+            return False, 'exclusions must be a list'
 
         # autotune parameters
         return simple_post(self, config_cmd)
