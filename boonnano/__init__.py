@@ -148,6 +148,92 @@ class NanoHandle:
         self.http.clear()
         return result, None
 
+    def create_config(self, feature_count, numeric_format, min_val, max_val, weight,
+                      percent_variation, streaming_window, accuracy, label=None):
+        """generate a configuration template for the given parameters
+
+        A discrete configuration is specified as a list of min, max, weights, and labels
+
+        Args:
+            feature_count (int): number of features per vector
+            numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
+            min_val (list): the value that should be considered the minimum value for this feature. This
+                can be set to a value larger than the actual min if you want to treat all value less
+                than that as the same (for instance, to keep a noise spike from having undue influence
+                in the clustering.  a single element list assigns all features with same min_val
+            max_val (list): corresponding maximum value, a single element list assigns all features with same max_val
+            weight (list): weight for this feature, a single element list assigns all features with same weight
+            label (list): list of labels to assign to features
+            percent_variation (float):
+            streaming_window (integer):
+            accuracy (float):
+
+        Returns:
+            result (boolean): true if successful (configuration was successfully created)
+            response (dict or str): configuration dictionary when result is true, error string when result is false
+
+        """
+        template_cmd = self.url + 'configTemplate/' + '?api-tenant=' + self.api_tenant
+        template_cmd += '&featureCount=' + str(feature_count)
+        template_cmd += '&numericFormat=' + str(numeric_format)
+        if isinstance(min_val, list):
+            template_cmd += '&minVal=' + ",".join([str(s) for s in min_val])
+        elif isinstance(max_val, np.ndarray):
+            template_cmd += '&minVal=' + ",".join([str(s) for s in min_val])
+        else:
+            return False, "min_val must be list or numpy array"
+        if isinstance(max_val, list):
+            template_cmd += '&maxVal=' + ",".join([str(s) for s in max_val])
+        elif isinstance(max_val, np.ndarray):
+            template_cmd += '&maxVal=' + ",".join([str(s) for s in max_val])
+        else:
+            return False, "max_val must be list or numpy array"
+        if isinstance(weight, list):
+            template_cmd += '&weight=' + ",".join([str(s) for s in weight])
+        elif isinstance(max_val, np.ndarray):
+            template_cmd += '&weight=' + ",".join([str(s) for s in weight])
+        else:
+            return False, "weight must be list or numpy array"
+        if isinstance(label, list):
+            template_cmd += '&label=' + ",".join([str(s) for s in label])
+        elif label:
+            return False, "label must be list"
+        template_cmd += '&percentVariation=' + str(percent_variation)
+        template_cmd += '&streamingWindowSize=' + str(streaming_window)
+        template_cmd += '&accuracy=' + str(accuracy)
+
+        return simple_get(self, template_cmd)
+
+    def configure_nano(self, config):
+        """returns the posted clustering configuration
+
+         Args:
+             feature_count (int): number of features per vector
+             numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
+             min: list of minimum values per feature, if specified as a single value, use that on all features
+             max: list of maximum values per feature, if specified as a single value, use that on all features
+             weight (float):
+             labels (list):
+             percent_variation (float):
+             streaming_window (integer):
+             accuracy (float):
+             config (dict):
+
+         Returns:
+             result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
+             response (dict or str): configuration dictionary when result is true, error string when result is false
+
+         """
+
+        body = json.dumps(config)
+
+        config_cmd = self.url + 'clusterConfig/' + self.instance + '?api-tenant=' + self.api_tenant
+        result, response = simple_post(self, config_cmd, body=body)
+        if result:
+            self.numeric_format = config['numericFormat']
+
+        return result, response
+
     def nano_list(self):
         """returns list of nano instances allocated for a pod
 
@@ -231,53 +317,6 @@ class NanoHandle:
         self.numeric_format = response['numericFormat']
 
         return True, response
-
-    def configure_nano(self, feature_count, numeric_format, min, max, weight, percent_variation, streaming_window,
-                       accuracy, labels=None, config=None):
-        """returns the posted clustering configuration
-
-         Args:
-             feature_count (int): number of features per vector
-             numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
-             min: list of minimum values per feature, if specified as a single value, use that on all features
-             max: list of maximum values per feature, if specified as a single value, use that on all features
-             weight (float):
-             labels (list):
-             percent_variation (float):
-             streaming_window (integer):
-             accuracy (float):
-             config (dict):
-
-         Returns:
-             result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
-             response (dict or str): configuration dictionary when result is true, error string when result is false
-
-         """
-
-        # verify numeric_format
-        if numeric_format not in ['float32', 'int16', 'uint16']:
-            return False, 'numeric_format must be "float32", "int16", or "uint16"'
-
-        # build command
-        config_cmd = self.url + 'clusterConfig/' + self.instance + '?api-tenant=' + self.api_tenant
-        if not config:
-            result, result = self.get_config_template(numeric_format=numeric_format, feature_count=feature_count,
-                                                      min=min, max=max, weight=weight, labels=labels,
-                                                      percent_variation=percent_variation,
-                                                      streaming_window=streaming_window, accuracy=accuracy)
-            if not result:
-                return False, result
-            new_config = result
-        else:
-            new_config = config
-
-        body = json.dumps(new_config)
-
-        result, response = simple_post(self, config_cmd, body=body)
-        if result:
-            self.numeric_format = new_config['numericFormat']
-
-        return result, response
 
     def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
         """autotunes the percent variation, min and max for each feature
@@ -541,53 +580,3 @@ class NanoHandle:
         results_cmd = results_cmd + '&results=' + results_str
 
         return simple_get(self, results_cmd)
-
-    def get_config_template(self, feature_count, numeric_format, min, max, weight,
-                            labels, percent_variation, streaming_window, accuracy):
-        """generate a configuration template for the given parameters
-
-        A discrete configuration is specified as a list of min, max, weights, and labels
-
-        Args:
-            feature_count (int): number of features per vector
-            numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
-            min (list): the value that should be considered the minimum value for this feature. This
-                can be set to a value larger than the actual min if you want to treat all value less
-                than that as the same (for instance, to keep a noise spike from having undue influence
-                in the clustering
-            max (list): corresponding maximum value
-            weight (list): weight for this feature, if a list of 1 is specified, all weights are one
-            labels (list):
-            percent_variation (float):
-            streaming_window (integer):
-            accuracy (float):
-
-        Returns:
-            result (boolean): true if successful (configuration was successfully created)
-            response (dict or str): configuration dictionary when result is true, error string when result is false
-
-        """
-        template_cmd = self.url + 'configTemplate/' + '?api-tenant=' + self.api_tenant
-        template_cmd += '&featureCount=' + str(feature_count)
-        template_cmd += '&numericFormat=' + str(numeric_format)
-        if isinstance(min, list):
-            template_cmd += '&minVal=' + ",".join([str(s) for s in min])
-        else:
-            template_cmd += '&minVal=' + str(min)
-        if isinstance(max, list):
-            template_cmd += '&maxVal=' + ",".join([str(s) for s in max])
-        else:
-            template_cmd += '&maxVal=' + str(max)
-        if isinstance(weight, list):
-            template_cmd += '&weight=' + ",".join([str(s) for s in weight])
-        else:
-            template_cmd += '&weight=' + str(weight)
-        if isinstance(labels, list):
-            template_cmd += '&label=' + ",".join([str(s) for s in labels])
-        elif labels:
-            template_cmd += '&label=' + str(labels)
-        template_cmd += '&percentVariation=' + str(percent_variation)
-        template_cmd += '&streamingWindowSize=' + str(streaming_window)
-        template_cmd += '&accuracy=' + str(accuracy)
-
-        return simple_get(self, template_cmd)

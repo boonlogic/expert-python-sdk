@@ -4,8 +4,10 @@ import sys
 import nose
 from nose.tools import assert_equal
 from nose.tools import assert_list_equal
+from nose.tools import assert_dict_equal
 from nose.tools import assert_false
 import os
+import numpy as np
 import json
 from nose.tools import raises
 from nose.tools import assert_not_equal
@@ -81,6 +83,8 @@ class TestManagement(object):
         os.environ.pop('BOON_API_KEY')
         os.environ.pop('BOON_TENANT')
         os.environ.pop('BOON_SERVER')
+
+    def test_nano_handle_negative(self):
 
         # create NanoHandle using bad license path
         assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BadLogic.license", license_id='sample-license')
@@ -206,48 +210,102 @@ class TestConfigure(object):
         self.nano.close_nano()
 
     def test_configure(self):
-        # set a configuration
-        success, response = self.nano.configure_nano(numeric_format='float32', feature_count=5, min=-10, max=15,
-                                                     weight=1, labels="", streaming_window=1,
-                                                     percent_variation=0.05,
-                                                     accuracy=0.99)
+
+        # create a configuration with single-value min_val, max_val, and weight
+        success, config = self.nano.create_config(numeric_format='float32', feature_count=5, min_val=[-10],
+                                                  max_val=[15], weight=[1], streaming_window=1,
+                                                  percent_variation=0.05, accuracy=0.99)
         assert_equal(success, True)
-        assert_equal(response['numericFormat'], 'float32')
-        assert_equal(response['accuracy'], 0.99)
-        assert_equal(response['streamingWindowSize'], 1)
-        assert_equal(response['percentVariation'], 0.05)
-        assert_equal(len(response['features']), 5)
+        assert_equal(config['numericFormat'], 'float32')
+        assert_equal(config['accuracy'], 0.99)
+        assert_equal(config['streamingWindowSize'], 1)
+        assert_equal(config['percentVariation'], 0.05)
+        assert_equal(len(config['features']), 5)
+
+        # apply the configuration
+        success, gen_config = self.nano.configure_nano(config)
+        assert_equal(success, True)
+        assert_dict_equal(config, gen_config)
 
         # query the configuration, should match the above response
         success, get_response = self.nano.get_config()
         assert_equal(success, True)
-        assert_equal(response, get_response)
-
-        success, gen_response = self.nano.get_config_template(numeric_format='float32', feature_count=5, min=[-10],
-                                                              max=[15], weight=[1], labels=None, streaming_window=1,
-                                                              percent_variation=0.05,
-                                                              accuracy=0.99)
-        assert_equal(success, True)
-        assert_equal(response, gen_response)
+        assert_dict_equal(config, get_response)
 
         # use the configuration template generator to create a per feature template
-        success, gen_response = self.nano.get_config_template(numeric_format='int16', feature_count=4,
-                                                              min=[-15, -14, -13, -12], max=[15.0, 14, 13, 12],
-                                                              weight=[1, 1, 2, 1], labels=["l1", "l2", "l3", "l4"],
-                                                              percent_variation=0.04,
-                                                              streaming_window=1, accuracy=0.99)
+        success, config = self.nano.create_config(numeric_format='int16', feature_count=4,
+                                                  min_val=[-15, -14, -13, -12], max_val=[15.0, 14, 13, 12],
+                                                  weight=[1, 1, 2, 1], label=["l1", "l2", "l3", "l4"],
+                                                  percent_variation=0.04,
+                                                  streaming_window=1, accuracy=0.99)
         expected_features = [{"minVal": -15, "maxVal": 15, "weight": 1, "label": "l1"},
                              {"minVal": -14, "maxVal": 14, "weight": 1, "label": "l2"},
                              {"minVal": -13, "maxVal": 13, "weight": 2, "label": "l3"},
                              {"minVal": -12, "maxVal": 12, "weight": 1, "label": "l4"}
                              ]
         assert_equal(success, True)
-        assert_equal(gen_response['accuracy'], 0.99)
-        assert_equal(gen_response['features'], expected_features)
-        assert_equal(gen_response['numericFormat'], 'int16')
-        assert_equal(gen_response['percentVariation'], 0.04)
-        assert_equal(gen_response['accuracy'], 0.99)
-        assert_equal(gen_response['streamingWindowSize'], 1)
+        assert_equal(config['accuracy'], 0.99)
+        assert_list_equal(config['features'], expected_features)
+        assert_equal(config['numericFormat'], 'int16')
+        assert_equal(config['percentVariation'], 0.04)
+        assert_equal(config['accuracy'], 0.99)
+        assert_equal(config['streamingWindowSize'], 1)
+
+        # create the same configuration using numpy arrays
+        success, npconfig = self.nano.create_config(numeric_format='int16', feature_count=4,
+                                                    min_val=np.array([-15, -14, -13, -12]),
+                                                    max_val=np.array([15.0, 14, 13, 12]),
+                                                    weight=np.array([1, 1, 2, 1]), label=["l1", "l2", "l3", "l4"],
+                                                    percent_variation=0.04,
+                                                    streaming_window=1, accuracy=0.99)
+        assert_equal(success, True)
+        assert_dict_equal(config, npconfig)
+
+    def test_configure_negative(self):
+
+        # test get_config_template with bad numeric_format
+        success, response = self.nano.create_config(numeric_format='int64', feature_count=5, min_val=[-10],
+                                                    max_val=[15],
+                                                    weight=[1], streaming_window=1, percent_variation=0.05,
+                                                    accuracy=0.99)
+        assert_equal(success, False)
+        assert_equal(response, '606: numericFormat in query should be one of [uint16 float32 int16]')
+
+        # test create_config with bad min_val
+        success, response = self.nano.create_config(numeric_format='int64', feature_count=4,
+                                                    min_val=-15, max_val=[15.0, 14, 13, 12],
+                                                    weight=[1, 1, 2, 1], label=["l1", "l2", "l3", "l4"],
+                                                    percent_variation=0.04,
+                                                    streaming_window=1, accuracy=0.99)
+        assert_equal(success, False)
+        assert_equal(response, 'min_val must be list or numpy array')
+
+        # test create_config with bad max_val
+        success, response = self.nano.create_config(numeric_format='int64', feature_count=4,
+                                                    min_val=[-15], max_val=10,
+                                                    weight=[1, 1, 2, 1], label=["l1", "l2", "l3", "l4"],
+                                                    percent_variation=0.04,
+                                                    streaming_window=1, accuracy=0.99)
+        assert_equal(success, False)
+        assert_equal(response, 'max_val must be list or numpy array')
+
+        # test create_config with bad max_val
+        success, response = self.nano.create_config(numeric_format='int64', feature_count=4,
+                                                    min_val=[-15], max_val=[10],
+                                                    weight=1, label=["l1", "l2", "l3", "l4"],
+                                                    percent_variation=0.04,
+                                                    streaming_window=1, accuracy=0.99)
+        assert_equal(success, False)
+        assert_equal(response, 'weight must be list or numpy array')
+
+        # test create_config with bad label
+        success, response = self.nano.create_config(numeric_format='int64', feature_count=4,
+                                                    min_val=[-15], max_val=[10],
+                                                    weight=[1], label="mylabel",
+                                                    percent_variation=0.04,
+                                                    streaming_window=1, accuracy=0.99)
+        assert_equal(success, False)
+        assert_equal(response, 'label must be list')
 
 
 class TestCluster(object):
