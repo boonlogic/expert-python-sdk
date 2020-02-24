@@ -1,6 +1,5 @@
 import boonnano as bn
-import sys
-
+import csv
 import nose
 from nose.tools import assert_equal
 from nose.tools import assert_list_equal
@@ -310,13 +309,86 @@ class TestConfigure(object):
 
 class TestCluster(object):
 
-    @classmethod
-    def setup_class(klass):
-        """This method is run once for each class before any tests are run"""
+    def __init__(self):
+        try:
+            self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
+            assert_equal(self.nano.license_id, 'default')
+        except bn.BoonException as be:
+            assert_false(False, 'test for default license_id failed')
 
-    @classmethod
-    def teardown_class(klass):
-        """This method is run once for each class _after_ all tests are run"""
+    def setUp(self):
+        clean_nano_instances(self.nano)
+        success, response = self.nano.open_nano('instance-1')
+        assert_equal(success, True)
+        assert_equal(response['instanceID'], 'instance-1')
+
+    def teardown(self):
+        self.nano.close_nano()
+
+    def test_load_data(self):
+        # create a configuration with single-value min_val, max_val, and weight
+        success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10],
+                                                  max_val=[15], weight=[1], streaming_window=1,
+                                                  percent_variation=0.05, accuracy=0.99)
+        # apply the configuration
+        success, gen_config = self.nano.configure_nano(config)
+        assert_equal(success, True)
+
+        # load data set
+        dataFile = 'Data.csv'
+        success, response = self.nano.load_file(file=dataFile, file_type='csv', append_data=False)
+        assert_equal(success, True)
+
+        # load data set with gzip compression
+        dataFile = 'Data.csv.gz'
+        success, response = self.nano.load_file(file=dataFile, file_type='csv', gzip=True, append_data=False)
+        assert_equal(success, True)
+
+        # load Data.csv and convert to list of floats
+        dataBlob = list()
+        with open('Data.csv', 'r') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                dataBlob = dataBlob + row
+
+        # load data as list
+        success, response = self.nano.load_data(data=dataBlob, append_data=False)
+        assert_equal(success, True)
+
+        # load data from numpy array
+        success, response = self.nano.load_data(data=np.array(dataBlob), append_data=False)
+        assert_equal(success, True)
+
+        # run the nano, ask for all results
+        success, response = self.nano.run_nano(results='All')
+        assert_equal(success, True)
+        assert_list_equal(list(response.keys()), ['ID', 'SI', 'RI', 'FI', 'DI'])
+
+        # run the nano, ask for just ID
+        success, response = self.nano.run_nano(results='ID')
+        assert_equal(success, True)
+        assert_list_equal(list(response.keys()), ['ID'])
+
+        # save the nano
+
+    def test_load_data_negative(self):
+
+        # create a configuration with single-value min_val, max_val, and weight
+        success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10],
+                                                  max_val=[15], weight=[1], streaming_window=1,
+                                                  percent_variation=0.05, accuracy=0.99)
+
+        # attempt to load from a file that doesn't exist
+        dataFile = 'BadData.csv'
+        success, response = self.nano.load_file(file=dataFile, file_type='csv', append_data=False)
+        assert_equal(success, False)
+        assert_equal(response, 'No such file or directory')
+
+        # attempt to load from a file and specify bad file_type
+        dataFile = 'Data.csv'
+        success, response = self.nano.load_file(file=dataFile, file_type='cbs', append_data=False)
+        assert_equal(success, False)
+        assert_equal(response, 'file_type must be "csv", "csv-c", "raw" or "raw-n"')
 
 
 if __name__ == '__main__':

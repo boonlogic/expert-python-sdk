@@ -373,10 +373,12 @@ class NanoHandle:
 
         # load the data file
         try:
-            with open(file) as fp:
+            with open(file, 'rb') as fp:
                 file_data = fp.read()
         except FileNotFoundError as e:
             return False, e.strerror
+        except Exception as e:
+            return False, e
 
         # verify file_type is set correctly
         if file_type not in ['csv', 'csv-c', 'raw', 'raw-n']:
