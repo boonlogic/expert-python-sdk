@@ -43,7 +43,7 @@ class NanoHandle:
         self.numeric_format = ''
 
         # when license_id comes in as None, use 'default'
-        if license_id == None:
+        if license_id is None:
             license_id = 'default'
 
         license_path = os.path.expanduser(license_file)
@@ -232,17 +232,17 @@ class NanoHandle:
 
         return True, response
 
-    def configure_nano(self, feature_count, numeric_format, min, max, weight, labels,
-                       percent_variation, streaming_window, accuracy, config=None):
+    def configure_nano(self, feature_count, numeric_format, min, max, weight, percent_variation, streaming_window,
+                       accuracy, labels=None, config=None):
         """returns the posted clustering configuration
 
          Args:
              feature_count (int): number of features per vector
              numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
-             min (float):
-             max (float):
+             min: list of minimum values per feature, if specified as a single value, use that on all features
+             max: list of maximum values per feature, if specified as a single value, use that on all features
              weight (float):
-             labels (str,list):
+             labels (list):
              percent_variation (float):
              streaming_window (integer):
              accuracy (float):
@@ -316,14 +316,13 @@ class NanoHandle:
         config_cmd = self.url + 'clusterConfig/' + self.instance + '?api-tenant=' + self.api_tenant
         return simple_get(self, config_cmd)
 
-    def load_file(self, file, file_type, gzip=False, metadata=None, append_data=False):
+    def load_file(self, file, file_type, gzip=False, append_data=False):
         """load nano data from a file
 
         Args:
             file (str): local path to data file
             file_type (str): file type specifier, must be either 'cvs' or 'raw'
             gzip (boolean): true if file is gzip'd, false if not gzip'd
-            metadata (list): list of data labels to attach to data fields
             append_data (boolean): true if data should be appended to previous data, false if existing
                 data should be truncated
 
@@ -346,11 +345,7 @@ class NanoHandle:
 
         file_name = os.path.basename(file)
 
-        if metadata:
-            fields = {'data': (file_name, file_data),
-                      'metadata': metadata.replace(',', '|').replace('{', '').replace('}', '').replace(' ', '')}
-        else:
-            fields = {'data': (file_name, file_data)}
+        fields = {'data': (file_name, file_data)}
 
         # build command
         dataset_cmd = self.url + 'data/' + self.instance + '?api-tenant=' + self.api_tenant
@@ -360,12 +355,11 @@ class NanoHandle:
 
         return multipart_post(self, dataset_cmd, fields=fields)
 
-    def load_data(self, data, metadata=None, append_data=False):
+    def load_data(self, data, append_data=False):
         """load nano data from an existing numpy array or simple python list
 
         Args:
             data (np.ndarray or list): numpy array or list of data values
-            metadata (list): list of data labels to attach to data fields
             append_data (boolean): true if data should be appended to previous data, false if existing
                 data should be truncated
 
@@ -393,11 +387,7 @@ class NanoHandle:
         file_name = 'dummy_filename.bin'
         file_type = 'raw'
 
-        if metadata:
-            fields = {'data': (file_name, data),
-                      'metadata': metadata.replace(',', '|').replace('{', '').replace('}', '').replace(' ', '')}
-        else:
-            fields = {'data': (file_name, data)}
+        fields = {'data': (file_name, data)}
 
         # build command
         dataset_cmd = self.url + 'data/' + self.instance + '?api-tenant=' + self.api_tenant
@@ -601,4 +591,3 @@ class NanoHandle:
         template_cmd += '&accuracy=' + str(accuracy)
 
         return simple_get(self, template_cmd)
-

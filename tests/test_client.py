@@ -4,13 +4,12 @@ import sys
 import nose
 from nose.tools import assert_equal
 from nose.tools import assert_list_equal
+from nose.tools import assert_false
 import os
 import json
-from nose.tools import assert_false
 from nose.tools import raises
 from nose.tools import assert_not_equal
 from nose.tools import assert_raises
-from nose.tools import raises
 
 
 def clean_nano_instances(nano):
@@ -33,7 +32,7 @@ class TestManagement(object):
             nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(nano.license_id, 'default')
         except bn.BoonException as be:
-            assert nose.tools.assert_false('test for default license_id failed')
+            assert_false(False, 'test for default license_id failed')
 
         # clean house
         clean_nano_instances(nano)
@@ -43,7 +42,7 @@ class TestManagement(object):
             nano = bn.NanoHandle(license_file=".BoonLogic.license", license_id=None)
             assert_equal(nano.license_id, 'default')
         except bn.BoonException as be:
-            assert nose.tools.assert_false('test for license_id = None failed')
+            assert_false(False, 'test for license_id = None failed')
 
         # successful nano-handle created with non-default specified, license_id=localhost
         try:
@@ -53,7 +52,7 @@ class TestManagement(object):
             assert_equal(nano.api_tenant, 'sample-tenant')
             assert_equal(nano.server, 'http://samplehost:5007')
         except bn.BoonException as be:
-            assert nose.tools.assert_false('test for license_id = localhost failed')
+            assert_false(False, 'test for license_id = localhost failed')
 
         # override license_id through environment
         os.environ['BOON_LICENSE_ID'] = 'sample-license'
@@ -64,7 +63,7 @@ class TestManagement(object):
             assert_equal(nano.api_tenant, 'sample-tenant')
             assert_equal(nano.server, 'http://samplehost:5007')
         except bn.BoonException as be:
-            assert nose.tools.assert_false('test for BOON_LICENSE_ID = sample-license failed')
+            assert_false(False, 'test for BOON_LICENSE_ID = sample-license failed')
         os.environ.pop('BOON_LICENSE_ID')
 
         # override BOON_API_KEY, BOON_TENANT and BOON_SERVER
@@ -78,10 +77,36 @@ class TestManagement(object):
             assert_equal(nano.api_tenant, 'new-tenant')
             assert_equal(nano.server, 'new-server:9999')
         except bn.BoonException as be:
-            assert nose.tools.assert_false('test for environment override failed')
+            assert_false(False, 'test for environment override failed')
         os.environ.pop('BOON_API_KEY')
         os.environ.pop('BOON_TENANT')
         os.environ.pop('BOON_SERVER')
+
+        # create NanoHandle using bad license path
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BadLogic.license", license_id='sample-license')
+
+        # create NanoHandle using badly formatted json
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BoonLogic.badformat", license_id='sample-license')
+
+        # create NanoHandle using non-existent license_id
+        assert_raises(bn.BoonException, bn.NanoHandle, license_id='not-a-license')
+
+        # create NanoHandle using non-existent BOON_LICENSE_ID
+        os.environ['BOON_LICENSE_ID'] = 'not-a-license'
+        assert_raises(bn.BoonException, bn.NanoHandle, license_id='not-a-license')
+        os.environ.pop('BOON_LICENSE_ID')
+
+        # create NanoHandle with missing api-key
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BoonLogic.no-api-key")
+
+        # create NanoHandle with missing api-tenant
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BoonLogic.no-tenant-id")
+
+        # create NanoHandle with missing api-tenant
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BoonLogic.no-api-tenant")
+
+        # create NanoHandle with missing server
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BoonLogic.no-server")
 
     def test_open_close(self):
 
@@ -97,19 +122,43 @@ class TestManagement(object):
                 assert_equal(success, True)
                 assert_equal(response['instanceID'], nano_inst)
         except bn.BoonException as be:
-            assert nose.tools.assert_false('creation of 4 nano handles failed')
+            assert_false(False, 'creation of 4 nano handles failed')
 
         # create one more NanoHandle
         try:
             nano = bn.NanoHandle(license_file=".BoonLogic.license")
             assert_equal(nano.license_id, 'default')
         except bn.BoonException as be:
-            assert nose.tools.assert_false('test for default license_id failed')
+            assert_false(False, 'test for default license_id failed')
 
         # attaching to 1 more instance should cause an error
         success, response = nano.open_nano('1-too-many')
         assert_equal(success, False)
         assert_equal(response, '400: All nano instance objects are allocated (total number = 4)')
+
+        # close an instance that doesn't exist, this involves creating two nano handles and point them at the
+        # same instance.  closing the first should succeed, the second should fail
+        clean_nano_instances(nano)
+        try:
+            nano1 = bn.NanoHandle(license_file=".BoonLogic.license")
+            nano2 = bn.NanoHandle(license_file=".BoonLogic.license")
+            assert_equal(nano1.license_id, 'default')
+            assert_equal(nano2.license_id, 'default')
+        except bn.BoonException as be:
+            assert_false(False, 'test for default license_id failed')
+
+        success, response = nano1.open_nano('instance-1')
+        assert_equal(success, True)
+        success, response = nano2.open_nano('instance-1')
+        assert_equal(success, True)
+
+        # should succeed
+        success, response = nano1.close_nano()
+        assert_equal(success, True)
+
+        # should fail
+        success, response = nano2.close_nano()
+        assert_equal(success, False)
 
 
 class TestResults(object):
@@ -119,7 +168,7 @@ class TestResults(object):
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')
         except bn.BoonException as be:
-            assert nose.tools.assert_false('test for default license_id failed')
+            assert_false(False, 'test for default license_id failed')
 
     def setUp(self):
         clean_nano_instances(self.nano)
@@ -145,7 +194,7 @@ class TestConfigure(object):
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')
         except bn.BoonException as be:
-            assert nose.tools.assert_false('test for default license_id failed')
+            assert_false(False, 'test for default license_id failed')
 
     def setUp(self):
         clean_nano_instances(self.nano)
@@ -159,7 +208,7 @@ class TestConfigure(object):
     def test_configure(self):
         # set a configuration
         success, response = self.nano.configure_nano(numeric_format='float32', feature_count=5, min=-10, max=15,
-                                                     weight=1, labels="same", streaming_window=1,
+                                                     weight=1, labels="", streaming_window=1,
                                                      percent_variation=0.05,
                                                      accuracy=0.99)
         assert_equal(success, True)

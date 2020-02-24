@@ -1,0 +1,6 @@
+{
+    "default": {
+        "api-key": "no-key",
+        "server": "http://localhost:5008"
+    }
+}

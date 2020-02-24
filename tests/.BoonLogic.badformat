@@ -3,7 +3,7 @@
         "api-key": "no-key",
         "api-tenant": "no-tenant",
         "server": "http://localhost:5008"
-    },
+    }
     "sample-license": {
         "api-key": "sample-key",
         "api-tenant": "sample-tenant",
