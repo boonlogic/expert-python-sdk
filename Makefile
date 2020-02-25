@@ -1,9 +1,13 @@
 init:
-	python3 -m venv local-env; \
-	. local-env/bin/activate; \
-	pip3 install -r requirements.txt; \
-	echo ""; \
-	echo "virtual environment configured, use 'source local-env/bin/activate' to enable it"
+	which python3
+	python3 -m venv local-env
+
+
+#; \
+#	. local-env/bin/activate; \
+#	pip3 install -r requirements.txt; \
+#	echo ""; \
+#	echo "virtual environment configured, use 'source local-env/bin/activate' to enable it"
 
 test: local-env-check
 	@. local-env/bin/activate; \
