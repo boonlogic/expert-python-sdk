@@ -1,3 +1,6 @@
+import sys
+sys.path.append('..')
+
 import boonnano as bn
 import csv
 import nose
@@ -442,6 +445,51 @@ class TestCluster(object):
         success, response = self.nano.load_file(file=dataFile, file_type='cbs', append_data=False)
         assert_equal(success, False)
         assert_equal(response, 'file_type must be "csv", "csv-c", "raw" or "raw-n"')
+
+
+class TestRest(object):
+
+    def __init__(self):
+        try:
+            self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
+            assert_equal(self.nano.license_id, 'default')
+        except bn.BoonException as be:
+            assert_false(False, 'test for default license_id failed')
+
+    def setUp(self):
+        clean_nano_instances(self.nano)
+        success, response = self.nano.open_nano('instance-1')
+        assert_equal(success, True)
+        assert_equal(response['instanceID'], 'instance-1')
+
+    def teardown(self):
+        self.nano.close_nano()
+
+    def negative_test(self):
+
+        # override server with a bad one
+        os.environ['BOON_SERVER'] = 'not-a-server:9999'
+        self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
+
+        # simple_get with bad server
+        success, response = bn.simple_get(self.nano, '/expert/v3/instance')
+        assert_equal(success, False)
+        assert_equal(response, 'request failed: No host specified.')
+
+        # multipart_post with bad server
+        success, response = bn.multipart_post(self.nano, '/expert/v3/instance')
+        assert_equal(success, False)
+        assert_equal(response, 'request failed: No host specified.')
+
+        # simple_post with bad server
+        success, response = bn.simple_post(self.nano, '/expert/v3/deleteInstance')
+        assert_equal(success, False)
+        assert_equal(response, 'request failed: No host specified.')
+
+        # simple_delete with bad server
+        success, response = bn.simple_delete(self.nano, '/expert/v3/deleteInstance')
+        assert_equal(success, False)
+        assert_equal(response, 'request failed: No host specified.')
 
 
 if __name__ == '__main__':

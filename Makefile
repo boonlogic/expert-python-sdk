@@ -8,7 +8,8 @@ init:
 
 test: local-env-check
 	@source local-env/bin/activate; \
-	coverage run -m nose tests/test_client.py; \
+	cd tests ; \
+	coverage run --source=boonnano -m nose -verbosity=2 test_client.py; \
 	coverage html
 
 pypi:
