@@ -1,5 +1,5 @@
 init:
-	@python3 -m venv local-env; \
+	python3 -m venv local-env; \
 	. local-env/bin/activate; \
 	pip3 install -r requirements.txt; \
 	echo ""; \
