@@ -1,0 +1,6 @@
+{
+    "default": {
+        "api-key": "no-key",
+        "api-tenant": "no-tenant"
+    }
+}

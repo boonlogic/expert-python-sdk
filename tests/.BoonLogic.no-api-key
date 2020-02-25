@@ -1,0 +1,6 @@
+{
+    "default": {
+        "api-tenant": "no-tenant",
+        "server": "http://localhost:5008"
+    }
+}

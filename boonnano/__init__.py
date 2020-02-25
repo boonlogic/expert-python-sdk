@@ -30,7 +30,7 @@ class NanoHandle:
         The is the primary handle to manage a nano pod instance
 
         Args:
-            license_id (str): license identifier label found within the .BoonLogic configuration file
+            license_id (str): license identifier label found within the .BoonLogic.license configuration file
             license_file (str): path to .BoonLogic license file
             timeout (float): read timeout for http requests
 
@@ -43,7 +43,7 @@ class NanoHandle:
         self.numeric_format = ''
 
         # when license_id comes in as None, use 'default'
-        if license_id == None:
+        if license_id is None:
             license_id = 'default'
 
         license_path = os.path.expanduser(license_file)
@@ -54,7 +54,8 @@ class NanoHandle:
                     file_data = json.load(json_file)
             except json.JSONDecodeError as e:
                 raise BoonException(
-                    "json formatting error in .BoonLogic file, {}, line: {}, col: {}".format(e.msg, e.lineno, e.colno))
+                    "json formatting error in .BoonLogic.license file, {}, line: {}, col: {}".format(e.msg, e.lineno,
+                                                                                                     e.colno))
         else:
             raise BoonException("file {} does not exist".format(license_path))
 
@@ -65,12 +66,13 @@ class NanoHandle:
             if license_env in file_data:
                 self.license_id = license_env
             else:
-                raise BoonException("BOON_LICENSE_ID value of '{}' not found in .BoonLogic file".format(license_env))
+                raise BoonException(
+                    "BOON_LICENSE_ID value of '{}' not found in .BoonLogic.license file".format(license_env))
         else:
             if license_id in file_data:
                 self.license_id = license_id
             else:
-                raise BoonException("license_id '{}' not found in .BoonLogic file".format(license_id))
+                raise BoonException("license_id '{}' not found in .BoonLogic.license file".format(license_id))
 
         license_block = file_data[self.license_id]
 
@@ -79,7 +81,7 @@ class NanoHandle:
         if not self.api_key:
             if 'api-key' not in license_block.keys():
                 raise BoonException(
-                    "'api-key' is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic file")
+                    "'api-key' is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic.license file")
             self.api_key = license_block['api-key']
 
         # load the server, environment gets precedence
@@ -87,7 +89,7 @@ class NanoHandle:
         if not self.server:
             if 'server' not in license_block.keys():
                 raise BoonException(
-                    "'server' is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic file")
+                    "'server' is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic.license file")
             self.server = license_block['server']
 
         # load the tenant, environment gets precedence
@@ -95,7 +97,7 @@ class NanoHandle:
         if not self.api_tenant:
             if 'api-tenant' not in license_block.keys():
                 raise BoonException(
-                    "'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic file")
+                    "'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic.license file")
             self.api_tenant = license_block['api-tenant']
 
         # set up base url
@@ -145,6 +147,92 @@ class NanoHandle:
 
         self.http.clear()
         return result, None
+
+    def create_config(self, feature_count, numeric_format, min_val, max_val, weight,
+                      percent_variation, streaming_window, accuracy, label=None):
+        """generate a configuration template for the given parameters
+
+        A discrete configuration is specified as a list of min, max, weights, and labels
+
+        Args:
+            feature_count (int): number of features per vector
+            numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
+            min_val (list): the value that should be considered the minimum value for this feature. This
+                can be set to a value larger than the actual min if you want to treat all value less
+                than that as the same (for instance, to keep a noise spike from having undue influence
+                in the clustering.  a single element list assigns all features with same min_val
+            max_val (list): corresponding maximum value, a single element list assigns all features with same max_val
+            weight (list): weight for this feature, a single element list assigns all features with same weight
+            label (list): list of labels to assign to features
+            percent_variation (float):
+            streaming_window (integer):
+            accuracy (float):
+
+        Returns:
+            result (boolean): true if successful (configuration was successfully created)
+            response (dict or str): configuration dictionary when result is true, error string when result is false
+
+        """
+        template_cmd = self.url + 'configTemplate/' + '?api-tenant=' + self.api_tenant
+        template_cmd += '&featureCount=' + str(feature_count)
+        template_cmd += '&numericFormat=' + str(numeric_format)
+        if isinstance(min_val, list):
+            template_cmd += '&minVal=' + ",".join([str(s) for s in min_val])
+        elif isinstance(max_val, np.ndarray):
+            template_cmd += '&minVal=' + ",".join([str(s) for s in min_val])
+        else:
+            return False, "min_val must be list or numpy array"
+        if isinstance(max_val, list):
+            template_cmd += '&maxVal=' + ",".join([str(s) for s in max_val])
+        elif isinstance(max_val, np.ndarray):
+            template_cmd += '&maxVal=' + ",".join([str(s) for s in max_val])
+        else:
+            return False, "max_val must be list or numpy array"
+        if isinstance(weight, list):
+            template_cmd += '&weight=' + ",".join([str(s) for s in weight])
+        elif isinstance(max_val, np.ndarray):
+            template_cmd += '&weight=' + ",".join([str(s) for s in weight])
+        else:
+            return False, "weight must be list or numpy array"
+        if isinstance(label, list):
+            template_cmd += '&label=' + ",".join([str(s) for s in label])
+        elif label:
+            return False, "label must be list"
+        template_cmd += '&percentVariation=' + str(percent_variation)
+        template_cmd += '&streamingWindowSize=' + str(streaming_window)
+        template_cmd += '&accuracy=' + str(accuracy)
+
+        return simple_get(self, template_cmd)
+
+    def configure_nano(self, config):
+        """returns the posted clustering configuration
+
+         Args:
+             feature_count (int): number of features per vector
+             numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
+             min: list of minimum values per feature, if specified as a single value, use that on all features
+             max: list of maximum values per feature, if specified as a single value, use that on all features
+             weight (float):
+             labels (list):
+             percent_variation (float):
+             streaming_window (integer):
+             accuracy (float):
+             config (dict):
+
+         Returns:
+             result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
+             response (dict or str): configuration dictionary when result is true, error string when result is false
+
+         """
+
+        body = json.dumps(config)
+
+        config_cmd = self.url + 'clusterConfig/' + self.instance + '?api-tenant=' + self.api_tenant
+        result, response = simple_post(self, config_cmd, body=body)
+        if result:
+            self.numeric_format = config['numericFormat']
+
+        return result, response
 
     def nano_list(self):
         """returns list of nano instances allocated for a pod
@@ -209,9 +297,10 @@ class NanoHandle:
                     if magic_num != b'\xef\xbe':
                         return False, 'file {} is not a Boon Logic nano-formatted file, bad magic number'.format(
                             filename)
-
         except KeyError:
             return False, 'file {} is not a Boon Logic nano-formatted file'.format(filename)
+        except Exception as e:
+            return False, 'corrupt file {}'.format(filename)
 
         with open(filename, 'rb') as fp:
             nano = fp.read()
@@ -230,48 +319,6 @@ class NanoHandle:
 
         return True, response
 
-    def configure_nano(self, feature_count=10, numeric_format="float32", min=1, max=10, weight=1, labels="",
-                       percent_variation=0.05, streaming_window=1, accuracy=0.99, config=None):
-        """returns the posted clustering configuration
-
-         Args:
-             feature_count (int): number of features per vector
-             numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
-             min (float):
-             max (float):
-             weight (float):
-             labels (list):
-             percent_variation (float):
-             streaming_window (integer):
-             accuracy (float):
-             config (dict):
-
-         Returns:
-             result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
-             response (dict or str): configuration dictionary when result is true, error string when result is false
-
-         """
-
-        # verify numeric_format
-        if numeric_format not in ['float32', 'int16', 'uint16']:
-            return False, 'numeric_format must be "float32", "int16", or "uint16"'
-
-        # build command
-        config_cmd = self.url + 'clusterConfig/' + self.instance + '?api-tenant=' + self.api_tenant
-        if not config:
-            new_config = generate_config(numeric_format, feature_count, min, max, weight, labels, percent_variation,
-                                         streaming_window, accuracy)
-        else:
-            new_config = config
-
-        body = json.dumps(new_config)
-
-        result, response = simple_post(self, config_cmd, body=body)
-        if result:
-            self.numeric_format = new_config['numericFormat']
-
-        return result, response
-
     def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
         """autotunes the percent variation, min and max for each feature
 
@@ -279,7 +326,7 @@ class NanoHandle:
             autotune_pv (boolean):
             autotune_range (boolean):
             by_feature (boolean):
-            exclusions (boolean):
+            exclusions (list):
 
         Returns:
             result (boolean): true if successful (autotuning was completed)
@@ -292,8 +339,10 @@ class NanoHandle:
         config_cmd += '&byFeature=' + str(by_feature).lower()
         config_cmd += '&autoTunePV=' + str(autotune_pv).lower()
         config_cmd += '&autoTuneRange=' + str(autotune_range).lower()
-        if exclusions:
-            config_cmd += '&exclusions=' + str(exclusions)[1:-1].replace(' ', '')
+        if isinstance(exclusions, list):
+            config_cmd += '&exclusions=' + ",".join([str(s) for s in exclusions])
+        elif exclusions:
+            return False, 'exclusions must be a list'
 
         # autotune parameters
         return simple_post(self, config_cmd)
@@ -309,14 +358,13 @@ class NanoHandle:
         config_cmd = self.url + 'clusterConfig/' + self.instance + '?api-tenant=' + self.api_tenant
         return simple_get(self, config_cmd)
 
-    def load_file(self, file, file_type, gzip=False, metadata=None, append_data=False):
+    def load_file(self, file, file_type, gzip=False, append_data=False):
         """load nano data from a file
 
         Args:
             file (str): local path to data file
             file_type (str): file type specifier, must be either 'cvs' or 'raw'
             gzip (boolean): true if file is gzip'd, false if not gzip'd
-            metadata (list): list of data labels to attach to data fields
             append_data (boolean): true if data should be appended to previous data, false if existing
                 data should be truncated
 
@@ -328,10 +376,12 @@ class NanoHandle:
 
         # load the data file
         try:
-            with open(file) as fp:
+            with open(file, 'rb') as fp:
                 file_data = fp.read()
         except FileNotFoundError as e:
             return False, e.strerror
+        except Exception as e:
+            return False, e
 
         # verify file_type is set correctly
         if file_type not in ['csv', 'csv-c', 'raw', 'raw-n']:
@@ -339,11 +389,7 @@ class NanoHandle:
 
         file_name = os.path.basename(file)
 
-        if metadata:
-            fields = {'data': (file_name, file_data),
-                      'metadata': metadata.replace(',', '|').replace('{', '').replace('}', '').replace(' ', '')}
-        else:
-            fields = {'data': (file_name, file_data)}
+        fields = {'data': (file_name, file_data)}
 
         # build command
         dataset_cmd = self.url + 'data/' + self.instance + '?api-tenant=' + self.api_tenant
@@ -353,12 +399,11 @@ class NanoHandle:
 
         return multipart_post(self, dataset_cmd, fields=fields)
 
-    def load_data(self, data, metadata=None, append_data=False):
+    def load_data(self, data, append_data=False):
         """load nano data from an existing numpy array or simple python list
 
         Args:
             data (np.ndarray or list): numpy array or list of data values
-            metadata (list): list of data labels to attach to data fields
             append_data (boolean): true if data should be appended to previous data, false if existing
                 data should be truncated
 
@@ -386,11 +431,7 @@ class NanoHandle:
         file_name = 'dummy_filename.bin'
         file_type = 'raw'
 
-        if metadata:
-            fields = {'data': (file_name, data),
-                      'metadata': metadata.replace(',', '|').replace('{', '').replace('}', '').replace(' ', '')}
-        else:
-            fields = {'data': (file_name, data)}
+        fields = {'data': (file_name, data)}
 
         # build command
         dataset_cmd = self.url + 'data/' + self.instance + '?api-tenant=' + self.api_tenant
@@ -544,65 +585,3 @@ class NanoHandle:
         results_cmd = results_cmd + '&results=' + results_str
 
         return simple_get(self, results_cmd)
-
-
-###########
-# PRIVATE #
-###########
-
-
-def generate_config(numeric_format, feature_count, minVal=1, maxVal=10, weight=1, labels=None,
-                    percent_variation=0.05, streaming_window=1, accuracy=0.99):
-    """generate a configuration for the given parameters
-
-    A discrete configuration is specified as a list of minVal, maxVal, weights, and labels
-
-    Args:
-        feature_count (int): number of features per vector
-        numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
-        minVal (list): the value that should be considered the minimum value for this feature. This
-            can be set to a value larger than the actual min if you want to treat all value less
-            than that as the same (for instance, to keep a noise spike from having undue influence
-            in the clustering
-        maxVal (list): corresponding maximum value
-        weight (list): weight for this feature, if a list of 1 is specified, all weights are one
-        labels (list):
-        percent_variation (float):
-        streaming_window (integer):
-        accuracy (float):
-
-    Returns:
-        result (boolean): true if successful (configuration was successfully created)
-        response (dict or str): configuration dictionary when result is true, error string when result is false
-
-    """
-    config = {}
-    config['accuracy'] = accuracy
-    temp_array = []
-    for x in range(feature_count):
-        temp_feature = {}
-        # max
-        if len([max]) == 1:
-            temp_feature['maxVal'] = maxVal
-        else:  # the max vals are given as a list
-            temp_feature['maxVal'] = maxVal[x]
-        # min
-        if len([min]) == 1:
-            temp_feature['minVal'] = minVal
-        else:  # the min vals are given as a list
-            temp_feature['minVal'] = minVal[x]
-        # weights
-        if len([weight]) == 1:
-            temp_feature['weight'] = weight
-        else:  # the weight vals are given as a list
-            temp_feature['weight'] = weight[x]
-        # labels
-        if labels != "" and labels[x] != "":
-            temp_feature['label'] = labels[x]
-        temp_array.append(temp_feature)
-    config['features'] = temp_array
-    config['numericFormat'] = str(numeric_format)
-    config['percentVariation'] = percent_variation
-    config['streamingWindowSize'] = streaming_window
-
-    return config

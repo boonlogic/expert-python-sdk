@@ -4,8 +4,8 @@ import urllib3
 
 """a collection of methods to standardize/isolate http request/response"""
 
-def outgoing_data(response):
 
+def outgoing_data(response):
     if response.status != 200:
         decoded = json.loads(response.data.decode('utf-8'))
         if 'code' in decoded and 'message' in decoded:
@@ -27,7 +27,6 @@ def outgoing_data(response):
 
 
 def simple_get(nano_handle, get_cmd):
-
     try:
         response = nano_handle.http.request(
             'GET',
@@ -38,14 +37,12 @@ def simple_get(nano_handle, get_cmd):
             }
         )
     except Exception as e:
-        return False, 'request failed'
+        return False, 'request failed: {}'.format(e)
 
     return outgoing_data(response)
 
 
 def multipart_post(nano_handle, post_cmd, fields=None):
-
-    multi_fields = urllib3.filepost.encode_multipart_formdata(fields)
 
     try:
         response = nano_handle.http.request(
@@ -63,7 +60,6 @@ def multipart_post(nano_handle, post_cmd, fields=None):
 
 
 def simple_post(nano_handle, post_cmd, body=None):
-
     try:
         response = nano_handle.http.request(
             'POST',
@@ -81,7 +77,6 @@ def simple_post(nano_handle, post_cmd, body=None):
 
 
 def simple_delete(nano_handle, delete_cmd):
-
     try:
         response = nano_handle.http.request(
             'DELETE',
