@@ -1,20 +1,19 @@
-
 init:
 	@python3 -m venv local-env; \
-	source local-env/bin/activate; \
+	. local-env/bin/activate; \
 	pip install -r requirements.txt; \
 	echo ""; \
 	echo "virtual environment configured, use 'source local-env/bin/activate' to enable it"
 
 test: local-env-check
-	@source local-env/bin/activate; \
+	@. local-env/bin/activate; \
 	cd tests ; \
 	coverage run --source=boonnano -m nose -verbosity=2 test_client.py; \
 	coverage html
 
 pypi:
-	@source local-env/bin/activate; \
-	python setup.py sdist; \
+	@. local-env/bin/activate; \
+	python3 setup.py sdist; \
 	twine upload --skip-existing dist/*
 
 local-env-check:
