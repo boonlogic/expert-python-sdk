@@ -1,4 +1,4 @@
-SHELL := /bin/bash
+export SHELL := /bin/bash
 
 init:
 	python3 -m venv local-env; \
