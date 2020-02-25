@@ -31,25 +31,24 @@ if not success:
 print(json.dumps(response, indent=4))
 
 # configure the nano by specifying individual parameters
-success, response = nano.configure_nano(numeric_format='float32', feature_count=20, min=-10, max=15,
-                                        percent_variation=0.05)
+success, response = nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10], max_val=[15],
+                                       weight=[1], accuracy=0.99, percent_variation=0.05, streaming_window=1)
 if not success:
     print("configure_nano failed: {}".format(response))
     sys.exit(1)
 print(json.dumps(response, indent=4))
-json_config = response
+
+# configure the nano using the configuration provided by create_config
+success, response = nano.configure_nano(config=response)
+if not success:
+    print("configure_nano failed: {}".format(response))
+    sys.exit(1)
+print(json.dumps(response, indent=4))
 
 # retrieve the nano configuration
 success, response = nano.get_config()
 if not success:
     print("get_config failed: {}".format(response))
-    sys.exit(1)
-print(json.dumps(response, indent=4))
-
-# configure the nano using a pre-made configuration block
-success, response = nano.configure_nano(config=json_config)
-if not success:
-    print("configure_nano failed: {}".format(response))
     sys.exit(1)
 print(json.dumps(response, indent=4))
 
