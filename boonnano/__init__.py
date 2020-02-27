@@ -152,7 +152,7 @@ class NanoHandle:
         self.http.clear()
         return result, None
 
-    def create_config(self, feature_count, numeric_format, min_val=0, max_val=1, weight=(1,),
+    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]), weight=np.array([1]),
                       percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
         """generate a configuration template for the given parameters
 
@@ -182,7 +182,7 @@ class NanoHandle:
         template_cmd += '&numericFormat=' + str(numeric_format)
         if isinstance(min_val, list):
             template_cmd += '&minVal=' + ",".join([str(s) for s in min_val])
-        elif isinstance(max_val, np.ndarray):
+        elif isinstance(min_val, np.ndarray):
             template_cmd += '&minVal=' + ",".join([str(s) for s in min_val])
         else:
             return False, "min_val must be list or numpy array"
@@ -194,7 +194,7 @@ class NanoHandle:
             return False, "max_val must be list or numpy array"
         if isinstance(weight, list):
             template_cmd += '&weight=' + ",".join([str(s) for s in weight])
-        elif isinstance(max_val, np.ndarray):
+        elif isinstance(weight, np.ndarray):
             template_cmd += '&weight=' + ",".join([str(s) for s in weight])
         else:
             return False, "weight must be list or numpy array"
