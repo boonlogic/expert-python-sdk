@@ -46,8 +46,12 @@ class NanoHandle:
         if license_id is None:
             license_id = 'default'
 
-        license_path = os.path.expanduser(license_file)
+        license_file_env = os.getenv('BOON_LICENSE_FILE')
+        if license_file_env:
+            # license file path was specified in environment
+            license_file = license_file_env
 
+        license_path = os.path.expanduser(license_file)
         if os.path.exists(license_path):
             try:
                 with open(license_path, "r") as json_file:
@@ -148,8 +152,8 @@ class NanoHandle:
         self.http.clear()
         return result, None
 
-    def create_config(self, feature_count, numeric_format, min_val, max_val, weight,
-                      percent_variation, streaming_window, accuracy, label=None):
+    def create_config(self, feature_count, numeric_format, min_val=0, max_val=1, weight=(1,),
+                      percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
         """generate a configuration template for the given parameters
 
         A discrete configuration is specified as a list of min, max, weights, and labels
@@ -273,7 +277,7 @@ class NanoHandle:
             with open(filename, 'wb') as fp:
                 fp.write(response)
         except Exception as e:
-            return False, e
+            return False, e.strerror
 
         return True, None
 
