@@ -1,7 +1,6 @@
 export SHELL := /bin/bash
 
 init:
-	echo $(SHELL); \
 	python3 -m venv local-env; \
 	. local-env/bin/activate; \
 	pip3 install -r requirements.txt; \

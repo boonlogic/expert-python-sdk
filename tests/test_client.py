@@ -446,6 +446,23 @@ class TestCluster(object):
         assert_equal(success, False)
         assert_equal(response, 'file_type must be "csv", "csv-c", "raw" or "raw-n"')
 
+        # run a nano with bad results specifier
+        success, response = self.nano.run_nano(results='NA')
+        assert_equal(success, False)
+
+        # get nano results with bad results specifier
+        success, response = self.nano.get_nano_results(results='NA')
+        assert_equal(success, False)
+
+        # get nano status with bad results specifier
+        success, response = self.nano.get_nano_status(results='NA')
+        assert_equal(success, False)
+
+        # save the configuration with a bad pathname
+        success, response = self.nano.save_nano('/badpath/junk/bad-saved-nano-1')
+        assert_equal(success, False)
+        assert_equal(response, 'No such file or directory')
+
 
 class TestRest(object):
 
