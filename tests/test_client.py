@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append('..')
 
 import boonnano as bn
@@ -9,10 +10,9 @@ from nose.tools import assert_list_equal
 from nose.tools import assert_dict_equal
 from nose.tools import assert_false
 import os
-import numpy as np
 import json
-from nose.tools import raises
-from nose.tools import assert_not_equal
+import numpy as np
+import socket
 from nose.tools import assert_raises
 
 
@@ -24,10 +24,41 @@ def clean_nano_instances(nano):
         nano.close_nano()
 
 
+def find_host_addr():
+    host_name = socket.gethostname()
+    host_addr = socket.gethostbyname(host_name)
+    return host_addr
+
+
+init_done = False
+def build_test_environment():
+    global init_done
+    if init_done:
+        return
+    server_addr = os.getenv('EXPERT_SERVER')
+    if not server_addr:
+        server_addr = "http://localhost:5008"
+    elif server_addr == 'auto':
+        host_addr = find_host_addr()
+        server_addr = "http://{}:5008".format(host_addr)
+
+    # iterate over .BoonLogic license files and update server addresses
+    for filename in os.listdir('.'):
+        if filename.startswith(".BoonLogic."):
+            with open(filename, "r") as jsonFile:
+                blob = json.load(jsonFile)
+                blob['default']['server'] = server_addr
+            with open(filename, "w") as jsonFile:
+                json.dump(blob, jsonFile, indent=4)
+    init_done = True
+
+
 class TestManagement(object):
 
     # This test class verifies the NanoHandle/open/close functionality
     # Setup is skipped
+    def __init__(self):
+        build_test_environment()
 
     def test_nano_handle(self):
 
@@ -92,7 +123,7 @@ class TestManagement(object):
         assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BadLogic.license", license_id='sample-license')
 
         # create NanoHandle using badly formatted json
-        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BoonLogic.badformat", license_id='sample-license')
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file="badformat.BoonLogic.license", license_id='sample-license')
 
         # create NanoHandle using non-existent license_id
         assert_raises(bn.BoonException, bn.NanoHandle, license_id='not-a-license')
@@ -103,73 +134,76 @@ class TestManagement(object):
         os.environ.pop('BOON_LICENSE_ID')
 
         # create NanoHandle with missing api-key
-        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BoonLogic.no-api-key")
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file="no-api-key.BoonLogic.license")
 
         # create NanoHandle with missing api-tenant
-        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BoonLogic.no-tenant-id")
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file="no-tenant-id.BoonLogic.license")
 
         # create NanoHandle with missing api-tenant
-        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BoonLogic.no-api-tenant")
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file="no-api-tenant.BoonLogic.license")
 
         # create NanoHandle with missing server
-        assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BoonLogic.no-server")
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file="no-server.BoonLogic.license")
 
     def test_open_close(self):
 
         # allocate four nano handles and open an instance for each
-        nano_dict = dict()
-        try:
-            for cnt in range(1, 5):
-                nano_key = 'nano-' + str(cnt)
-                nano_inst = 'nano-instance-' + str(cnt)
-                nano_dict[nano_key] = bn.NanoHandle(license_file=".BoonLogic.license")
-                assert_equal(nano_dict[nano_key].license_id, 'default')
-                success, response = nano_dict[nano_key].open_nano(nano_inst)
-                assert_equal(success, True)
-                assert_equal(response['instanceID'], nano_inst)
-        except bn.BoonException as be:
-            assert_false(False, 'creation of 4 nano handles failed')
+        for license_file in [".BoonLogic.proxy", ".BoonLogic.license"]:
+            nano_dict = dict()
+            try:
+                for cnt in range(1, 5):
+                    nano_key = 'nano-' + str(cnt)
+                    nano_inst = 'nano-instance-' + str(cnt)
+                    nano_dict[nano_key] = bn.NanoHandle(license_file=license_file)
+                    assert_equal(nano_dict[nano_key].license_id, 'default')
+                    success, response = nano_dict[nano_key].open_nano(nano_inst)
+                    assert_equal(success, True)
+                    assert_equal(response['instanceID'], nano_inst)
+            except bn.BoonException as be:
+                assert_false(False, 'creation of 4 nano handles failed')
 
-        # create one more NanoHandle
-        try:
-            nano = bn.NanoHandle(license_file=".BoonLogic.license")
-            assert_equal(nano.license_id, 'default')
-        except bn.BoonException as be:
-            assert_false(False, 'test for default license_id failed')
+            # create one more NanoHandle
+            try:
+                nano = bn.NanoHandle(license_file=license_file)
+                assert_equal(nano.license_id, 'default')
+            except bn.BoonException as be:
+                assert_false(False, 'test for default license_id failed')
 
-        # attaching to 1 more instance should cause an error
-        success, response = nano.open_nano('1-too-many')
-        assert_equal(success, False)
-        assert_equal(response, '400: All nano instance objects are allocated (total number = 4)')
+            # attaching to 1 more instance should cause an error
+            success, response = nano.open_nano('1-too-many')
+            assert_equal(success, False)
+            assert_equal(response, '400: All nano instance objects are allocated (total number = 4)')
 
-        # close an instance that doesn't exist, this involves creating two nano handles and point them at the
-        # same instance.  closing the first should succeed, the second should fail
-        clean_nano_instances(nano)
-        try:
-            nano1 = bn.NanoHandle(license_file=".BoonLogic.license")
-            nano2 = bn.NanoHandle(license_file=".BoonLogic.license")
-            assert_equal(nano1.license_id, 'default')
-            assert_equal(nano2.license_id, 'default')
-        except bn.BoonException as be:
-            assert_false(False, 'test for default license_id failed')
+            # close an instance that doesn't exist, this involves creating two nano handles and point them at the
+            # same instance.  closing the first should succeed, the second should fail
+            clean_nano_instances(nano)
 
-        success, response = nano1.open_nano('instance-1')
-        assert_equal(success, True)
-        success, response = nano2.open_nano('instance-1')
-        assert_equal(success, True)
+            try:
+                nano1 = bn.NanoHandle(license_file=license_file)
+                nano2 = bn.NanoHandle(license_file=license_file)
+                assert_equal(nano1.license_id, 'default')
+                assert_equal(nano2.license_id, 'default')
+            except bn.BoonException as be:
+                assert_false(False, 'test for default license_id failed')
 
-        # should succeed
-        success, response = nano1.close_nano()
-        assert_equal(success, True)
+            success, response = nano1.open_nano('instance-1')
+            assert_equal(success, True)
+            success, response = nano2.open_nano('instance-1')
+            assert_equal(success, True)
 
-        # should fail
-        success, response = nano2.close_nano()
-        assert_equal(success, False)
+            # should succeed
+            success, response = nano1.close_nano()
+            assert_equal(success, True)
+
+            # should fail
+            success, response = nano2.close_nano()
+            assert_equal(success, False)
 
 
 class TestResults(object):
 
     def __init__(self):
+        build_test_environment()
         try:
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')
@@ -196,6 +230,7 @@ class TestResults(object):
 class TestConfigure(object):
 
     def __init__(self):
+        build_test_environment()
         try:
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')
@@ -313,6 +348,7 @@ class TestConfigure(object):
 class TestCluster(object):
 
     def __init__(self):
+        build_test_environment()
         try:
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')
@@ -467,6 +503,7 @@ class TestCluster(object):
 class TestRest(object):
 
     def __init__(self):
+        build_test_environment()
         try:
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')

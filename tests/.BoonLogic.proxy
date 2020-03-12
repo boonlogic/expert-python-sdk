@@ -2,11 +2,13 @@
     "default": {
         "api-key": "no-key",
         "api-tenant": "no-tenant",
-        "server": "http://10.0.1.51:5008"
+        "server": "http://10.0.1.51:5008",
+        "proxy-server": "http://boon-proxy:8888/"
     },
     "sample-license": {
         "api-key": "sample-key",
         "api-tenant": "sample-tenant",
-        "server": "http://samplehost:5007"
+        "server": "http://samplehost:5007",
+        "proxy-server": "http://boon-proxy:8888"
     }
 }

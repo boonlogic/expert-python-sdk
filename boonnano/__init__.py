@@ -1,3 +1,4 @@
+from urllib3 import ProxyManager
 from urllib3 import PoolManager
 from urllib3 import Timeout
 import json
@@ -33,6 +34,23 @@ class NanoHandle:
             license_id (str): license identifier label found within the .BoonLogic.license configuration file
             license_file (str): path to .BoonLogic license file
             timeout (float): read timeout for http requests
+
+        Environment:
+            BOON_LICENSE_FILE: sets license_file path
+            BOON_LICENSE_ID: sets license_id
+            BOON_API_KEY: overrides the api-key as found in .BoonLogic.license file
+            BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
+            BOON_SERVER: overrides the server as found in .BoonLogic.license file
+            PROXY_SERVER: overrides the proxy server as found in .BoonLogic.license file
+
+        Example:
+            ```python
+            try:
+                nano = bn.NanoHandle()
+            except bn.BoonException as be:
+                print(be)
+                sys.exit(1)
+            ```
 
         """
         self.license_file = license_file
@@ -104,6 +122,12 @@ class NanoHandle:
                     "'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic.license file")
             self.api_tenant = license_block['api-tenant']
 
+        # load the https proxy (if any)
+        self.proxy_server = os.getenv('PROXY_SERVER')
+        if not self.proxy_server:
+            if 'proxy-server' in license_block.keys():
+                self.proxy_server = license_block['proxy-server']
+
         # set up base url
         self.url = self.server + '/expert/v3/'
         if "http" not in self.server:
@@ -111,7 +135,12 @@ class NanoHandle:
 
         # create pool manager
         timeout_inst = Timeout(connect=30.0, read=timeout)
-        self.http = PoolManager(timeout=timeout_inst)
+        if self.proxy_server:
+            # proxy pool
+            self.http = ProxyManager(self.proxy_server, maxsize=10, timeout=timeout_inst)
+        else:
+            # non-proxy pool
+            self.http = PoolManager(timeout=timeout_inst)
 
     def open_nano(self, instance_id):
         """Creates or attaches to a nano pod instance
