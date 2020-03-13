@@ -28,7 +28,8 @@ The license should be placed in a file named ~/.BoonLogic.license
   "default": {
     "api-key": "API-KEY",
     "server": "WEB ADDRESS",
-    "api-tenant": "API-TENANT"
+    "api-tenant": "API-TENANT",
+    "proxy-server": "HTTP-PROXY"
   }
 }
 ```

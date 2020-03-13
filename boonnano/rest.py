@@ -4,6 +4,7 @@ import urllib3
 
 """a collection of methods to standardize/isolate http request/response"""
 
+user_agent = 'Boon Logic / expert-python-sdk / urllib3'
 
 def outgoing_data(response):
     if response.status != 200:
@@ -33,8 +34,9 @@ def simple_get(nano_handle, get_cmd):
             get_cmd,
             headers={
                 'x-token': nano_handle.api_key,
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+                'User-Agent': user_agent
+        }
         )
     except Exception as e:
         return False, 'request failed: {}'.format(e)
@@ -49,7 +51,8 @@ def multipart_post(nano_handle, post_cmd, fields=None):
             'POST',
             post_cmd,
             headers={
-                'x-token': nano_handle.api_key
+                'x-token': nano_handle.api_key,
+                'User-Agent': user_agent
             },
             fields=fields
         )
@@ -66,7 +69,8 @@ def simple_post(nano_handle, post_cmd, body=None):
             post_cmd,
             headers={
                 'x-token': nano_handle.api_key,
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                'User-Agent': user_agent
             },
             body=body
         )
@@ -82,7 +86,8 @@ def simple_delete(nano_handle, delete_cmd):
             'DELETE',
             delete_cmd,
             headers={
-                'x-token': nano_handle.api_key
+                'x-token': nano_handle.api_key,
+                'User-Agent': user_agent
             }
         )
     except Exception as e:
