@@ -24,4 +24,8 @@ local-env-check:
 		exit 1; \
 	fi
 
-.PHONY: init test pypi local-env-check
+docs:
+	@. local-env/bin/activate; \
+	pdoc3 --force -o docs --html boonnano
+
+.PHONY: docs init test pypi local-env-check
