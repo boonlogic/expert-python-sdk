@@ -1,0 +1,2419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.1" />
+<title>boonnano API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>boonnano</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from urllib3 import PoolManager
+from urllib3 import Timeout
+import json
+import os
+import tarfile
+from .rest import simple_get
+from .rest import simple_delete
+from .rest import simple_post
+from .rest import multipart_post
+import numpy as np
+
+__all__ = [&#39;BoonException&#39;, &#39;NanoHandle&#39;]
+
+
+############################
+# BoonNano Python API v3 #
+############################
+
+
+class BoonException(Exception):
+    def __init__(self, message):
+        self.message = message
+
+
+class NanoHandle:
+
+    def __init__(self, license_id=&#39;default&#39;, license_file=&#34;~/.BoonLogic.license&#34;, timeout=120.0):
+        &#34;&#34;&#34;Primary handle for BoonNano Pod instances
+
+        This is the primary handle used to manage a nano pod instance.  The NanoHandle instance will &#39;house&#39; the
+        licensing information and server location for a desired nano instance.
+
+        Args:
+            license_id (str): license identifier label found within the .BoonLogic.license configuration file.  The
+                label &#39;default&#39; will be used when no license file is specified.  Specifying None for license_id will
+                also map to a license_id=&#39;default&#39;
+            license_file (str): path to the license file.
+            timeout (float): read timeout for http requests
+
+        Environment:
+            BOON_LICENSE_FILE: sets license_file path
+            BOON_LICENSE_ID: sets license_id
+            BOON_API_KEY: overrides the api-key as found in .BoonLogic.license file
+            BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
+            BOON_SERVER: overrides the server as found in .BoonLogic.license file
+
+        Example:
+            ```python
+            try:
+                nano = bn.NanoHandle()
+            except bn.BoonException as be:
+                print(be)
+                sys.exit(1)
+            ```
+
+        &#34;&#34;&#34;
+        self.license_file = license_file
+        self.license_id = None
+        self.api_key = None
+        self.api_tenant = None
+        self.instance = &#39;&#39;
+        self.numeric_format = &#39;&#39;
+
+        # when license_id comes in as None, use &#39;default&#39;
+        if license_id is None:
+            license_id = &#39;default&#39;
+
+        license_file_env = os.getenv(&#39;BOON_LICENSE_FILE&#39;)
+        if license_file_env:
+            # license file path was specified in environment
+            license_file = license_file_env
+
+        license_path = os.path.expanduser(license_file)
+        if os.path.exists(license_path):
+            try:
+                with open(license_path, &#34;r&#34;) as json_file:
+                    file_data = json.load(json_file)
+            except json.JSONDecodeError as e:
+                raise BoonException(
+                    &#34;json formatting error in .BoonLogic.license file, {}, line: {}, col: {}&#34;.format(e.msg, e.lineno,
+                                                                                                     e.colno))
+        else:
+            raise BoonException(&#34;file {} does not exist&#34;.format(license_path))
+
+        # load the license block, environment gets precedence
+        license_env = os.getenv(&#39;BOON_LICENSE_ID&#39;)
+        if license_env:
+            # license id was specified through environment
+            if license_env in file_data:
+                self.license_id = license_env
+            else:
+                raise BoonException(
+                    &#34;BOON_LICENSE_ID value of &#39;{}&#39; not found in .BoonLogic.license file&#34;.format(license_env))
+        else:
+            if license_id in file_data:
+                self.license_id = license_id
+            else:
+                raise BoonException(&#34;license_id &#39;{}&#39; not found in .BoonLogic.license file&#34;.format(license_id))
+
+        license_block = file_data[self.license_id]
+
+        # load the api-key, environment gets precedence
+        self.api_key = os.getenv(&#39;BOON_API_KEY&#39;)
+        if not self.api_key:
+            if &#39;api-key&#39; not in license_block.keys():
+                raise BoonException(
+                    &#34;&#39;api-key&#39; is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic.license file&#34;)
+            self.api_key = license_block[&#39;api-key&#39;]
+
+        # load the server, environment gets precedence
+        self.server = os.getenv(&#39;BOON_SERVER&#39;)
+        if not self.server:
+            if &#39;server&#39; not in license_block.keys():
+                raise BoonException(
+                    &#34;&#39;server&#39; is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic.license file&#34;)
+            self.server = license_block[&#39;server&#39;]
+
+        # load the tenant, environment gets precedence
+        self.api_tenant = os.getenv(&#39;BOON_TENANT&#39;)
+        if not self.api_tenant:
+            if &#39;api-tenant&#39; not in license_block.keys():
+                raise BoonException(
+                    &#34;&#39;api-tenant&#39; is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic.license file&#34;)
+            self.api_tenant = license_block[&#39;api-tenant&#39;]
+
+        # set up base url
+        self.url = self.server + &#39;/expert/v3/&#39;
+        if &#34;http&#34; not in self.server:
+            self.url = &#34;http://&#34; + self.url
+
+        # create pool manager
+        timeout_inst = Timeout(connect=30.0, read=timeout)
+        self.http = PoolManager(timeout=timeout_inst)
+
+    def open_nano(self, instance_id):
+        &#34;&#34;&#34;Creates or attaches to a nano pod instance
+
+        Args:
+            instance_id (str): instance identifier to assign to new pod instance
+
+        Returns:
+            success (boolean): true if successful (instance is created or attached)
+            response (str): None when success is true, error string when success=false
+
+        Example:
+            ```python
+            # create new nano instance
+            try:
+                nano = bn.NanoHandle()
+            except bn.BoonException as be:
+                print(be)
+                sys.exit(1)
+
+            # open/attach to nano called sample-instance
+            success, response = nano.open_nano(&#39;sample-instance&#39;)
+            if not success:
+                print(&#34;open_nano failed: {}&#34;.format(response))
+                sys.exit(1)
+            ```
+
+        &#34;&#34;&#34;
+        instance_cmd = self.url + &#39;nanoInstance/&#39; + instance_id + &#39;?api-tenant=&#39; + self.api_tenant
+
+        success, response = simple_post(self, instance_cmd)
+        if not success:
+            return False, response
+
+        self.instance = instance_id
+        return success, response
+
+    def close_nano(self):
+        &#34;&#34;&#34;Closes the pod instance
+
+        Returns:
+            result (boolean):  true if successful (nano pod instance was closed)
+            response (str): None when result is true, error string when result=false
+
+        Example:
+            ```python
+            # create new nano instance
+            try:
+                nano = bn.NanoHandle()
+            except bn.BoonException as be:
+                print(be)
+                sys.exit(1)
+
+            # open/attach to nano called sample-instance
+            success, response = nano.open_nano(&#39;sample-instance&#39;)
+            if not success:
+                print(&#34;open_nano failed: {}&#34;.format(response))
+                sys.exit(1)
+
+             # close/detach the nano instance
+            success, response = nano.close_nano()
+            if not success:
+                print(&#34;close_nano failed: {}&#34;.format(response))
+                sys.exit(1)
+            ```
+
+        &#34;&#34;&#34;
+        close_cmd = self.url + &#39;nanoInstance/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+
+        # delete instance
+        result, response = simple_delete(self, close_cmd)
+        if not result:
+            return result, response
+
+        self.http.clear()
+        return result, None
+
+    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]), weight=np.array([1]),
+                      percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
+        &#34;&#34;&#34;generate a configuration template for the given parameters
+
+        A discrete configuration is specified as a list of min, max, weights, and labels
+
+        Args:
+            feature_count (int): number of features per vector
+            numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
+            min_val (list): the value that should be considered the minimum value for this feature. This
+                can be set to a value larger than the actual min if you want to treat all value less
+                than that as the same (for instance, to keep a noise spike from having undue influence
+                in the clustering.  a single element list assigns all features with same min_val
+            max_val (list): corresponding maximum value, a single element list assigns all features with same max_val
+            weight (list): weight for this feature, a single element list assigns all features with same weight
+            label (list): list of labels to assign to features
+            percent_variation (float):
+            streaming_window (integer):
+            accuracy (float):
+
+        Returns:
+            result (boolean): true if successful (configuration was successfully created)
+            response (dict or str): configuration dictionary when result is true, error string when result is false
+
+        Example:
+            ```python
+            # create the configuration
+            success, response = nano.create_config(numeric_format=&#39;float32&#39;,
+                feature_count=20, min_val=[-10], max_val=[15], percent_variation=0.05,
+                accuracy=0.99, weight=[1], streaming_window=1)
+            if not success:
+                print(&#34;create_config failed: {}&#34;.format(response))
+                sys.exit(1)
+            print(json.dumps(response, indent=4))
+            ```
+
+        &#34;&#34;&#34;
+        template_cmd = self.url + &#39;configTemplate/&#39; + &#39;?api-tenant=&#39; + self.api_tenant
+        template_cmd += &#39;&amp;featureCount=&#39; + str(feature_count)
+        template_cmd += &#39;&amp;numericFormat=&#39; + str(numeric_format)
+        if isinstance(min_val, list):
+            template_cmd += &#39;&amp;minVal=&#39; + &#34;,&#34;.join([str(s) for s in min_val])
+        elif isinstance(min_val, np.ndarray):
+            template_cmd += &#39;&amp;minVal=&#39; + &#34;,&#34;.join([str(s) for s in min_val])
+        else:
+            return False, &#34;min_val must be list or numpy array&#34;
+        if isinstance(max_val, list):
+            template_cmd += &#39;&amp;maxVal=&#39; + &#34;,&#34;.join([str(s) for s in max_val])
+        elif isinstance(max_val, np.ndarray):
+            template_cmd += &#39;&amp;maxVal=&#39; + &#34;,&#34;.join([str(s) for s in max_val])
+        else:
+            return False, &#34;max_val must be list or numpy array&#34;
+        if isinstance(weight, list):
+            template_cmd += &#39;&amp;weight=&#39; + &#34;,&#34;.join([str(s) for s in weight])
+        elif isinstance(weight, np.ndarray):
+            template_cmd += &#39;&amp;weight=&#39; + &#34;,&#34;.join([str(s) for s in weight])
+        else:
+            return False, &#34;weight must be list or numpy array&#34;
+        if isinstance(label, list):
+            template_cmd += &#39;&amp;label=&#39; + &#34;,&#34;.join([str(s) for s in label])
+        elif label:
+            return False, &#34;label must be list&#34;
+        template_cmd += &#39;&amp;percentVariation=&#39; + str(percent_variation)
+        template_cmd += &#39;&amp;streamingWindowSize=&#39; + str(streaming_window)
+        template_cmd += &#39;&amp;accuracy=&#39; + str(accuracy)
+
+        return simple_get(self, template_cmd)
+
+    def configure_nano(self, config):
+        &#34;&#34;&#34;returns the posted clustering configuration
+
+         Args:
+             feature_count (int): number of features per vector
+             numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
+             min: list of minimum values per feature, if specified as a single value, use that on all features
+             max: list of maximum values per feature, if specified as a single value, use that on all features
+             weight (float):
+             labels (list):
+             percent_variation (float):
+             streaming_window (integer):
+             accuracy (float):
+             config (dict):
+
+         Returns:
+             result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
+             response (dict or str): configuration dictionary when result is true, error string when result is false
+
+         &#34;&#34;&#34;
+
+        body = json.dumps(config)
+
+        config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        result, response = simple_post(self, config_cmd, body=body)
+        if result:
+            self.numeric_format = config[&#39;numericFormat&#39;]
+
+        return result, response
+
+    def nano_list(self):
+        &#34;&#34;&#34;returns list of nano instances allocated for a pod
+
+        Returns:
+            result (boolean):  true if successful (list was returned)
+            response (str): json dictionary of pod instances when result=true, error string when result=false
+
+        &#34;&#34;&#34;
+
+        # build command
+        instance_cmd = self.url + &#39;nanoInstances&#39; + &#39;?api-tenant=&#39; + self.api_tenant
+
+        return simple_get(self, instance_cmd)
+
+    def save_nano(self, filename):
+        &#34;&#34;&#34;serialize a nano pod instance and save to a local file
+
+        Args:
+            filename (str): path to local file where saved pod instance should be written
+
+        Returns:
+            result (boolean):  true if successful (pod instance was written)
+            response (str): None when result is true, error string when result=false
+
+        &#34;&#34;&#34;
+
+        # build command
+        snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+
+        # serialize nano
+        result, response = simple_get(self, snapshot_cmd)
+        if not result:
+            return result, response
+
+        # at this point, the call succeeded, saves the result to a local file
+        try:
+            with open(filename, &#39;wb&#39;) as fp:
+                fp.write(response)
+        except Exception as e:
+            return False, e.strerror
+
+        return True, None
+
+    def restore_nano(self, filename):
+        &#34;&#34;&#34;restore a nano pod instance from local file
+
+        Args:
+            filename (str): path to local file containing saved pod instance
+
+        Returns:
+            result (boolean):  true if successful (nano pod instance was restored)
+            response (str): None when result is true, error string when result=false
+
+        &#34;&#34;&#34;
+
+        # verify that input file is a valid nano file (gzip&#39;d tar with Magic Number)
+        try:
+            with tarfile.open(filename, &#39;r:gz&#39;) as tp:
+                with tp.extractfile(&#39;BoonNano/MagicNumber&#39;) as magic_fp:
+                    magic_num = magic_fp.read()
+                    if magic_num != b&#39;\xef\xbe&#39;:
+                        return False, &#39;file {} is not a Boon Logic nano-formatted file, bad magic number&#39;.format(
+                            filename)
+        except KeyError:
+            return False, &#39;file {} is not a Boon Logic nano-formatted file&#39;.format(filename)
+        except Exception as e:
+            return False, &#39;corrupt file {}&#39;.format(filename)
+
+        with open(filename, &#39;rb&#39;) as fp:
+            nano = fp.read()
+
+        # build command
+        snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+
+        fields = {&#39;snapshot&#39;: (filename, nano)}
+
+        result, response = multipart_post(self, snapshot_cmd, fields=fields)
+
+        if not result:
+            return result, response
+
+        self.numeric_format = response[&#39;numericFormat&#39;]
+
+        return True, response
+
+    def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
+        &#34;&#34;&#34;autotunes the percent variation, min and max for each feature
+
+        Args:
+            autotune_pv (boolean):
+            autotune_range (boolean):
+            by_feature (boolean):
+            exclusions (list):
+
+        Returns:
+            result (boolean): true if successful (autotuning was completed)
+            response (dict or str): configuration dictionary when result is true, error string when result is false
+
+        &#34;&#34;&#34;
+
+        # build command
+        config_cmd = self.url + &#39;autoTuneConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        config_cmd += &#39;&amp;byFeature=&#39; + str(by_feature).lower()
+        config_cmd += &#39;&amp;autoTunePV=&#39; + str(autotune_pv).lower()
+        config_cmd += &#39;&amp;autoTuneRange=&#39; + str(autotune_range).lower()
+        if isinstance(exclusions, list):
+            config_cmd += &#39;&amp;exclusions=&#39; + &#34;,&#34;.join([str(s) for s in exclusions])
+        elif exclusions:
+            return False, &#39;exclusions must be a list&#39;
+
+        # autotune parameters
+        return simple_post(self, config_cmd)
+
+    def get_config(self):
+        &#34;&#34;&#34;gets the configuration for this nano pod instance
+
+        Returns:
+            result (boolean): true if successful (configuration was found)
+            response (dict or str): configuration dictionary when result is true, error string when result is false
+
+        &#34;&#34;&#34;
+        config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        return simple_get(self, config_cmd)
+
+    def load_file(self, file, file_type, gzip=False, append_data=False):
+        &#34;&#34;&#34;load nano data from a file
+
+        Args:
+            file (str): local path to data file
+            file_type (str): file type specifier, must be either &#39;cvs&#39; or &#39;raw&#39;
+            gzip (boolean): true if file is gzip&#39;d, false if not gzip&#39;d
+            append_data (boolean): true if data should be appended to previous data, false if existing
+                data should be truncated
+
+        Returns:
+            result (boolean): true if successful (file was successful loaded into nano pod instance)
+            response (str): None when result is true, error string when result=false
+
+        &#34;&#34;&#34;
+
+        # load the data file
+        try:
+            with open(file, &#39;rb&#39;) as fp:
+                file_data = fp.read()
+        except FileNotFoundError as e:
+            return False, e.strerror
+        except Exception as e:
+            return False, e
+
+        # verify file_type is set correctly
+        if file_type not in [&#39;csv&#39;, &#39;csv-c&#39;, &#39;raw&#39;, &#39;raw-n&#39;]:
+            return False, &#39;file_type must be &#34;csv&#34;, &#34;csv-c&#34;, &#34;raw&#34; or &#34;raw-n&#34;&#39;
+
+        file_name = os.path.basename(file)
+
+        fields = {&#39;data&#39;: (file_name, file_data)}
+
+        # build command
+        dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        dataset_cmd += &#39;&amp;fileType=&#39; + file_type
+        dataset_cmd += &#39;&amp;gzip=&#39; + str(gzip).lower()
+        dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
+
+        return multipart_post(self, dataset_cmd, fields=fields)
+
+    def load_data(self, data, append_data=False):
+        &#34;&#34;&#34;load nano data from an existing numpy array or simple python list
+
+        Args:
+            data (np.ndarray or list): numpy array or list of data values
+            append_data (boolean): true if data should be appended to previous data, false if existing
+                data should be truncated
+
+        Returns:
+            result (boolean): true if successful (data was successful loaded into nano pod instance)
+            response (str): None when result is true, error string when result=false
+
+        &#34;&#34;&#34;
+
+        if not isinstance(data, np.ndarray):
+            if self.numeric_format == &#39;int16&#39;:
+                data = np.asarray(data, dtype=np.int16)
+            elif self.numeric_format == &#39;float32&#39;:
+                data = np.asarray(data, dtype=np.float32)
+            elif self.numeric_format == &#39;uint16&#39;:
+                data = np.asarray(data, dtype=np.uint16)
+
+        if self.numeric_format == &#39;int16&#39;:
+            data = data.astype(np.int16)
+        elif self.numeric_format == &#39;float32&#39;:
+            data = data.astype(np.float32)
+        elif self.numeric_format == &#39;uint16&#39;:
+            data = data.astype(np.uint16)
+        data = data.tostring()
+        file_name = &#39;dummy_filename.bin&#39;
+        file_type = &#39;raw&#39;
+
+        fields = {&#39;data&#39;: (file_name, data)}
+
+        # build command
+        dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        dataset_cmd += &#39;&amp;fileType=&#39; + file_type
+        dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
+
+        return multipart_post(self, dataset_cmd, fields=fields)
+
+    def run_nano(self, results=None):
+        &#34;&#34;&#34; clusters the data in the nano pod buffer and returns the specified results
+
+        Args:
+            results (str): comma separated list of result specifiers
+
+                ID = cluster ID
+
+                SI = smoothed anomaly index
+
+                RI = raw anomaly index
+
+                FI = frequency index
+
+                DI = distance index
+
+        Returns:
+            result (boolean): true if successful (nano was successfully run)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        &#34;&#34;&#34;
+
+        results_str = &#39;&#39;
+        if str(results) == &#39;All&#39;:
+            results_str = &#39;ID,SI,RI,FI,DI&#39;
+        elif results:
+            for result in results.split(&#39;,&#39;):
+                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
+                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+            results_str = results
+
+        # build command
+        nano_cmd = self.url + &#39;nanoRun/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        if results:
+            nano_cmd += &#39;&amp;results=&#39; + results_str
+
+        return simple_post(self, nano_cmd)
+
+    def get_version(self):
+        &#34;&#34;&#34; results related to the bytes processed/in the buffer
+
+        Returns:
+            result (boolean): true if successful (version information was retrieved)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        &#34;&#34;&#34;
+
+        # build command (minus the v3 portion)
+        version_cmd = self.url[:-3] + &#39;version&#39; + &#39;?api-tenant=&#39; + self.api_tenant
+        return simple_get(self, version_cmd)
+
+    def get_buffer_status(self):
+        &#34;&#34;&#34; results related to the bytes processed/in the buffer
+
+        Returns:
+            result (boolean): true if successful (nano was successfully run)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        &#34;&#34;&#34;
+        status_cmd = self.url + &#39;bufferStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        return simple_get(self, status_cmd)
+
+    def get_nano_results(self, results=&#39;All&#39;):
+        &#34;&#34;&#34; results per pattern
+
+        Args:
+            results (str): comma separated list of results
+
+                ID: cluster ID
+
+                SI: smoothed anomaly index
+
+                RI: raw anomaly index
+
+                FI: frequency index
+
+                DI: distance index
+
+                All: ID,SI,RI,FI,DI
+
+        &#34;&#34;&#34;
+        # build results command
+        if str(results) == &#39;All&#39;:
+            results_str = &#39;ID,SI,RI,FI,DI&#39;
+        else:
+            for result in results.split(&#39;,&#39;):
+                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
+                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+            results_str = results
+
+        # build command
+        results_cmd = self.url + &#39;nanoResults/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        results_cmd += &#39;&amp;results=&#39; + results_str
+
+        return simple_get(self, results_cmd)
+
+    def get_nano_status(self, results=&#39;All&#39;):
+        &#34;&#34;&#34;results in relation to each cluster/overall stats
+
+        Args:
+            results (str): comma separated list of results
+
+                PCA = principal components (includes 0 cluster)
+
+                clusterGrowth = indexes of each increase in cluster (includes 0 cluster)
+
+                clusterSizes = number of patterns in each cluster (includes 0 cluster)
+
+                anomalyIndexes = anomaly index (includes 0 cluster)
+
+                frequencyIndexes = frequency index (includes 0 cluster)
+
+                distanceIndexes = distance index (includes 0 cluster)
+
+                patternMemory = base64 pattern memory (overall)
+
+                totalInferences = total number of patterns clustered (overall)
+
+                averageInferenceTime = time in milliseconds to cluster per
+                    pattern (not available if uploading from serialized nano) (overall)
+
+                numClusters = total number of clusters (includes 0 cluster) (overall)
+
+        Returns:
+            result (boolean): true if successful (nano was successfully run)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        &#34;&#34;&#34;
+
+        # build results command
+        if str(results) == &#39;All&#39;:
+            results_str = &#39;PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,&#39; \
+                          &#39;distanceIndexes,totalInferences,numClusters&#39;
+        else:
+            for result in results.split(&#39;,&#39;):
+                if result not in [&#39;PCA&#39;, &#39;clusterGrowth&#39;, &#39;clusterSizes&#39;, &#39;anomalyIndexes&#39;, &#39;frequencyIndexes&#39;,
+                                  &#39;distanceIndexes&#39;, &#39;totalInferences&#39;, &#39;numClusters&#39;, &#39;averageInferenceTime&#39;]:
+                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+            results_str = results
+
+        # build command
+        results_cmd = self.url + &#39;nanoStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        results_cmd = results_cmd + &#39;&amp;results=&#39; + results_str
+
+        return simple_get(self, results_cmd)</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="boonnano.rest" href="rest.html">boonnano.rest</a></code></dt>
+<dd>
+<section class="desc"></section>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="boonnano.BoonException"><code class="flex name class">
+<span>class <span class="ident">BoonException</span></span>
+<span>(</span><span>message)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Common base class for all non-exit exceptions.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BoonException(Exception):
+    def __init__(self, message):
+        self.message = message</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="boonnano.NanoHandle"><code class="flex name class">
+<span>class <span class="ident">NanoHandle</span></span>
+<span>(</span><span>license_id='default', license_file='~/.BoonLogic.license', timeout=120.0)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Primary handle for BoonNano Pod instances</p>
+<p>This is the primary handle used to manage a nano pod instance.
+The NanoHandle instance will 'house' the
+licensing information and server location for a desired nano instance.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>license_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>license identifier label found within the .BoonLogic.license configuration file.
+The
+label 'default' will be used when no license file is specified.
+Specifying None for license_id will
+also map to a license_id='default'</dd>
+<dt><strong><code>license_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>path to the license file.</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>float</code></dt>
+<dd>read timeout for http requests</dd>
+</dl>
+<h2 id="environment">Environment</h2>
+<dl>
+<dt><strong><code>BOON_LICENSE_FILE</code></strong></dt>
+<dd>sets license_file path</dd>
+<dt><strong><code>BOON_LICENSE_ID</code></strong></dt>
+<dd>sets license_id</dd>
+<dt><strong><code>BOON_API_KEY</code></strong></dt>
+<dd>overrides the api-key as found in .BoonLogic.license file</dd>
+<dt><strong><code>BOON_API_TENANT</code></strong></dt>
+<dd>overrides the api-tenant as found in .BoonLogic.license file</dd>
+<dt><strong><code>BOON_SERVER</code></strong></dt>
+<dd>overrides the server as found in .BoonLogic.license file</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="python">try:
+    nano = bn.NanoHandle()
+except bn.BoonException as be:
+    print(be)
+    sys.exit(1)
+</code></pre></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NanoHandle:
+
+    def __init__(self, license_id=&#39;default&#39;, license_file=&#34;~/.BoonLogic.license&#34;, timeout=120.0):
+        &#34;&#34;&#34;Primary handle for BoonNano Pod instances
+
+        This is the primary handle used to manage a nano pod instance.  The NanoHandle instance will &#39;house&#39; the
+        licensing information and server location for a desired nano instance.
+
+        Args:
+            license_id (str): license identifier label found within the .BoonLogic.license configuration file.  The
+                label &#39;default&#39; will be used when no license file is specified.  Specifying None for license_id will
+                also map to a license_id=&#39;default&#39;
+            license_file (str): path to the license file.
+            timeout (float): read timeout for http requests
+
+        Environment:
+            BOON_LICENSE_FILE: sets license_file path
+            BOON_LICENSE_ID: sets license_id
+            BOON_API_KEY: overrides the api-key as found in .BoonLogic.license file
+            BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
+            BOON_SERVER: overrides the server as found in .BoonLogic.license file
+
+        Example:
+            ```python
+            try:
+                nano = bn.NanoHandle()
+            except bn.BoonException as be:
+                print(be)
+                sys.exit(1)
+            ```
+
+        &#34;&#34;&#34;
+        self.license_file = license_file
+        self.license_id = None
+        self.api_key = None
+        self.api_tenant = None
+        self.instance = &#39;&#39;
+        self.numeric_format = &#39;&#39;
+
+        # when license_id comes in as None, use &#39;default&#39;
+        if license_id is None:
+            license_id = &#39;default&#39;
+
+        license_file_env = os.getenv(&#39;BOON_LICENSE_FILE&#39;)
+        if license_file_env:
+            # license file path was specified in environment
+            license_file = license_file_env
+
+        license_path = os.path.expanduser(license_file)
+        if os.path.exists(license_path):
+            try:
+                with open(license_path, &#34;r&#34;) as json_file:
+                    file_data = json.load(json_file)
+            except json.JSONDecodeError as e:
+                raise BoonException(
+                    &#34;json formatting error in .BoonLogic.license file, {}, line: {}, col: {}&#34;.format(e.msg, e.lineno,
+                                                                                                     e.colno))
+        else:
+            raise BoonException(&#34;file {} does not exist&#34;.format(license_path))
+
+        # load the license block, environment gets precedence
+        license_env = os.getenv(&#39;BOON_LICENSE_ID&#39;)
+        if license_env:
+            # license id was specified through environment
+            if license_env in file_data:
+                self.license_id = license_env
+            else:
+                raise BoonException(
+                    &#34;BOON_LICENSE_ID value of &#39;{}&#39; not found in .BoonLogic.license file&#34;.format(license_env))
+        else:
+            if license_id in file_data:
+                self.license_id = license_id
+            else:
+                raise BoonException(&#34;license_id &#39;{}&#39; not found in .BoonLogic.license file&#34;.format(license_id))
+
+        license_block = file_data[self.license_id]
+
+        # load the api-key, environment gets precedence
+        self.api_key = os.getenv(&#39;BOON_API_KEY&#39;)
+        if not self.api_key:
+            if &#39;api-key&#39; not in license_block.keys():
+                raise BoonException(
+                    &#34;&#39;api-key&#39; is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic.license file&#34;)
+            self.api_key = license_block[&#39;api-key&#39;]
+
+        # load the server, environment gets precedence
+        self.server = os.getenv(&#39;BOON_SERVER&#39;)
+        if not self.server:
+            if &#39;server&#39; not in license_block.keys():
+                raise BoonException(
+                    &#34;&#39;server&#39; is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic.license file&#34;)
+            self.server = license_block[&#39;server&#39;]
+
+        # load the tenant, environment gets precedence
+        self.api_tenant = os.getenv(&#39;BOON_TENANT&#39;)
+        if not self.api_tenant:
+            if &#39;api-tenant&#39; not in license_block.keys():
+                raise BoonException(
+                    &#34;&#39;api-tenant&#39; is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic.license file&#34;)
+            self.api_tenant = license_block[&#39;api-tenant&#39;]
+
+        # set up base url
+        self.url = self.server + &#39;/expert/v3/&#39;
+        if &#34;http&#34; not in self.server:
+            self.url = &#34;http://&#34; + self.url
+
+        # create pool manager
+        timeout_inst = Timeout(connect=30.0, read=timeout)
+        self.http = PoolManager(timeout=timeout_inst)
+
+    def open_nano(self, instance_id):
+        &#34;&#34;&#34;Creates or attaches to a nano pod instance
+
+        Args:
+            instance_id (str): instance identifier to assign to new pod instance
+
+        Returns:
+            success (boolean): true if successful (instance is created or attached)
+            response (str): None when success is true, error string when success=false
+
+        Example:
+            ```python
+            # create new nano instance
+            try:
+                nano = bn.NanoHandle()
+            except bn.BoonException as be:
+                print(be)
+                sys.exit(1)
+
+            # open/attach to nano called sample-instance
+            success, response = nano.open_nano(&#39;sample-instance&#39;)
+            if not success:
+                print(&#34;open_nano failed: {}&#34;.format(response))
+                sys.exit(1)
+            ```
+
+        &#34;&#34;&#34;
+        instance_cmd = self.url + &#39;nanoInstance/&#39; + instance_id + &#39;?api-tenant=&#39; + self.api_tenant
+
+        success, response = simple_post(self, instance_cmd)
+        if not success:
+            return False, response
+
+        self.instance = instance_id
+        return success, response
+
+    def close_nano(self):
+        &#34;&#34;&#34;Closes the pod instance
+
+        Returns:
+            result (boolean):  true if successful (nano pod instance was closed)
+            response (str): None when result is true, error string when result=false
+
+        Example:
+            ```python
+            # create new nano instance
+            try:
+                nano = bn.NanoHandle()
+            except bn.BoonException as be:
+                print(be)
+                sys.exit(1)
+
+            # open/attach to nano called sample-instance
+            success, response = nano.open_nano(&#39;sample-instance&#39;)
+            if not success:
+                print(&#34;open_nano failed: {}&#34;.format(response))
+                sys.exit(1)
+
+             # close/detach the nano instance
+            success, response = nano.close_nano()
+            if not success:
+                print(&#34;close_nano failed: {}&#34;.format(response))
+                sys.exit(1)
+            ```
+
+        &#34;&#34;&#34;
+        close_cmd = self.url + &#39;nanoInstance/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+
+        # delete instance
+        result, response = simple_delete(self, close_cmd)
+        if not result:
+            return result, response
+
+        self.http.clear()
+        return result, None
+
+    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]), weight=np.array([1]),
+                      percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
+        &#34;&#34;&#34;generate a configuration template for the given parameters
+
+        A discrete configuration is specified as a list of min, max, weights, and labels
+
+        Args:
+            feature_count (int): number of features per vector
+            numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
+            min_val (list): the value that should be considered the minimum value for this feature. This
+                can be set to a value larger than the actual min if you want to treat all value less
+                than that as the same (for instance, to keep a noise spike from having undue influence
+                in the clustering.  a single element list assigns all features with same min_val
+            max_val (list): corresponding maximum value, a single element list assigns all features with same max_val
+            weight (list): weight for this feature, a single element list assigns all features with same weight
+            label (list): list of labels to assign to features
+            percent_variation (float):
+            streaming_window (integer):
+            accuracy (float):
+
+        Returns:
+            result (boolean): true if successful (configuration was successfully created)
+            response (dict or str): configuration dictionary when result is true, error string when result is false
+
+        Example:
+            ```python
+            # create the configuration
+            success, response = nano.create_config(numeric_format=&#39;float32&#39;,
+                feature_count=20, min_val=[-10], max_val=[15], percent_variation=0.05,
+                accuracy=0.99, weight=[1], streaming_window=1)
+            if not success:
+                print(&#34;create_config failed: {}&#34;.format(response))
+                sys.exit(1)
+            print(json.dumps(response, indent=4))
+            ```
+
+        &#34;&#34;&#34;
+        template_cmd = self.url + &#39;configTemplate/&#39; + &#39;?api-tenant=&#39; + self.api_tenant
+        template_cmd += &#39;&amp;featureCount=&#39; + str(feature_count)
+        template_cmd += &#39;&amp;numericFormat=&#39; + str(numeric_format)
+        if isinstance(min_val, list):
+            template_cmd += &#39;&amp;minVal=&#39; + &#34;,&#34;.join([str(s) for s in min_val])
+        elif isinstance(min_val, np.ndarray):
+            template_cmd += &#39;&amp;minVal=&#39; + &#34;,&#34;.join([str(s) for s in min_val])
+        else:
+            return False, &#34;min_val must be list or numpy array&#34;
+        if isinstance(max_val, list):
+            template_cmd += &#39;&amp;maxVal=&#39; + &#34;,&#34;.join([str(s) for s in max_val])
+        elif isinstance(max_val, np.ndarray):
+            template_cmd += &#39;&amp;maxVal=&#39; + &#34;,&#34;.join([str(s) for s in max_val])
+        else:
+            return False, &#34;max_val must be list or numpy array&#34;
+        if isinstance(weight, list):
+            template_cmd += &#39;&amp;weight=&#39; + &#34;,&#34;.join([str(s) for s in weight])
+        elif isinstance(weight, np.ndarray):
+            template_cmd += &#39;&amp;weight=&#39; + &#34;,&#34;.join([str(s) for s in weight])
+        else:
+            return False, &#34;weight must be list or numpy array&#34;
+        if isinstance(label, list):
+            template_cmd += &#39;&amp;label=&#39; + &#34;,&#34;.join([str(s) for s in label])
+        elif label:
+            return False, &#34;label must be list&#34;
+        template_cmd += &#39;&amp;percentVariation=&#39; + str(percent_variation)
+        template_cmd += &#39;&amp;streamingWindowSize=&#39; + str(streaming_window)
+        template_cmd += &#39;&amp;accuracy=&#39; + str(accuracy)
+
+        return simple_get(self, template_cmd)
+
+    def configure_nano(self, config):
+        &#34;&#34;&#34;returns the posted clustering configuration
+
+         Args:
+             feature_count (int): number of features per vector
+             numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
+             min: list of minimum values per feature, if specified as a single value, use that on all features
+             max: list of maximum values per feature, if specified as a single value, use that on all features
+             weight (float):
+             labels (list):
+             percent_variation (float):
+             streaming_window (integer):
+             accuracy (float):
+             config (dict):
+
+         Returns:
+             result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
+             response (dict or str): configuration dictionary when result is true, error string when result is false
+
+         &#34;&#34;&#34;
+
+        body = json.dumps(config)
+
+        config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        result, response = simple_post(self, config_cmd, body=body)
+        if result:
+            self.numeric_format = config[&#39;numericFormat&#39;]
+
+        return result, response
+
+    def nano_list(self):
+        &#34;&#34;&#34;returns list of nano instances allocated for a pod
+
+        Returns:
+            result (boolean):  true if successful (list was returned)
+            response (str): json dictionary of pod instances when result=true, error string when result=false
+
+        &#34;&#34;&#34;
+
+        # build command
+        instance_cmd = self.url + &#39;nanoInstances&#39; + &#39;?api-tenant=&#39; + self.api_tenant
+
+        return simple_get(self, instance_cmd)
+
+    def save_nano(self, filename):
+        &#34;&#34;&#34;serialize a nano pod instance and save to a local file
+
+        Args:
+            filename (str): path to local file where saved pod instance should be written
+
+        Returns:
+            result (boolean):  true if successful (pod instance was written)
+            response (str): None when result is true, error string when result=false
+
+        &#34;&#34;&#34;
+
+        # build command
+        snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+
+        # serialize nano
+        result, response = simple_get(self, snapshot_cmd)
+        if not result:
+            return result, response
+
+        # at this point, the call succeeded, saves the result to a local file
+        try:
+            with open(filename, &#39;wb&#39;) as fp:
+                fp.write(response)
+        except Exception as e:
+            return False, e.strerror
+
+        return True, None
+
+    def restore_nano(self, filename):
+        &#34;&#34;&#34;restore a nano pod instance from local file
+
+        Args:
+            filename (str): path to local file containing saved pod instance
+
+        Returns:
+            result (boolean):  true if successful (nano pod instance was restored)
+            response (str): None when result is true, error string when result=false
+
+        &#34;&#34;&#34;
+
+        # verify that input file is a valid nano file (gzip&#39;d tar with Magic Number)
+        try:
+            with tarfile.open(filename, &#39;r:gz&#39;) as tp:
+                with tp.extractfile(&#39;BoonNano/MagicNumber&#39;) as magic_fp:
+                    magic_num = magic_fp.read()
+                    if magic_num != b&#39;\xef\xbe&#39;:
+                        return False, &#39;file {} is not a Boon Logic nano-formatted file, bad magic number&#39;.format(
+                            filename)
+        except KeyError:
+            return False, &#39;file {} is not a Boon Logic nano-formatted file&#39;.format(filename)
+        except Exception as e:
+            return False, &#39;corrupt file {}&#39;.format(filename)
+
+        with open(filename, &#39;rb&#39;) as fp:
+            nano = fp.read()
+
+        # build command
+        snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+
+        fields = {&#39;snapshot&#39;: (filename, nano)}
+
+        result, response = multipart_post(self, snapshot_cmd, fields=fields)
+
+        if not result:
+            return result, response
+
+        self.numeric_format = response[&#39;numericFormat&#39;]
+
+        return True, response
+
+    def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
+        &#34;&#34;&#34;autotunes the percent variation, min and max for each feature
+
+        Args:
+            autotune_pv (boolean):
+            autotune_range (boolean):
+            by_feature (boolean):
+            exclusions (list):
+
+        Returns:
+            result (boolean): true if successful (autotuning was completed)
+            response (dict or str): configuration dictionary when result is true, error string when result is false
+
+        &#34;&#34;&#34;
+
+        # build command
+        config_cmd = self.url + &#39;autoTuneConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        config_cmd += &#39;&amp;byFeature=&#39; + str(by_feature).lower()
+        config_cmd += &#39;&amp;autoTunePV=&#39; + str(autotune_pv).lower()
+        config_cmd += &#39;&amp;autoTuneRange=&#39; + str(autotune_range).lower()
+        if isinstance(exclusions, list):
+            config_cmd += &#39;&amp;exclusions=&#39; + &#34;,&#34;.join([str(s) for s in exclusions])
+        elif exclusions:
+            return False, &#39;exclusions must be a list&#39;
+
+        # autotune parameters
+        return simple_post(self, config_cmd)
+
+    def get_config(self):
+        &#34;&#34;&#34;gets the configuration for this nano pod instance
+
+        Returns:
+            result (boolean): true if successful (configuration was found)
+            response (dict or str): configuration dictionary when result is true, error string when result is false
+
+        &#34;&#34;&#34;
+        config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        return simple_get(self, config_cmd)
+
+    def load_file(self, file, file_type, gzip=False, append_data=False):
+        &#34;&#34;&#34;load nano data from a file
+
+        Args:
+            file (str): local path to data file
+            file_type (str): file type specifier, must be either &#39;cvs&#39; or &#39;raw&#39;
+            gzip (boolean): true if file is gzip&#39;d, false if not gzip&#39;d
+            append_data (boolean): true if data should be appended to previous data, false if existing
+                data should be truncated
+
+        Returns:
+            result (boolean): true if successful (file was successful loaded into nano pod instance)
+            response (str): None when result is true, error string when result=false
+
+        &#34;&#34;&#34;
+
+        # load the data file
+        try:
+            with open(file, &#39;rb&#39;) as fp:
+                file_data = fp.read()
+        except FileNotFoundError as e:
+            return False, e.strerror
+        except Exception as e:
+            return False, e
+
+        # verify file_type is set correctly
+        if file_type not in [&#39;csv&#39;, &#39;csv-c&#39;, &#39;raw&#39;, &#39;raw-n&#39;]:
+            return False, &#39;file_type must be &#34;csv&#34;, &#34;csv-c&#34;, &#34;raw&#34; or &#34;raw-n&#34;&#39;
+
+        file_name = os.path.basename(file)
+
+        fields = {&#39;data&#39;: (file_name, file_data)}
+
+        # build command
+        dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        dataset_cmd += &#39;&amp;fileType=&#39; + file_type
+        dataset_cmd += &#39;&amp;gzip=&#39; + str(gzip).lower()
+        dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
+
+        return multipart_post(self, dataset_cmd, fields=fields)
+
+    def load_data(self, data, append_data=False):
+        &#34;&#34;&#34;load nano data from an existing numpy array or simple python list
+
+        Args:
+            data (np.ndarray or list): numpy array or list of data values
+            append_data (boolean): true if data should be appended to previous data, false if existing
+                data should be truncated
+
+        Returns:
+            result (boolean): true if successful (data was successful loaded into nano pod instance)
+            response (str): None when result is true, error string when result=false
+
+        &#34;&#34;&#34;
+
+        if not isinstance(data, np.ndarray):
+            if self.numeric_format == &#39;int16&#39;:
+                data = np.asarray(data, dtype=np.int16)
+            elif self.numeric_format == &#39;float32&#39;:
+                data = np.asarray(data, dtype=np.float32)
+            elif self.numeric_format == &#39;uint16&#39;:
+                data = np.asarray(data, dtype=np.uint16)
+
+        if self.numeric_format == &#39;int16&#39;:
+            data = data.astype(np.int16)
+        elif self.numeric_format == &#39;float32&#39;:
+            data = data.astype(np.float32)
+        elif self.numeric_format == &#39;uint16&#39;:
+            data = data.astype(np.uint16)
+        data = data.tostring()
+        file_name = &#39;dummy_filename.bin&#39;
+        file_type = &#39;raw&#39;
+
+        fields = {&#39;data&#39;: (file_name, data)}
+
+        # build command
+        dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        dataset_cmd += &#39;&amp;fileType=&#39; + file_type
+        dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
+
+        return multipart_post(self, dataset_cmd, fields=fields)
+
+    def run_nano(self, results=None):
+        &#34;&#34;&#34; clusters the data in the nano pod buffer and returns the specified results
+
+        Args:
+            results (str): comma separated list of result specifiers
+
+                ID = cluster ID
+
+                SI = smoothed anomaly index
+
+                RI = raw anomaly index
+
+                FI = frequency index
+
+                DI = distance index
+
+        Returns:
+            result (boolean): true if successful (nano was successfully run)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        &#34;&#34;&#34;
+
+        results_str = &#39;&#39;
+        if str(results) == &#39;All&#39;:
+            results_str = &#39;ID,SI,RI,FI,DI&#39;
+        elif results:
+            for result in results.split(&#39;,&#39;):
+                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
+                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+            results_str = results
+
+        # build command
+        nano_cmd = self.url + &#39;nanoRun/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        if results:
+            nano_cmd += &#39;&amp;results=&#39; + results_str
+
+        return simple_post(self, nano_cmd)
+
+    def get_version(self):
+        &#34;&#34;&#34; results related to the bytes processed/in the buffer
+
+        Returns:
+            result (boolean): true if successful (version information was retrieved)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        &#34;&#34;&#34;
+
+        # build command (minus the v3 portion)
+        version_cmd = self.url[:-3] + &#39;version&#39; + &#39;?api-tenant=&#39; + self.api_tenant
+        return simple_get(self, version_cmd)
+
+    def get_buffer_status(self):
+        &#34;&#34;&#34; results related to the bytes processed/in the buffer
+
+        Returns:
+            result (boolean): true if successful (nano was successfully run)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        &#34;&#34;&#34;
+        status_cmd = self.url + &#39;bufferStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        return simple_get(self, status_cmd)
+
+    def get_nano_results(self, results=&#39;All&#39;):
+        &#34;&#34;&#34; results per pattern
+
+        Args:
+            results (str): comma separated list of results
+
+                ID: cluster ID
+
+                SI: smoothed anomaly index
+
+                RI: raw anomaly index
+
+                FI: frequency index
+
+                DI: distance index
+
+                All: ID,SI,RI,FI,DI
+
+        &#34;&#34;&#34;
+        # build results command
+        if str(results) == &#39;All&#39;:
+            results_str = &#39;ID,SI,RI,FI,DI&#39;
+        else:
+            for result in results.split(&#39;,&#39;):
+                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
+                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+            results_str = results
+
+        # build command
+        results_cmd = self.url + &#39;nanoResults/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        results_cmd += &#39;&amp;results=&#39; + results_str
+
+        return simple_get(self, results_cmd)
+
+    def get_nano_status(self, results=&#39;All&#39;):
+        &#34;&#34;&#34;results in relation to each cluster/overall stats
+
+        Args:
+            results (str): comma separated list of results
+
+                PCA = principal components (includes 0 cluster)
+
+                clusterGrowth = indexes of each increase in cluster (includes 0 cluster)
+
+                clusterSizes = number of patterns in each cluster (includes 0 cluster)
+
+                anomalyIndexes = anomaly index (includes 0 cluster)
+
+                frequencyIndexes = frequency index (includes 0 cluster)
+
+                distanceIndexes = distance index (includes 0 cluster)
+
+                patternMemory = base64 pattern memory (overall)
+
+                totalInferences = total number of patterns clustered (overall)
+
+                averageInferenceTime = time in milliseconds to cluster per
+                    pattern (not available if uploading from serialized nano) (overall)
+
+                numClusters = total number of clusters (includes 0 cluster) (overall)
+
+        Returns:
+            result (boolean): true if successful (nano was successfully run)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        &#34;&#34;&#34;
+
+        # build results command
+        if str(results) == &#39;All&#39;:
+            results_str = &#39;PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,&#39; \
+                          &#39;distanceIndexes,totalInferences,numClusters&#39;
+        else:
+            for result in results.split(&#39;,&#39;):
+                if result not in [&#39;PCA&#39;, &#39;clusterGrowth&#39;, &#39;clusterSizes&#39;, &#39;anomalyIndexes&#39;, &#39;frequencyIndexes&#39;,
+                                  &#39;distanceIndexes&#39;, &#39;totalInferences&#39;, &#39;numClusters&#39;, &#39;averageInferenceTime&#39;]:
+                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+            results_str = results
+
+        # build command
+        results_cmd = self.url + &#39;nanoStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        results_cmd = results_cmd + &#39;&amp;results=&#39; + results_str
+
+        return simple_get(self, results_cmd)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="boonnano.NanoHandle.autotune_config"><code class="name flex">
+<span>def <span class="ident">autotune_config</span></span>(<span>self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>autotunes the percent variation, min and max for each feature</p>
+<h2 id="args">Args</h2>
+<p>autotune_pv (boolean):
+autotune_range (boolean):
+by_feature (boolean):
+exclusions (list):</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (autotuning was completed)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
+<dd>configuration dictionary when result is true, error string when result is false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
+    &#34;&#34;&#34;autotunes the percent variation, min and max for each feature
+
+    Args:
+        autotune_pv (boolean):
+        autotune_range (boolean):
+        by_feature (boolean):
+        exclusions (list):
+
+    Returns:
+        result (boolean): true if successful (autotuning was completed)
+        response (dict or str): configuration dictionary when result is true, error string when result is false
+
+    &#34;&#34;&#34;
+
+    # build command
+    config_cmd = self.url + &#39;autoTuneConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+    config_cmd += &#39;&amp;byFeature=&#39; + str(by_feature).lower()
+    config_cmd += &#39;&amp;autoTunePV=&#39; + str(autotune_pv).lower()
+    config_cmd += &#39;&amp;autoTuneRange=&#39; + str(autotune_range).lower()
+    if isinstance(exclusions, list):
+        config_cmd += &#39;&amp;exclusions=&#39; + &#34;,&#34;.join([str(s) for s in exclusions])
+    elif exclusions:
+        return False, &#39;exclusions must be a list&#39;
+
+    # autotune parameters
+    return simple_post(self, config_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.close_nano"><code class="name flex">
+<span>def <span class="ident">close_nano</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Closes the pod instance</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (nano pod instance was closed)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
+<dd>None when result is true, error string when result=false</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="python"># create new nano instance
+try:
+    nano = bn.NanoHandle()
+except bn.BoonException as be:
+    print(be)
+    sys.exit(1)
+
+# open/attach to nano called sample-instance
+success, response = nano.open_nano('sample-instance')
+if not success:
+    print(&quot;open_nano failed: {}&quot;.format(response))
+    sys.exit(1)
+
+ # close/detach the nano instance
+success, response = nano.close_nano()
+if not success:
+    print(&quot;close_nano failed: {}&quot;.format(response))
+    sys.exit(1)
+</code></pre></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def close_nano(self):
+    &#34;&#34;&#34;Closes the pod instance
+
+    Returns:
+        result (boolean):  true if successful (nano pod instance was closed)
+        response (str): None when result is true, error string when result=false
+
+    Example:
+        ```python
+        # create new nano instance
+        try:
+            nano = bn.NanoHandle()
+        except bn.BoonException as be:
+            print(be)
+            sys.exit(1)
+
+        # open/attach to nano called sample-instance
+        success, response = nano.open_nano(&#39;sample-instance&#39;)
+        if not success:
+            print(&#34;open_nano failed: {}&#34;.format(response))
+            sys.exit(1)
+
+         # close/detach the nano instance
+        success, response = nano.close_nano()
+        if not success:
+            print(&#34;close_nano failed: {}&#34;.format(response))
+            sys.exit(1)
+        ```
+
+    &#34;&#34;&#34;
+    close_cmd = self.url + &#39;nanoInstance/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+
+    # delete instance
+    result, response = simple_delete(self, close_cmd)
+    if not result:
+        return result, response
+
+    self.http.clear()
+    return result, None</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.configure_nano"><code class="name flex">
+<span>def <span class="ident">configure_nano</span></span>(<span>self, config)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>returns the posted clustering configuration</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>feature_count</code></strong> :&ensp;<code>int</code></dt>
+<dd>number of features per vector</dd>
+<dt><strong><code>numeric_format</code></strong> :&ensp;<code>str</code></dt>
+<dd>numeric type of data (one of "float32", "uint16", or "int16")</dd>
+<dt><strong><code>min</code></strong></dt>
+<dd>list of minimum values per feature, if specified as a single value, use that on all features</dd>
+<dt><strong><code>max</code></strong></dt>
+<dd>list of maximum values per feature, if specified as a single value, use that on all features</dd>
+</dl>
+<p>weight (float):
+labels (list):
+percent_variation (float):
+streaming_window (integer):
+accuracy (float):
+config (dict):</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (configuration was successfully loaded into nano pod instance)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
+<dd>configuration dictionary when result is true, error string when result is false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_nano(self, config):
+    &#34;&#34;&#34;returns the posted clustering configuration
+
+     Args:
+         feature_count (int): number of features per vector
+         numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
+         min: list of minimum values per feature, if specified as a single value, use that on all features
+         max: list of maximum values per feature, if specified as a single value, use that on all features
+         weight (float):
+         labels (list):
+         percent_variation (float):
+         streaming_window (integer):
+         accuracy (float):
+         config (dict):
+
+     Returns:
+         result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
+         response (dict or str): configuration dictionary when result is true, error string when result is false
+
+     &#34;&#34;&#34;
+
+    body = json.dumps(config)
+
+    config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+    result, response = simple_post(self, config_cmd, body=body)
+    if result:
+        self.numeric_format = config[&#39;numericFormat&#39;]
+
+    return result, response</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.create_config"><code class="name flex">
+<span>def <span class="ident">create_config</span></span>(<span>self, feature_count, numeric_format, min_val=array([0]), max_val=array([1]), weight=array([1]), percent_variation=0.05, streaming_window=1, accuracy=0.99, label=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>generate a configuration template for the given parameters</p>
+<p>A discrete configuration is specified as a list of min, max, weights, and labels</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>feature_count</code></strong> :&ensp;<code>int</code></dt>
+<dd>number of features per vector</dd>
+<dt><strong><code>numeric_format</code></strong> :&ensp;<code>str</code></dt>
+<dd>numeric type of data (one of "float32", "uint16", or "int16")</dd>
+<dt><strong><code>min_val</code></strong> :&ensp;<code>list</code></dt>
+<dd>the value that should be considered the minimum value for this feature. This
+can be set to a value larger than the actual min if you want to treat all value less
+than that as the same (for instance, to keep a noise spike from having undue influence
+in the clustering.
+a single element list assigns all features with same min_val</dd>
+<dt><strong><code>max_val</code></strong> :&ensp;<code>list</code></dt>
+<dd>corresponding maximum value, a single element list assigns all features with same max_val</dd>
+<dt><strong><code>weight</code></strong> :&ensp;<code>list</code></dt>
+<dd>weight for this feature, a single element list assigns all features with same weight</dd>
+<dt><strong><code>label</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of labels to assign to features</dd>
+</dl>
+<p>percent_variation (float):
+streaming_window (integer):
+accuracy (float):</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (configuration was successfully created)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
+<dd>configuration dictionary when result is true, error string when result is false</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="python"># create the configuration
+success, response = nano.create_config(numeric_format='float32',
+    feature_count=20, min_val=[-10], max_val=[15], percent_variation=0.05,
+    accuracy=0.99, weight=[1], streaming_window=1)
+if not success:
+    print(&quot;create_config failed: {}&quot;.format(response))
+    sys.exit(1)
+print(json.dumps(response, indent=4))
+</code></pre></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]), weight=np.array([1]),
+                  percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
+    &#34;&#34;&#34;generate a configuration template for the given parameters
+
+    A discrete configuration is specified as a list of min, max, weights, and labels
+
+    Args:
+        feature_count (int): number of features per vector
+        numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
+        min_val (list): the value that should be considered the minimum value for this feature. This
+            can be set to a value larger than the actual min if you want to treat all value less
+            than that as the same (for instance, to keep a noise spike from having undue influence
+            in the clustering.  a single element list assigns all features with same min_val
+        max_val (list): corresponding maximum value, a single element list assigns all features with same max_val
+        weight (list): weight for this feature, a single element list assigns all features with same weight
+        label (list): list of labels to assign to features
+        percent_variation (float):
+        streaming_window (integer):
+        accuracy (float):
+
+    Returns:
+        result (boolean): true if successful (configuration was successfully created)
+        response (dict or str): configuration dictionary when result is true, error string when result is false
+
+    Example:
+        ```python
+        # create the configuration
+        success, response = nano.create_config(numeric_format=&#39;float32&#39;,
+            feature_count=20, min_val=[-10], max_val=[15], percent_variation=0.05,
+            accuracy=0.99, weight=[1], streaming_window=1)
+        if not success:
+            print(&#34;create_config failed: {}&#34;.format(response))
+            sys.exit(1)
+        print(json.dumps(response, indent=4))
+        ```
+
+    &#34;&#34;&#34;
+    template_cmd = self.url + &#39;configTemplate/&#39; + &#39;?api-tenant=&#39; + self.api_tenant
+    template_cmd += &#39;&amp;featureCount=&#39; + str(feature_count)
+    template_cmd += &#39;&amp;numericFormat=&#39; + str(numeric_format)
+    if isinstance(min_val, list):
+        template_cmd += &#39;&amp;minVal=&#39; + &#34;,&#34;.join([str(s) for s in min_val])
+    elif isinstance(min_val, np.ndarray):
+        template_cmd += &#39;&amp;minVal=&#39; + &#34;,&#34;.join([str(s) for s in min_val])
+    else:
+        return False, &#34;min_val must be list or numpy array&#34;
+    if isinstance(max_val, list):
+        template_cmd += &#39;&amp;maxVal=&#39; + &#34;,&#34;.join([str(s) for s in max_val])
+    elif isinstance(max_val, np.ndarray):
+        template_cmd += &#39;&amp;maxVal=&#39; + &#34;,&#34;.join([str(s) for s in max_val])
+    else:
+        return False, &#34;max_val must be list or numpy array&#34;
+    if isinstance(weight, list):
+        template_cmd += &#39;&amp;weight=&#39; + &#34;,&#34;.join([str(s) for s in weight])
+    elif isinstance(weight, np.ndarray):
+        template_cmd += &#39;&amp;weight=&#39; + &#34;,&#34;.join([str(s) for s in weight])
+    else:
+        return False, &#34;weight must be list or numpy array&#34;
+    if isinstance(label, list):
+        template_cmd += &#39;&amp;label=&#39; + &#34;,&#34;.join([str(s) for s in label])
+    elif label:
+        return False, &#34;label must be list&#34;
+    template_cmd += &#39;&amp;percentVariation=&#39; + str(percent_variation)
+    template_cmd += &#39;&amp;streamingWindowSize=&#39; + str(streaming_window)
+    template_cmd += &#39;&amp;accuracy=&#39; + str(accuracy)
+
+    return simple_get(self, template_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.get_buffer_status"><code class="name flex">
+<span>def <span class="ident">get_buffer_status</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>results related to the bytes processed/in the buffer</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (nano was successfully run)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
+<dd>dictionary of results when result is true, error message when result = false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_buffer_status(self):
+    &#34;&#34;&#34; results related to the bytes processed/in the buffer
+
+    Returns:
+        result (boolean): true if successful (nano was successfully run)
+        response (dict or str): dictionary of results when result is true, error message when result = false
+
+    &#34;&#34;&#34;
+    status_cmd = self.url + &#39;bufferStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+    return simple_get(self, status_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.get_config"><code class="name flex">
+<span>def <span class="ident">get_config</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>gets the configuration for this nano pod instance</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (configuration was found)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
+<dd>configuration dictionary when result is true, error string when result is false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_config(self):
+    &#34;&#34;&#34;gets the configuration for this nano pod instance
+
+    Returns:
+        result (boolean): true if successful (configuration was found)
+        response (dict or str): configuration dictionary when result is true, error string when result is false
+
+    &#34;&#34;&#34;
+    config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+    return simple_get(self, config_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.get_nano_results"><code class="name flex">
+<span>def <span class="ident">get_nano_results</span></span>(<span>self, results='All')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>results per pattern</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
+<dd>
+<p>comma separated list of results</p>
+<p>ID: cluster ID</p>
+<p>SI: smoothed anomaly index</p>
+<p>RI: raw anomaly index</p>
+<p>FI: frequency index</p>
+<p>DI: distance index</p>
+<p>All: ID,SI,RI,FI,DI</p>
+</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_nano_results(self, results=&#39;All&#39;):
+    &#34;&#34;&#34; results per pattern
+
+    Args:
+        results (str): comma separated list of results
+
+            ID: cluster ID
+
+            SI: smoothed anomaly index
+
+            RI: raw anomaly index
+
+            FI: frequency index
+
+            DI: distance index
+
+            All: ID,SI,RI,FI,DI
+
+    &#34;&#34;&#34;
+    # build results command
+    if str(results) == &#39;All&#39;:
+        results_str = &#39;ID,SI,RI,FI,DI&#39;
+    else:
+        for result in results.split(&#39;,&#39;):
+            if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
+                return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+        results_str = results
+
+    # build command
+    results_cmd = self.url + &#39;nanoResults/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+    results_cmd += &#39;&amp;results=&#39; + results_str
+
+    return simple_get(self, results_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.get_nano_status"><code class="name flex">
+<span>def <span class="ident">get_nano_status</span></span>(<span>self, results='All')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>results in relation to each cluster/overall stats</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
+<dd>
+<p>comma separated list of results</p>
+<p>PCA = principal components (includes 0 cluster)</p>
+<p>clusterGrowth = indexes of each increase in cluster (includes 0 cluster)</p>
+<p>clusterSizes = number of patterns in each cluster (includes 0 cluster)</p>
+<p>anomalyIndexes = anomaly index (includes 0 cluster)</p>
+<p>frequencyIndexes = frequency index (includes 0 cluster)</p>
+<p>distanceIndexes = distance index (includes 0 cluster)</p>
+<p>patternMemory = base64 pattern memory (overall)</p>
+<p>totalInferences = total number of patterns clustered (overall)</p>
+<p>averageInferenceTime = time in milliseconds to cluster per
+pattern (not available if uploading from serialized nano) (overall)</p>
+<p>numClusters = total number of clusters (includes 0 cluster) (overall)</p>
+</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (nano was successfully run)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
+<dd>dictionary of results when result is true, error message when result = false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_nano_status(self, results=&#39;All&#39;):
+    &#34;&#34;&#34;results in relation to each cluster/overall stats
+
+    Args:
+        results (str): comma separated list of results
+
+            PCA = principal components (includes 0 cluster)
+
+            clusterGrowth = indexes of each increase in cluster (includes 0 cluster)
+
+            clusterSizes = number of patterns in each cluster (includes 0 cluster)
+
+            anomalyIndexes = anomaly index (includes 0 cluster)
+
+            frequencyIndexes = frequency index (includes 0 cluster)
+
+            distanceIndexes = distance index (includes 0 cluster)
+
+            patternMemory = base64 pattern memory (overall)
+
+            totalInferences = total number of patterns clustered (overall)
+
+            averageInferenceTime = time in milliseconds to cluster per
+                pattern (not available if uploading from serialized nano) (overall)
+
+            numClusters = total number of clusters (includes 0 cluster) (overall)
+
+    Returns:
+        result (boolean): true if successful (nano was successfully run)
+        response (dict or str): dictionary of results when result is true, error message when result = false
+
+    &#34;&#34;&#34;
+
+    # build results command
+    if str(results) == &#39;All&#39;:
+        results_str = &#39;PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,&#39; \
+                      &#39;distanceIndexes,totalInferences,numClusters&#39;
+    else:
+        for result in results.split(&#39;,&#39;):
+            if result not in [&#39;PCA&#39;, &#39;clusterGrowth&#39;, &#39;clusterSizes&#39;, &#39;anomalyIndexes&#39;, &#39;frequencyIndexes&#39;,
+                              &#39;distanceIndexes&#39;, &#39;totalInferences&#39;, &#39;numClusters&#39;, &#39;averageInferenceTime&#39;]:
+                return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+        results_str = results
+
+    # build command
+    results_cmd = self.url + &#39;nanoStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+    results_cmd = results_cmd + &#39;&amp;results=&#39; + results_str
+
+    return simple_get(self, results_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.get_version"><code class="name flex">
+<span>def <span class="ident">get_version</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>results related to the bytes processed/in the buffer</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (version information was retrieved)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
+<dd>dictionary of results when result is true, error message when result = false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_version(self):
+    &#34;&#34;&#34; results related to the bytes processed/in the buffer
+
+    Returns:
+        result (boolean): true if successful (version information was retrieved)
+        response (dict or str): dictionary of results when result is true, error message when result = false
+
+    &#34;&#34;&#34;
+
+    # build command (minus the v3 portion)
+    version_cmd = self.url[:-3] + &#39;version&#39; + &#39;?api-tenant=&#39; + self.api_tenant
+    return simple_get(self, version_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.load_data"><code class="name flex">
+<span>def <span class="ident">load_data</span></span>(<span>self, data, append_data=False)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>load nano data from an existing numpy array or simple python list</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>np.ndarray</code> or <code>list</code></dt>
+<dd>numpy array or list of data values</dd>
+<dt><strong><code>append_data</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if data should be appended to previous data, false if existing
+data should be truncated</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (data was successful loaded into nano pod instance)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
+<dd>None when result is true, error string when result=false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_data(self, data, append_data=False):
+    &#34;&#34;&#34;load nano data from an existing numpy array or simple python list
+
+    Args:
+        data (np.ndarray or list): numpy array or list of data values
+        append_data (boolean): true if data should be appended to previous data, false if existing
+            data should be truncated
+
+    Returns:
+        result (boolean): true if successful (data was successful loaded into nano pod instance)
+        response (str): None when result is true, error string when result=false
+
+    &#34;&#34;&#34;
+
+    if not isinstance(data, np.ndarray):
+        if self.numeric_format == &#39;int16&#39;:
+            data = np.asarray(data, dtype=np.int16)
+        elif self.numeric_format == &#39;float32&#39;:
+            data = np.asarray(data, dtype=np.float32)
+        elif self.numeric_format == &#39;uint16&#39;:
+            data = np.asarray(data, dtype=np.uint16)
+
+    if self.numeric_format == &#39;int16&#39;:
+        data = data.astype(np.int16)
+    elif self.numeric_format == &#39;float32&#39;:
+        data = data.astype(np.float32)
+    elif self.numeric_format == &#39;uint16&#39;:
+        data = data.astype(np.uint16)
+    data = data.tostring()
+    file_name = &#39;dummy_filename.bin&#39;
+    file_type = &#39;raw&#39;
+
+    fields = {&#39;data&#39;: (file_name, data)}
+
+    # build command
+    dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+    dataset_cmd += &#39;&amp;fileType=&#39; + file_type
+    dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
+
+    return multipart_post(self, dataset_cmd, fields=fields)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.load_file"><code class="name flex">
+<span>def <span class="ident">load_file</span></span>(<span>self, file, file_type, gzip=False, append_data=False)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>load nano data from a file</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>file</code></strong> :&ensp;<code>str</code></dt>
+<dd>local path to data file</dd>
+<dt><strong><code>file_type</code></strong> :&ensp;<code>str</code></dt>
+<dd>file type specifier, must be either 'cvs' or 'raw'</dd>
+<dt><strong><code>gzip</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if file is gzip'd, false if not gzip'd</dd>
+<dt><strong><code>append_data</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if data should be appended to previous data, false if existing
+data should be truncated</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (file was successful loaded into nano pod instance)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
+<dd>None when result is true, error string when result=false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_file(self, file, file_type, gzip=False, append_data=False):
+    &#34;&#34;&#34;load nano data from a file
+
+    Args:
+        file (str): local path to data file
+        file_type (str): file type specifier, must be either &#39;cvs&#39; or &#39;raw&#39;
+        gzip (boolean): true if file is gzip&#39;d, false if not gzip&#39;d
+        append_data (boolean): true if data should be appended to previous data, false if existing
+            data should be truncated
+
+    Returns:
+        result (boolean): true if successful (file was successful loaded into nano pod instance)
+        response (str): None when result is true, error string when result=false
+
+    &#34;&#34;&#34;
+
+    # load the data file
+    try:
+        with open(file, &#39;rb&#39;) as fp:
+            file_data = fp.read()
+    except FileNotFoundError as e:
+        return False, e.strerror
+    except Exception as e:
+        return False, e
+
+    # verify file_type is set correctly
+    if file_type not in [&#39;csv&#39;, &#39;csv-c&#39;, &#39;raw&#39;, &#39;raw-n&#39;]:
+        return False, &#39;file_type must be &#34;csv&#34;, &#34;csv-c&#34;, &#34;raw&#34; or &#34;raw-n&#34;&#39;
+
+    file_name = os.path.basename(file)
+
+    fields = {&#39;data&#39;: (file_name, file_data)}
+
+    # build command
+    dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+    dataset_cmd += &#39;&amp;fileType=&#39; + file_type
+    dataset_cmd += &#39;&amp;gzip=&#39; + str(gzip).lower()
+    dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
+
+    return multipart_post(self, dataset_cmd, fields=fields)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.nano_list"><code class="name flex">
+<span>def <span class="ident">nano_list</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>returns list of nano instances allocated for a pod</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (list was returned)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
+<dd>json dictionary of pod instances when result=true, error string when result=false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def nano_list(self):
+    &#34;&#34;&#34;returns list of nano instances allocated for a pod
+
+    Returns:
+        result (boolean):  true if successful (list was returned)
+        response (str): json dictionary of pod instances when result=true, error string when result=false
+
+    &#34;&#34;&#34;
+
+    # build command
+    instance_cmd = self.url + &#39;nanoInstances&#39; + &#39;?api-tenant=&#39; + self.api_tenant
+
+    return simple_get(self, instance_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.open_nano"><code class="name flex">
+<span>def <span class="ident">open_nano</span></span>(<span>self, instance_id)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates or attaches to a nano pod instance</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>success</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (instance is created or attached)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
+<dd>None when success is true, error string when success=false</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="python"># create new nano instance
+try:
+    nano = bn.NanoHandle()
+except bn.BoonException as be:
+    print(be)
+    sys.exit(1)
+
+# open/attach to nano called sample-instance
+success, response = nano.open_nano('sample-instance')
+if not success:
+    print(&quot;open_nano failed: {}&quot;.format(response))
+    sys.exit(1)
+</code></pre></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def open_nano(self, instance_id):
+    &#34;&#34;&#34;Creates or attaches to a nano pod instance
+
+    Args:
+        instance_id (str): instance identifier to assign to new pod instance
+
+    Returns:
+        success (boolean): true if successful (instance is created or attached)
+        response (str): None when success is true, error string when success=false
+
+    Example:
+        ```python
+        # create new nano instance
+        try:
+            nano = bn.NanoHandle()
+        except bn.BoonException as be:
+            print(be)
+            sys.exit(1)
+
+        # open/attach to nano called sample-instance
+        success, response = nano.open_nano(&#39;sample-instance&#39;)
+        if not success:
+            print(&#34;open_nano failed: {}&#34;.format(response))
+            sys.exit(1)
+        ```
+
+    &#34;&#34;&#34;
+    instance_cmd = self.url + &#39;nanoInstance/&#39; + instance_id + &#39;?api-tenant=&#39; + self.api_tenant
+
+    success, response = simple_post(self, instance_cmd)
+    if not success:
+        return False, response
+
+    self.instance = instance_id
+    return success, response</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.restore_nano"><code class="name flex">
+<span>def <span class="ident">restore_nano</span></span>(<span>self, filename)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>restore a nano pod instance from local file</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>path to local file containing saved pod instance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (nano pod instance was restored)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
+<dd>None when result is true, error string when result=false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def restore_nano(self, filename):
+    &#34;&#34;&#34;restore a nano pod instance from local file
+
+    Args:
+        filename (str): path to local file containing saved pod instance
+
+    Returns:
+        result (boolean):  true if successful (nano pod instance was restored)
+        response (str): None when result is true, error string when result=false
+
+    &#34;&#34;&#34;
+
+    # verify that input file is a valid nano file (gzip&#39;d tar with Magic Number)
+    try:
+        with tarfile.open(filename, &#39;r:gz&#39;) as tp:
+            with tp.extractfile(&#39;BoonNano/MagicNumber&#39;) as magic_fp:
+                magic_num = magic_fp.read()
+                if magic_num != b&#39;\xef\xbe&#39;:
+                    return False, &#39;file {} is not a Boon Logic nano-formatted file, bad magic number&#39;.format(
+                        filename)
+    except KeyError:
+        return False, &#39;file {} is not a Boon Logic nano-formatted file&#39;.format(filename)
+    except Exception as e:
+        return False, &#39;corrupt file {}&#39;.format(filename)
+
+    with open(filename, &#39;rb&#39;) as fp:
+        nano = fp.read()
+
+    # build command
+    snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+
+    fields = {&#39;snapshot&#39;: (filename, nano)}
+
+    result, response = multipart_post(self, snapshot_cmd, fields=fields)
+
+    if not result:
+        return result, response
+
+    self.numeric_format = response[&#39;numericFormat&#39;]
+
+    return True, response</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.run_nano"><code class="name flex">
+<span>def <span class="ident">run_nano</span></span>(<span>self, results=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>clusters the data in the nano pod buffer and returns the specified results</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
+<dd>
+<p>comma separated list of result specifiers</p>
+<p>ID = cluster ID</p>
+<p>SI = smoothed anomaly index</p>
+<p>RI = raw anomaly index</p>
+<p>FI = frequency index</p>
+<p>DI = distance index</p>
+</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (nano was successfully run)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
+<dd>dictionary of results when result is true, error message when result = false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_nano(self, results=None):
+    &#34;&#34;&#34; clusters the data in the nano pod buffer and returns the specified results
+
+    Args:
+        results (str): comma separated list of result specifiers
+
+            ID = cluster ID
+
+            SI = smoothed anomaly index
+
+            RI = raw anomaly index
+
+            FI = frequency index
+
+            DI = distance index
+
+    Returns:
+        result (boolean): true if successful (nano was successfully run)
+        response (dict or str): dictionary of results when result is true, error message when result = false
+
+    &#34;&#34;&#34;
+
+    results_str = &#39;&#39;
+    if str(results) == &#39;All&#39;:
+        results_str = &#39;ID,SI,RI,FI,DI&#39;
+    elif results:
+        for result in results.split(&#39;,&#39;):
+            if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
+                return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+        results_str = results
+
+    # build command
+    nano_cmd = self.url + &#39;nanoRun/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+    if results:
+        nano_cmd += &#39;&amp;results=&#39; + results_str
+
+    return simple_post(self, nano_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.save_nano"><code class="name flex">
+<span>def <span class="ident">save_nano</span></span>(<span>self, filename)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>serialize a nano pod instance and save to a local file</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>path to local file where saved pod instance should be written</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (pod instance was written)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
+<dd>None when result is true, error string when result=false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_nano(self, filename):
+    &#34;&#34;&#34;serialize a nano pod instance and save to a local file
+
+    Args:
+        filename (str): path to local file where saved pod instance should be written
+
+    Returns:
+        result (boolean):  true if successful (pod instance was written)
+        response (str): None when result is true, error string when result=false
+
+    &#34;&#34;&#34;
+
+    # build command
+    snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+
+    # serialize nano
+    result, response = simple_get(self, snapshot_cmd)
+    if not result:
+        return result, response
+
+    # at this point, the call succeeded, saves the result to a local file
+    try:
+        with open(filename, &#39;wb&#39;) as fp:
+            fp.write(response)
+    except Exception as e:
+        return False, e.strerror
+
+    return True, None</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="boonnano.rest" href="rest.html">boonnano.rest</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="boonnano.BoonException" href="#boonnano.BoonException">BoonException</a></code></h4>
+</li>
+<li>
+<h4><code><a title="boonnano.NanoHandle" href="#boonnano.NanoHandle">NanoHandle</a></code></h4>
+<ul class="two-column">
+<li><code><a title="boonnano.NanoHandle.autotune_config" href="#boonnano.NanoHandle.autotune_config">autotune_config</a></code></li>
+<li><code><a title="boonnano.NanoHandle.close_nano" href="#boonnano.NanoHandle.close_nano">close_nano</a></code></li>
+<li><code><a title="boonnano.NanoHandle.configure_nano" href="#boonnano.NanoHandle.configure_nano">configure_nano</a></code></li>
+<li><code><a title="boonnano.NanoHandle.create_config" href="#boonnano.NanoHandle.create_config">create_config</a></code></li>
+<li><code><a title="boonnano.NanoHandle.get_buffer_status" href="#boonnano.NanoHandle.get_buffer_status">get_buffer_status</a></code></li>
+<li><code><a title="boonnano.NanoHandle.get_config" href="#boonnano.NanoHandle.get_config">get_config</a></code></li>
+<li><code><a title="boonnano.NanoHandle.get_nano_results" href="#boonnano.NanoHandle.get_nano_results">get_nano_results</a></code></li>
+<li><code><a title="boonnano.NanoHandle.get_nano_status" href="#boonnano.NanoHandle.get_nano_status">get_nano_status</a></code></li>
+<li><code><a title="boonnano.NanoHandle.get_version" href="#boonnano.NanoHandle.get_version">get_version</a></code></li>
+<li><code><a title="boonnano.NanoHandle.load_data" href="#boonnano.NanoHandle.load_data">load_data</a></code></li>
+<li><code><a title="boonnano.NanoHandle.load_file" href="#boonnano.NanoHandle.load_file">load_file</a></code></li>
+<li><code><a title="boonnano.NanoHandle.nano_list" href="#boonnano.NanoHandle.nano_list">nano_list</a></code></li>
+<li><code><a title="boonnano.NanoHandle.open_nano" href="#boonnano.NanoHandle.open_nano">open_nano</a></code></li>
+<li><code><a title="boonnano.NanoHandle.restore_nano" href="#boonnano.NanoHandle.restore_nano">restore_nano</a></code></li>
+<li><code><a title="boonnano.NanoHandle.run_nano" href="#boonnano.NanoHandle.run_nano">run_nano</a></code></li>
+<li><code><a title="boonnano.NanoHandle.save_nano" href="#boonnano.NanoHandle.save_nano">save_nano</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

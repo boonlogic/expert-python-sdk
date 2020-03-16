@@ -3,6 +3,10 @@ import json
 import sys
 import csv
 
+#
+# example of each boonnano SDK endpoint
+#
+
 # create new nano instance
 try:
     nano = bn.NanoHandle()
@@ -30,25 +34,31 @@ if not success:
     sys.exit(1)
 print(json.dumps(response, indent=4))
 
-# configure the nano by specifying individual parameters
+# create the configuration
 success, response = nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10], max_val=[15],
-                                       weight=[1], accuracy=0.99, percent_variation=0.05, streaming_window=1)
+                                       percent_variation=0.05, accuracy=0.99, weight=[1], streaming_window=1)
 if not success:
-    print("configure_nano failed: {}".format(response))
+    print("create_config failed: {}".format(response))
     sys.exit(1)
 print(json.dumps(response, indent=4))
 
-# configure the nano using the configuration provided by create_config
+# configure the nano with created configuration
 success, response = nano.configure_nano(config=response)
 if not success:
     print("configure_nano failed: {}".format(response))
     sys.exit(1)
-print(json.dumps(response, indent=4))
 
 # retrieve the nano configuration
 success, response = nano.get_config()
 if not success:
     print("get_config failed: {}".format(response))
+    sys.exit(1)
+print(json.dumps(response, indent=4))
+
+# configure the nano using a pre-made configuration block
+success, response = nano.configure_nano(config=response)
+if not success:
+    print("configure_nano failed: {}".format(response))
     sys.exit(1)
 print(json.dumps(response, indent=4))
 
@@ -60,6 +70,7 @@ if not success:
     sys.exit(1)
 print(json.dumps(response, indent=4))
 
+# check buffer status again
 success, response = nano.get_buffer_status()
 if not success:
     print("get_buffer_status failed: {}".format(response))
@@ -101,7 +112,11 @@ if not success:
     sys.exit(1)
 print(json.dumps(response, indent=4))
 
-print("=====\n")
+# get the results again
+success, response = nano.get_nano_results(results='All')
+if not success:
+    print("run_nano_status failed: {}".format(response))
+    sys.exit(1)
 
 # get the nano status
 success, response = nano.get_nano_status(results='averageInferenceTime')

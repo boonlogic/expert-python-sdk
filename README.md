@@ -1,23 +1,21 @@
 # Python SDK Documentation
-
 This python package allows ease of access to calls to the BoonLogic Nano API.
 
-**NOTE:** In order to use this package, it is necessary to acquire a BoonNano license
-from Boon Logic, Inc.  A startup email will be sent providing the details
-for using this package.
-
-- __Website__: [https://boonlogic.com](https://github.com/boonlogic/expert-python-sdk)
-- __Documentation__: [https://github.com/boonlogic/expert-python-sdk](https://github.com/boonlogic/expert-python-sdk)
+- __Website__: [boonlogic.com](https://boonlogic.com)
+- __Documentation__: [Python SDK Guides and Tutorials](https://boonlogic.github.io/expert-python-sdk/docs/python-docs)
 
 
-------------
-### Installation of BoonNano
+---------
+## Installation
+
+The BoonNano SDK is a Python3 project and can be installed via pip.
+
 ```
 pip install boonnano
 ```
 
-------------
-### License Configuration
+---------
+## License setup
 
 Note: A license must be obtained from Boon Logic to use the BoonNano Python SDK
 
@@ -28,8 +26,7 @@ The license should be placed in a file named ~/.BoonLogic.license
   "default": {
     "api-key": "API-KEY",
     "server": "WEB ADDRESS",
-    "api-tenant": "API-TENANT",
-    "proxy-server": "HTTP-PROXY"
+    "api-tenant": "API-TENANT"
   }
 }
 ```
@@ -38,7 +35,7 @@ The *API-KEY*, *WEB ADDRESS*, and *API-TENANT* will be unique to your obtained l
 
 The .BoonLogic.license file will be consulted by the BoonNano Python SDK to successfully find and authenticate with your designated server.
 
----------------
+
 ### Connectivity Test
 
 The following Python script provides a basic proof-of-connectivity:
@@ -50,7 +47,7 @@ import boonnano as bn
 import json
 import sys
 
-# create new nano instance
+# create new nano handle
 try:
     nano = bn.NanoHandle('default')
 except bn.BoonException as be:
@@ -78,15 +75,17 @@ if not success:
 
 ```
 
-Running the **connect-example.py** script should yield something like:
+Running the connect-test.py script should yield something like:
 
 ```sh
 % python connect-example.py
 {
+    "release": "dev",
     "api-version": "/expert/v3",
-    "boon-nano": "e5d221de",
-    "expert-api": "18a5ddfa",
-    "expert-common": "f3215f72"
+    "nano-secure": "3c40f1d6",
+    "builder": "f5db0682",
+    "expert-api": "f6643822",
+    "expert-common": "c0575a50",
+    "swagger-ui": "914af396"
 }
 ```
-

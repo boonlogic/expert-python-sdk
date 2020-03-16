@@ -24,4 +24,6 @@ local-env-check:
 		exit 1; \
 	fi
 
+doc:
+
 .PHONY: init test pypi local-env-check

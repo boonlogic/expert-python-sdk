@@ -1,6 +1,6 @@
 # Guide: Nano Results
 
-See [How-to: Generate Cluster Results](../How-Tos/How_To_Generate_Cluster_Results.md) for instructions on generating the results.
+See [How-to: Generate Cluster Results](How_To_Generate_Cluster_Results.md) for instructions on generating the results.
 
 These can be called from any of the following functions:
 - load_data
@@ -50,8 +50,8 @@ Setting results equal to an empty string will omit any results being returned. T
 Finally, setting results to All will return the IDs, RIs, SIs, FIs, and DIs. These results are returned as a JSON block with uncollated lists but are all the same length (that matches the number of patterns most recently clustered).
 
 
-For more statistical values, see [Guide: Nano Status](./Guide_Nano_Status.md)
+For more statistical values, see [Guide: Nano Status](Guide_Nano_Status.md)
 
 <br/>
 
-[Return to documentation homepage](../python-docs.md)
+[Return to documentation homepage](python-docs.md)
