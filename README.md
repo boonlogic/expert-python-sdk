@@ -2,7 +2,7 @@
 This python package allows ease of access to calls to the BoonLogic Nano API.
 
 - __Website__: [boonlogic.com](https://boonlogic.com)
-- __Documentation__: [Python SDK Guides and Tutorials](https://boonlogic.github.io/expert-python-sdk/docs/python-docs)
+- __Documentation__: [Python SDK Guides and Tutorials](https://boonlogic.github.io/expert-python-sdk/docs/index.md)
 
 
 ---------
