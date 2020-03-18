@@ -426,4 +426,4 @@ if not success:
 [Guide: Status](Guide_Nano_Status.md)
 <br/>
 
-[Return to documentation homepage](index.md)
+[Return to documentation homepage](python-docs.md)
