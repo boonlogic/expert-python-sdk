@@ -3,6 +3,8 @@ Welcome to the documentation for the boon nano python client library!
 
 ## Tutorials
 
+###### [Introduction To Clustering](https://github.com/boonlogic/expert-rest-api/blob/master/Guides/Intro_to_Clustering.md)
+
 ###### [General Pipeline](Tutorial_The_General_Pipeline.md)
 
 ## Guides
