@@ -143,4 +143,4 @@ print(json.dumps(response, indent=4))
 
 ```
 
-[Return to documentation homepage](python-docs.md)
+[Return to documentation homepage](index.md)

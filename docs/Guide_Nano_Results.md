@@ -54,4 +54,4 @@ For more statistical values, see [Guide: Nano Status](Guide_Nano_Status.md)
 
 <br/>
 
-[Return to documentation homepage](python-docs.md)
+[Return to documentation homepage](index.md)

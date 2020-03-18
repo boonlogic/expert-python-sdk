@@ -146,4 +146,4 @@ if not success:
     sys.exit(1)
 ```
 
-[Return to documentation homepage](python-docs.md)
+[Return to documentation homepage](index.md)
