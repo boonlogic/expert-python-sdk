@@ -151,14 +151,6 @@ class NanoHandle:
             return f(*args, **kwargs)
         return inner
 
-    #def _is_configured(function):
-    #    def inner(*args, **kwargs):
-    #        if args[0].numeric_format not in ['int16', 'uint16', 'float32']:
-    #            return False, "nano instance is not configured"
-    #        return function(*args, **kwargs)
-    #
-    #        return inner
-
     def open_nano(self, instance_id):
         """Creates or attaches to a nano pod instance
 
