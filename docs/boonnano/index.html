@@ -500,7 +500,7 @@ class NanoHandle:
         return multipart_post(self, dataset_cmd, fields=fields)
 
     def run_nano(self, results=None):
-        &#34;&#34;&#34; clusters the data in the nano pod buffer and returns the specified results
+        &#34;&#34;&#34;clusters the data in the nano pod buffer and returns the specified results
 
         Args:
             results (str): comma separated list of result specifiers
@@ -537,8 +537,66 @@ class NanoHandle:
 
         return simple_post(self, nano_cmd)
 
+    def run_streaming_nano(self, data, results=None):
+        &#34;&#34;&#34;load streaming data into self-autotuning nano pod instance, run the nano and return results
+
+        Args:
+            data (np.ndarray or list): numpy array or list of data values
+            results (str): comma separated list of result specifiers
+
+                ID = cluster ID
+
+                SI = smoothed anomaly index
+
+                RI = raw anomaly index
+
+                FI = frequency index
+
+                DI = distance index
+
+        Returns:
+            result (boolean): true if successful (data was successful streamed to nano pod instance)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        &#34;&#34;&#34;
+        if not isinstance(data, np.ndarray):
+            if self.numeric_format == &#39;int16&#39;:
+                data = np.asarray(data, dtype=np.int16)
+            elif self.numeric_format == &#39;float32&#39;:
+                data = np.asarray(data, dtype=np.float32)
+            elif self.numeric_format == &#39;uint16&#39;:
+                data = np.asarray(data, dtype=np.uint16)
+
+        if self.numeric_format == &#39;int16&#39;:
+            data = data.astype(np.int16)
+        elif self.numeric_format == &#39;float32&#39;:
+            data = data.astype(np.float32)
+        elif self.numeric_format == &#39;uint16&#39;:
+            data = data.astype(np.uint16)
+        data = data.tostring()
+        file_name = &#39;dummy_filename.bin&#39;
+        file_type = &#39;raw&#39;
+
+        fields = {&#39;data&#39;: (file_name, data)}
+
+        results_str = &#39;&#39;
+        if str(results) == &#39;All&#39;:
+            results_str = &#39;ID,SI,RI,FI,DI&#39;
+        elif results:
+            for result in results.split(&#39;,&#39;):
+                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
+                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+
+        # build command
+        streaming_cmd = self.url + &#39;nanoRunStreaming/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        streaming_cmd += &#39;&amp;fileType=&#39; + file_type
+        if results:
+            streaming_cmd += &#39;&amp;results=&#39; + results_str
+
+        return multipart_post(self, streaming_cmd, fields=fields)
+
     def get_version(self):
-        &#34;&#34;&#34; results related to the bytes processed/in the buffer
+        &#34;&#34;&#34;results related to the bytes processed/in the buffer
 
         Returns:
             result (boolean): true if successful (version information was retrieved)
@@ -551,7 +609,7 @@ class NanoHandle:
         return simple_get(self, version_cmd)
 
     def get_buffer_status(self):
-        &#34;&#34;&#34; results related to the bytes processed/in the buffer
+        &#34;&#34;&#34;results related to the bytes processed/in the buffer
 
         Returns:
             result (boolean): true if successful (nano was successfully run)
@@ -562,7 +620,7 @@ class NanoHandle:
         return simple_get(self, status_cmd)
 
     def get_nano_results(self, results=&#39;All&#39;):
-        &#34;&#34;&#34; results per pattern
+        &#34;&#34;&#34;results per pattern
 
         Args:
             results (str): comma separated list of results
@@ -1175,7 +1233,7 @@ except bn.BoonException as be:
         return multipart_post(self, dataset_cmd, fields=fields)
 
     def run_nano(self, results=None):
-        &#34;&#34;&#34; clusters the data in the nano pod buffer and returns the specified results
+        &#34;&#34;&#34;clusters the data in the nano pod buffer and returns the specified results
 
         Args:
             results (str): comma separated list of result specifiers
@@ -1212,8 +1270,66 @@ except bn.BoonException as be:
 
         return simple_post(self, nano_cmd)
 
+    def run_streaming_nano(self, data, results=None):
+        &#34;&#34;&#34;load streaming data into self-autotuning nano pod instance, run the nano and return results
+
+        Args:
+            data (np.ndarray or list): numpy array or list of data values
+            results (str): comma separated list of result specifiers
+
+                ID = cluster ID
+
+                SI = smoothed anomaly index
+
+                RI = raw anomaly index
+
+                FI = frequency index
+
+                DI = distance index
+
+        Returns:
+            result (boolean): true if successful (data was successful streamed to nano pod instance)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        &#34;&#34;&#34;
+        if not isinstance(data, np.ndarray):
+            if self.numeric_format == &#39;int16&#39;:
+                data = np.asarray(data, dtype=np.int16)
+            elif self.numeric_format == &#39;float32&#39;:
+                data = np.asarray(data, dtype=np.float32)
+            elif self.numeric_format == &#39;uint16&#39;:
+                data = np.asarray(data, dtype=np.uint16)
+
+        if self.numeric_format == &#39;int16&#39;:
+            data = data.astype(np.int16)
+        elif self.numeric_format == &#39;float32&#39;:
+            data = data.astype(np.float32)
+        elif self.numeric_format == &#39;uint16&#39;:
+            data = data.astype(np.uint16)
+        data = data.tostring()
+        file_name = &#39;dummy_filename.bin&#39;
+        file_type = &#39;raw&#39;
+
+        fields = {&#39;data&#39;: (file_name, data)}
+
+        results_str = &#39;&#39;
+        if str(results) == &#39;All&#39;:
+            results_str = &#39;ID,SI,RI,FI,DI&#39;
+        elif results:
+            for result in results.split(&#39;,&#39;):
+                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
+                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+
+        # build command
+        streaming_cmd = self.url + &#39;nanoRunStreaming/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        streaming_cmd += &#39;&amp;fileType=&#39; + file_type
+        if results:
+            streaming_cmd += &#39;&amp;results=&#39; + results_str
+
+        return multipart_post(self, streaming_cmd, fields=fields)
+
     def get_version(self):
-        &#34;&#34;&#34; results related to the bytes processed/in the buffer
+        &#34;&#34;&#34;results related to the bytes processed/in the buffer
 
         Returns:
             result (boolean): true if successful (version information was retrieved)
@@ -1226,7 +1342,7 @@ except bn.BoonException as be:
         return simple_get(self, version_cmd)
 
     def get_buffer_status(self):
-        &#34;&#34;&#34; results related to the bytes processed/in the buffer
+        &#34;&#34;&#34;results related to the bytes processed/in the buffer
 
         Returns:
             result (boolean): true if successful (nano was successfully run)
@@ -1237,7 +1353,7 @@ except bn.BoonException as be:
         return simple_get(self, status_cmd)
 
     def get_nano_results(self, results=&#39;All&#39;):
-        &#34;&#34;&#34; results per pattern
+        &#34;&#34;&#34;results per pattern
 
         Args:
             results (str): comma separated list of results
@@ -1584,7 +1700,7 @@ accuracy (float):</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_buffer_status(self):
-    &#34;&#34;&#34; results related to the bytes processed/in the buffer
+    &#34;&#34;&#34;results related to the bytes processed/in the buffer
 
     Returns:
         result (boolean): true if successful (nano was successfully run)
@@ -1646,7 +1762,7 @@ accuracy (float):</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_nano_results(self, results=&#39;All&#39;):
-    &#34;&#34;&#34; results per pattern
+    &#34;&#34;&#34;results per pattern
 
     Args:
         results (str): comma separated list of results
@@ -1782,7 +1898,7 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_version(self):
-    &#34;&#34;&#34; results related to the bytes processed/in the buffer
+    &#34;&#34;&#34;results related to the bytes processed/in the buffer
 
     Returns:
         result (boolean): true if successful (version information was retrieved)
@@ -2098,7 +2214,7 @@ data should be truncated</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run_nano(self, results=None):
-    &#34;&#34;&#34; clusters the data in the nano pod buffer and returns the specified results
+    &#34;&#34;&#34;clusters the data in the nano pod buffer and returns the specified results
 
     Args:
         results (str): comma separated list of result specifiers
@@ -2134,6 +2250,95 @@ data should be truncated</dd>
         nano_cmd += &#39;&amp;results=&#39; + results_str
 
     return simple_post(self, nano_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.run_streaming_nano"><code class="name flex">
+<span>def <span class="ident">run_streaming_nano</span></span>(<span>self, data, results=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>load streaming data into self-autotuning nano pod instance, run the nano and return results</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>np.ndarray</code> or <code>list</code></dt>
+<dd>numpy array or list of data values</dd>
+<dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
+<dd>
+<p>comma separated list of result specifiers</p>
+<p>ID = cluster ID</p>
+<p>SI = smoothed anomaly index</p>
+<p>RI = raw anomaly index</p>
+<p>FI = frequency index</p>
+<p>DI = distance index</p>
+</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true if successful (data was successful streamed to nano pod instance)</dd>
+<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
+<dd>dictionary of results when result is true, error message when result = false</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_streaming_nano(self, data, results=None):
+    &#34;&#34;&#34;load streaming data into self-autotuning nano pod instance, run the nano and return results
+
+    Args:
+        data (np.ndarray or list): numpy array or list of data values
+        results (str): comma separated list of result specifiers
+
+            ID = cluster ID
+
+            SI = smoothed anomaly index
+
+            RI = raw anomaly index
+
+            FI = frequency index
+
+            DI = distance index
+
+    Returns:
+        result (boolean): true if successful (data was successful streamed to nano pod instance)
+        response (dict or str): dictionary of results when result is true, error message when result = false
+
+    &#34;&#34;&#34;
+    if not isinstance(data, np.ndarray):
+        if self.numeric_format == &#39;int16&#39;:
+            data = np.asarray(data, dtype=np.int16)
+        elif self.numeric_format == &#39;float32&#39;:
+            data = np.asarray(data, dtype=np.float32)
+        elif self.numeric_format == &#39;uint16&#39;:
+            data = np.asarray(data, dtype=np.uint16)
+
+    if self.numeric_format == &#39;int16&#39;:
+        data = data.astype(np.int16)
+    elif self.numeric_format == &#39;float32&#39;:
+        data = data.astype(np.float32)
+    elif self.numeric_format == &#39;uint16&#39;:
+        data = data.astype(np.uint16)
+    data = data.tostring()
+    file_name = &#39;dummy_filename.bin&#39;
+    file_type = &#39;raw&#39;
+
+    fields = {&#39;data&#39;: (file_name, data)}
+
+    results_str = &#39;&#39;
+    if str(results) == &#39;All&#39;:
+        results_str = &#39;ID,SI,RI,FI,DI&#39;
+    elif results:
+        for result in results.split(&#39;,&#39;):
+            if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
+                return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
+
+    # build command
+    streaming_cmd = self.url + &#39;nanoRunStreaming/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+    streaming_cmd += &#39;&amp;fileType=&#39; + file_type
+    if results:
+        streaming_cmd += &#39;&amp;results=&#39; + results_str
+
+    return multipart_post(self, streaming_cmd, fields=fields)</code></pre>
 </details>
 </dd>
 <dt id="boonnano.NanoHandle.save_nano"><code class="name flex">
@@ -2226,6 +2431,7 @@ data should be truncated</dd>
 <li><code><a title="boonnano.NanoHandle.open_nano" href="#boonnano.NanoHandle.open_nano">open_nano</a></code></li>
 <li><code><a title="boonnano.NanoHandle.restore_nano" href="#boonnano.NanoHandle.restore_nano">restore_nano</a></code></li>
 <li><code><a title="boonnano.NanoHandle.run_nano" href="#boonnano.NanoHandle.run_nano">run_nano</a></code></li>
+<li><code><a title="boonnano.NanoHandle.run_streaming_nano" href="#boonnano.NanoHandle.run_streaming_nano">run_streaming_nano</a></code></li>
 <li><code><a title="boonnano.NanoHandle.save_nano" href="#boonnano.NanoHandle.save_nano">save_nano</a></code></li>
 </ul>
 </li>

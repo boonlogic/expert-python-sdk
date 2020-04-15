@@ -474,7 +474,7 @@ class NanoHandle:
         return multipart_post(self, dataset_cmd, fields=fields)
 
     def run_nano(self, results=None):
-        """ clusters the data in the nano pod buffer and returns the specified results
+        """clusters the data in the nano pod buffer and returns the specified results
 
         Args:
             results (str): comma separated list of result specifiers
@@ -511,8 +511,66 @@ class NanoHandle:
 
         return simple_post(self, nano_cmd)
 
+    def run_streaming_nano(self, data, results=None):
+        """load streaming data into self-autotuning nano pod instance, run the nano and return results
+
+        Args:
+            data (np.ndarray or list): numpy array or list of data values
+            results (str): comma separated list of result specifiers
+
+                ID = cluster ID
+
+                SI = smoothed anomaly index
+
+                RI = raw anomaly index
+
+                FI = frequency index
+
+                DI = distance index
+
+        Returns:
+            result (boolean): true if successful (data was successful streamed to nano pod instance)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        """
+        if not isinstance(data, np.ndarray):
+            if self.numeric_format == 'int16':
+                data = np.asarray(data, dtype=np.int16)
+            elif self.numeric_format == 'float32':
+                data = np.asarray(data, dtype=np.float32)
+            elif self.numeric_format == 'uint16':
+                data = np.asarray(data, dtype=np.uint16)
+
+        if self.numeric_format == 'int16':
+            data = data.astype(np.int16)
+        elif self.numeric_format == 'float32':
+            data = data.astype(np.float32)
+        elif self.numeric_format == 'uint16':
+            data = data.astype(np.uint16)
+        data = data.tostring()
+        file_name = 'dummy_filename.bin'
+        file_type = 'raw'
+
+        fields = {'data': (file_name, data)}
+
+        results_str = ''
+        if str(results) == 'All':
+            results_str = 'ID,SI,RI,FI,DI'
+        elif results:
+            for result in results.split(','):
+                if result not in ['ID', 'SI', 'RI', 'FI', 'DI']:
+                    return False, 'unknown result "{}" found in results parameter'.format(result)
+
+        # build command
+        streaming_cmd = self.url + 'nanoRunStreaming/' + self.instance + '?api-tenant=' + self.api_tenant
+        streaming_cmd += '&fileType=' + file_type
+        if results:
+            streaming_cmd += '&results=' + results_str
+
+        return multipart_post(self, streaming_cmd, fields=fields)
+
     def get_version(self):
-        """ results related to the bytes processed/in the buffer
+        """results related to the bytes processed/in the buffer
 
         Returns:
             result (boolean): true if successful (version information was retrieved)
@@ -525,7 +583,7 @@ class NanoHandle:
         return simple_get(self, version_cmd)
 
     def get_buffer_status(self):
-        """ results related to the bytes processed/in the buffer
+        """results related to the bytes processed/in the buffer
 
         Returns:
             result (boolean): true if successful (nano was successfully run)
@@ -536,7 +594,7 @@ class NanoHandle:
         return simple_get(self, status_cmd)
 
     def get_nano_results(self, results='All'):
-        """ results per pattern
+        """results per pattern
 
         Args:
             results (str): comma separated list of results
