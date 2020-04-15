@@ -27,6 +27,7 @@
 <pre><code class="python">from urllib3 import ProxyManager
 from urllib3 import PoolManager
 from urllib3 import Timeout
+from functools import wraps
 import json
 import os
 import tarfile
@@ -168,6 +169,22 @@ class NanoHandle:
             # non-proxy pool
             self.http = PoolManager(timeout=timeout_inst)
 
+    def _is_configured(f):
+        @wraps(f)
+        def inner(*args, **kwargs):
+            if args[0].numeric_format not in [&#39;int16&#39;, &#39;uint16&#39;, &#39;float32&#39;]:
+                return False, &#34;nano instance is not configured&#34;
+            return f(*args, **kwargs)
+        return inner
+
+    #def _is_configured(function):
+    #    def inner(*args, **kwargs):
+    #        if args[0].numeric_format not in [&#39;int16&#39;, &#39;uint16&#39;, &#39;float32&#39;]:
+    #            return False, &#34;nano instance is not configured&#34;
+    #        return function(*args, **kwargs)
+    #
+    #        return inner
+
     def open_nano(self, instance_id):
         &#34;&#34;&#34;Creates or attaches to a nano pod instance
 
@@ -207,9 +224,10 @@ class NanoHandle:
         self.http.clear()
         return result, None
 
-    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]), weight=np.array([1]),
+    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]),
+                      weight=np.array([1]),
                       percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
-        &#34;&#34;&#34;generate a configuration template for the given parameters
+        &#34;&#34;&#34;Generate a configuration template for the given parameters
 
         A discrete configuration is specified as a list of min, max, weights, and labels
 
@@ -264,7 +282,7 @@ class NanoHandle:
         return simple_get(self, template_cmd)
 
     def configure_nano(self, config):
-        &#34;&#34;&#34;returns the posted clustering configuration
+        &#34;&#34;&#34;Returns the posted clustering configuration
 
          Args:
              feature_count (int): number of features per vector
@@ -294,7 +312,7 @@ class NanoHandle:
         return result, response
 
     def nano_list(self):
-        &#34;&#34;&#34;returns list of nano instances allocated for a pod
+        &#34;&#34;&#34;Returns list of nano instances allocated for a pod
 
         Returns:
             result (boolean):  true if successful (list was returned)
@@ -307,6 +325,7 @@ class NanoHandle:
 
         return simple_get(self, instance_cmd)
 
+    @_is_configured
     def save_nano(self, filename):
         &#34;&#34;&#34;serialize a nano pod instance and save to a local file
 
@@ -337,7 +356,7 @@ class NanoHandle:
         return True, None
 
     def restore_nano(self, filename):
-        &#34;&#34;&#34;restore a nano pod instance from local file
+        &#34;&#34;&#34;Restore a nano pod instance from local file
 
         Args:
             filename (str): path to local file containing saved pod instance
@@ -378,8 +397,9 @@ class NanoHandle:
 
         return True, response
 
+    @_is_configured
     def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
-        &#34;&#34;&#34;autotunes the percent variation, min and max for each feature
+        &#34;&#34;&#34;Autotunes the percent variation, min and max for each feature
 
         Args:
             autotune_pv (boolean):
@@ -406,8 +426,9 @@ class NanoHandle:
         # autotune parameters
         return simple_post(self, config_cmd)
 
+    @_is_configured
     def get_config(self):
-        &#34;&#34;&#34;gets the configuration for this nano pod instance
+        &#34;&#34;&#34;Gets the configuration for this nano pod instance
 
         Returns:
             result (boolean): true if successful (configuration was found)
@@ -417,8 +438,9 @@ class NanoHandle:
         config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
         return simple_get(self, config_cmd)
 
+    @_is_configured
     def load_file(self, file, file_type, gzip=False, append_data=False):
-        &#34;&#34;&#34;load nano data from a file
+        &#34;&#34;&#34;Load nano data from a file
 
         Args:
             file (str): local path to data file
@@ -458,8 +480,9 @@ class NanoHandle:
 
         return multipart_post(self, dataset_cmd, fields=fields)
 
+    @_is_configured
     def load_data(self, data, append_data=False):
-        &#34;&#34;&#34;load nano data from an existing numpy array or simple python list
+        &#34;&#34;&#34;Load nano data from an existing numpy array or simple python list
 
         Args:
             data (np.ndarray or list): numpy array or list of data values
@@ -499,8 +522,9 @@ class NanoHandle:
 
         return multipart_post(self, dataset_cmd, fields=fields)
 
+    @_is_configured
     def run_nano(self, results=None):
-        &#34;&#34;&#34;clusters the data in the nano pod buffer and returns the specified results
+        &#34;&#34;&#34;Clusters the data in the nano pod buffer and returns the specified results
 
         Args:
             results (str): comma separated list of result specifiers
@@ -537,8 +561,9 @@ class NanoHandle:
 
         return simple_post(self, nano_cmd)
 
+    @_is_configured
     def run_streaming_nano(self, data, results=None):
-        &#34;&#34;&#34;load streaming data into self-autotuning nano pod instance, run the nano and return results
+        &#34;&#34;&#34;Load streaming data into self-autotuning nano pod instance, run the nano and return results
 
         Args:
             data (np.ndarray or list): numpy array or list of data values
@@ -596,7 +621,7 @@ class NanoHandle:
         return multipart_post(self, streaming_cmd, fields=fields)
 
     def get_version(self):
-        &#34;&#34;&#34;results related to the bytes processed/in the buffer
+        &#34;&#34;&#34;Version information for this nano pod
 
         Returns:
             result (boolean): true if successful (version information was retrieved)
@@ -608,8 +633,9 @@ class NanoHandle:
         version_cmd = self.url[:-3] + &#39;version&#39; + &#39;?api-tenant=&#39; + self.api_tenant
         return simple_get(self, version_cmd)
 
+    @_is_configured
     def get_buffer_status(self):
-        &#34;&#34;&#34;results related to the bytes processed/in the buffer
+        &#34;&#34;&#34;Results related to the bytes processed/in the buffer
 
         Returns:
             result (boolean): true if successful (nano was successfully run)
@@ -619,8 +645,9 @@ class NanoHandle:
         status_cmd = self.url + &#39;bufferStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
         return simple_get(self, status_cmd)
 
+    @_is_configured
     def get_nano_results(self, results=&#39;All&#39;):
-        &#34;&#34;&#34;results per pattern
+        &#34;&#34;&#34;Results per pattern
 
         Args:
             results (str): comma separated list of results
@@ -653,8 +680,9 @@ class NanoHandle:
 
         return simple_get(self, results_cmd)
 
+    @_is_configured
     def get_nano_status(self, results=&#39;All&#39;):
-        &#34;&#34;&#34;results in relation to each cluster/overall stats
+        &#34;&#34;&#34;Results in relation to each cluster/overall stats
 
         Args:
             results (str): comma separated list of results
@@ -901,6 +929,22 @@ except bn.BoonException as be:
             # non-proxy pool
             self.http = PoolManager(timeout=timeout_inst)
 
+    def _is_configured(f):
+        @wraps(f)
+        def inner(*args, **kwargs):
+            if args[0].numeric_format not in [&#39;int16&#39;, &#39;uint16&#39;, &#39;float32&#39;]:
+                return False, &#34;nano instance is not configured&#34;
+            return f(*args, **kwargs)
+        return inner
+
+    #def _is_configured(function):
+    #    def inner(*args, **kwargs):
+    #        if args[0].numeric_format not in [&#39;int16&#39;, &#39;uint16&#39;, &#39;float32&#39;]:
+    #            return False, &#34;nano instance is not configured&#34;
+    #        return function(*args, **kwargs)
+    #
+    #        return inner
+
     def open_nano(self, instance_id):
         &#34;&#34;&#34;Creates or attaches to a nano pod instance
 
@@ -940,9 +984,10 @@ except bn.BoonException as be:
         self.http.clear()
         return result, None
 
-    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]), weight=np.array([1]),
+    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]),
+                      weight=np.array([1]),
                       percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
-        &#34;&#34;&#34;generate a configuration template for the given parameters
+        &#34;&#34;&#34;Generate a configuration template for the given parameters
 
         A discrete configuration is specified as a list of min, max, weights, and labels
 
@@ -997,7 +1042,7 @@ except bn.BoonException as be:
         return simple_get(self, template_cmd)
 
     def configure_nano(self, config):
-        &#34;&#34;&#34;returns the posted clustering configuration
+        &#34;&#34;&#34;Returns the posted clustering configuration
 
          Args:
              feature_count (int): number of features per vector
@@ -1027,7 +1072,7 @@ except bn.BoonException as be:
         return result, response
 
     def nano_list(self):
-        &#34;&#34;&#34;returns list of nano instances allocated for a pod
+        &#34;&#34;&#34;Returns list of nano instances allocated for a pod
 
         Returns:
             result (boolean):  true if successful (list was returned)
@@ -1040,6 +1085,7 @@ except bn.BoonException as be:
 
         return simple_get(self, instance_cmd)
 
+    @_is_configured
     def save_nano(self, filename):
         &#34;&#34;&#34;serialize a nano pod instance and save to a local file
 
@@ -1070,7 +1116,7 @@ except bn.BoonException as be:
         return True, None
 
     def restore_nano(self, filename):
-        &#34;&#34;&#34;restore a nano pod instance from local file
+        &#34;&#34;&#34;Restore a nano pod instance from local file
 
         Args:
             filename (str): path to local file containing saved pod instance
@@ -1111,8 +1157,9 @@ except bn.BoonException as be:
 
         return True, response
 
+    @_is_configured
     def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
-        &#34;&#34;&#34;autotunes the percent variation, min and max for each feature
+        &#34;&#34;&#34;Autotunes the percent variation, min and max for each feature
 
         Args:
             autotune_pv (boolean):
@@ -1139,8 +1186,9 @@ except bn.BoonException as be:
         # autotune parameters
         return simple_post(self, config_cmd)
 
+    @_is_configured
     def get_config(self):
-        &#34;&#34;&#34;gets the configuration for this nano pod instance
+        &#34;&#34;&#34;Gets the configuration for this nano pod instance
 
         Returns:
             result (boolean): true if successful (configuration was found)
@@ -1150,8 +1198,9 @@ except bn.BoonException as be:
         config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
         return simple_get(self, config_cmd)
 
+    @_is_configured
     def load_file(self, file, file_type, gzip=False, append_data=False):
-        &#34;&#34;&#34;load nano data from a file
+        &#34;&#34;&#34;Load nano data from a file
 
         Args:
             file (str): local path to data file
@@ -1191,8 +1240,9 @@ except bn.BoonException as be:
 
         return multipart_post(self, dataset_cmd, fields=fields)
 
+    @_is_configured
     def load_data(self, data, append_data=False):
-        &#34;&#34;&#34;load nano data from an existing numpy array or simple python list
+        &#34;&#34;&#34;Load nano data from an existing numpy array or simple python list
 
         Args:
             data (np.ndarray or list): numpy array or list of data values
@@ -1232,8 +1282,9 @@ except bn.BoonException as be:
 
         return multipart_post(self, dataset_cmd, fields=fields)
 
+    @_is_configured
     def run_nano(self, results=None):
-        &#34;&#34;&#34;clusters the data in the nano pod buffer and returns the specified results
+        &#34;&#34;&#34;Clusters the data in the nano pod buffer and returns the specified results
 
         Args:
             results (str): comma separated list of result specifiers
@@ -1270,8 +1321,9 @@ except bn.BoonException as be:
 
         return simple_post(self, nano_cmd)
 
+    @_is_configured
     def run_streaming_nano(self, data, results=None):
-        &#34;&#34;&#34;load streaming data into self-autotuning nano pod instance, run the nano and return results
+        &#34;&#34;&#34;Load streaming data into self-autotuning nano pod instance, run the nano and return results
 
         Args:
             data (np.ndarray or list): numpy array or list of data values
@@ -1329,7 +1381,7 @@ except bn.BoonException as be:
         return multipart_post(self, streaming_cmd, fields=fields)
 
     def get_version(self):
-        &#34;&#34;&#34;results related to the bytes processed/in the buffer
+        &#34;&#34;&#34;Version information for this nano pod
 
         Returns:
             result (boolean): true if successful (version information was retrieved)
@@ -1341,8 +1393,9 @@ except bn.BoonException as be:
         version_cmd = self.url[:-3] + &#39;version&#39; + &#39;?api-tenant=&#39; + self.api_tenant
         return simple_get(self, version_cmd)
 
+    @_is_configured
     def get_buffer_status(self):
-        &#34;&#34;&#34;results related to the bytes processed/in the buffer
+        &#34;&#34;&#34;Results related to the bytes processed/in the buffer
 
         Returns:
             result (boolean): true if successful (nano was successfully run)
@@ -1352,8 +1405,9 @@ except bn.BoonException as be:
         status_cmd = self.url + &#39;bufferStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
         return simple_get(self, status_cmd)
 
+    @_is_configured
     def get_nano_results(self, results=&#39;All&#39;):
-        &#34;&#34;&#34;results per pattern
+        &#34;&#34;&#34;Results per pattern
 
         Args:
             results (str): comma separated list of results
@@ -1386,8 +1440,9 @@ except bn.BoonException as be:
 
         return simple_get(self, results_cmd)
 
+    @_is_configured
     def get_nano_status(self, results=&#39;All&#39;):
-        &#34;&#34;&#34;results in relation to each cluster/overall stats
+        &#34;&#34;&#34;Results in relation to each cluster/overall stats
 
         Args:
             results (str): comma separated list of results
@@ -1442,7 +1497,7 @@ except bn.BoonException as be:
 <span>def <span class="ident">autotune_config</span></span>(<span>self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>autotunes the percent variation, min and max for each feature</p>
+<section class="desc"><p>Autotunes the percent variation, min and max for each feature</p>
 <h2 id="args">Args</h2>
 <p>autotune_pv (boolean):
 autotune_range (boolean):
@@ -1459,8 +1514,9 @@ exclusions (list):</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
-    &#34;&#34;&#34;autotunes the percent variation, min and max for each feature
+<pre><code class="python">@_is_configured
+def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
+    &#34;&#34;&#34;Autotunes the percent variation, min and max for each feature
 
     Args:
         autotune_pv (boolean):
@@ -1527,7 +1583,7 @@ exclusions (list):</p>
 <span>def <span class="ident">configure_nano</span></span>(<span>self, config)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>returns the posted clustering configuration</p>
+<section class="desc"><p>Returns the posted clustering configuration</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>feature_count</code></strong> :&ensp;<code>int</code></dt>
@@ -1557,7 +1613,7 @@ config (dict):</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def configure_nano(self, config):
-    &#34;&#34;&#34;returns the posted clustering configuration
+    &#34;&#34;&#34;Returns the posted clustering configuration
 
      Args:
          feature_count (int): number of features per vector
@@ -1591,7 +1647,7 @@ config (dict):</p>
 <span>def <span class="ident">create_config</span></span>(<span>self, feature_count, numeric_format, min_val=array([0]), max_val=array([1]), weight=array([1]), percent_variation=0.05, streaming_window=1, accuracy=0.99, label=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>generate a configuration template for the given parameters</p>
+<section class="desc"><p>Generate a configuration template for the given parameters</p>
 <p>A discrete configuration is specified as a list of min, max, weights, and labels</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -1626,9 +1682,10 @@ accuracy (float):</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]), weight=np.array([1]),
+<pre><code class="python">def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]),
+                  weight=np.array([1]),
                   percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
-    &#34;&#34;&#34;generate a configuration template for the given parameters
+    &#34;&#34;&#34;Generate a configuration template for the given parameters
 
     A discrete configuration is specified as a list of min, max, weights, and labels
 
@@ -1687,7 +1744,7 @@ accuracy (float):</p>
 <span>def <span class="ident">get_buffer_status</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>results related to the bytes processed/in the buffer</p>
+<section class="desc"><p>Results related to the bytes processed/in the buffer</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
@@ -1699,8 +1756,9 @@ accuracy (float):</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_buffer_status(self):
-    &#34;&#34;&#34;results related to the bytes processed/in the buffer
+<pre><code class="python">@_is_configured
+def get_buffer_status(self):
+    &#34;&#34;&#34;Results related to the bytes processed/in the buffer
 
     Returns:
         result (boolean): true if successful (nano was successfully run)
@@ -1715,7 +1773,7 @@ accuracy (float):</p>
 <span>def <span class="ident">get_config</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>gets the configuration for this nano pod instance</p>
+<section class="desc"><p>Gets the configuration for this nano pod instance</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
@@ -1727,8 +1785,9 @@ accuracy (float):</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_config(self):
-    &#34;&#34;&#34;gets the configuration for this nano pod instance
+<pre><code class="python">@_is_configured
+def get_config(self):
+    &#34;&#34;&#34;Gets the configuration for this nano pod instance
 
     Returns:
         result (boolean): true if successful (configuration was found)
@@ -1743,7 +1802,7 @@ accuracy (float):</p>
 <span>def <span class="ident">get_nano_results</span></span>(<span>self, results='All')</span>
 </code></dt>
 <dd>
-<section class="desc"><p>results per pattern</p>
+<section class="desc"><p>Results per pattern</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
@@ -1761,8 +1820,9 @@ accuracy (float):</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_nano_results(self, results=&#39;All&#39;):
-    &#34;&#34;&#34;results per pattern
+<pre><code class="python">@_is_configured
+def get_nano_results(self, results=&#39;All&#39;):
+    &#34;&#34;&#34;Results per pattern
 
     Args:
         results (str): comma separated list of results
@@ -1800,7 +1860,7 @@ accuracy (float):</p>
 <span>def <span class="ident">get_nano_status</span></span>(<span>self, results='All')</span>
 </code></dt>
 <dd>
-<section class="desc"><p>results in relation to each cluster/overall stats</p>
+<section class="desc"><p>Results in relation to each cluster/overall stats</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
@@ -1830,8 +1890,9 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_nano_status(self, results=&#39;All&#39;):
-    &#34;&#34;&#34;results in relation to each cluster/overall stats
+<pre><code class="python">@_is_configured
+def get_nano_status(self, results=&#39;All&#39;):
+    &#34;&#34;&#34;Results in relation to each cluster/overall stats
 
     Args:
         results (str): comma separated list of results
@@ -1885,7 +1946,7 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 <span>def <span class="ident">get_version</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>results related to the bytes processed/in the buffer</p>
+<section class="desc"><p>Version information for this nano pod</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
@@ -1898,7 +1959,7 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_version(self):
-    &#34;&#34;&#34;results related to the bytes processed/in the buffer
+    &#34;&#34;&#34;Version information for this nano pod
 
     Returns:
         result (boolean): true if successful (version information was retrieved)
@@ -1915,7 +1976,7 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 <span>def <span class="ident">load_data</span></span>(<span>self, data, append_data=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>load nano data from an existing numpy array or simple python list</p>
+<section class="desc"><p>Load nano data from an existing numpy array or simple python list</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>data</code></strong> :&ensp;<code>np.ndarray</code> or <code>list</code></dt>
@@ -1935,8 +1996,9 @@ data should be truncated</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def load_data(self, data, append_data=False):
-    &#34;&#34;&#34;load nano data from an existing numpy array or simple python list
+<pre><code class="python">@_is_configured
+def load_data(self, data, append_data=False):
+    &#34;&#34;&#34;Load nano data from an existing numpy array or simple python list
 
     Args:
         data (np.ndarray or list): numpy array or list of data values
@@ -1981,7 +2043,7 @@ data should be truncated</dd>
 <span>def <span class="ident">load_file</span></span>(<span>self, file, file_type, gzip=False, append_data=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>load nano data from a file</p>
+<section class="desc"><p>Load nano data from a file</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>file</code></strong> :&ensp;<code>str</code></dt>
@@ -2005,8 +2067,9 @@ data should be truncated</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def load_file(self, file, file_type, gzip=False, append_data=False):
-    &#34;&#34;&#34;load nano data from a file
+<pre><code class="python">@_is_configured
+def load_file(self, file, file_type, gzip=False, append_data=False):
+    &#34;&#34;&#34;Load nano data from a file
 
     Args:
         file (str): local path to data file
@@ -2051,7 +2114,7 @@ data should be truncated</dd>
 <span>def <span class="ident">nano_list</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>returns list of nano instances allocated for a pod</p>
+<section class="desc"><p>Returns list of nano instances allocated for a pod</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
@@ -2064,7 +2127,7 @@ data should be truncated</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def nano_list(self):
-    &#34;&#34;&#34;returns list of nano instances allocated for a pod
+    &#34;&#34;&#34;Returns list of nano instances allocated for a pod
 
     Returns:
         result (boolean):  true if successful (list was returned)
@@ -2125,7 +2188,7 @@ data should be truncated</dd>
 <span>def <span class="ident">restore_nano</span></span>(<span>self, filename)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>restore a nano pod instance from local file</p>
+<section class="desc"><p>Restore a nano pod instance from local file</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
@@ -2143,7 +2206,7 @@ data should be truncated</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def restore_nano(self, filename):
-    &#34;&#34;&#34;restore a nano pod instance from local file
+    &#34;&#34;&#34;Restore a nano pod instance from local file
 
     Args:
         filename (str): path to local file containing saved pod instance
@@ -2189,7 +2252,7 @@ data should be truncated</dd>
 <span>def <span class="ident">run_nano</span></span>(<span>self, results=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>clusters the data in the nano pod buffer and returns the specified results</p>
+<section class="desc"><p>Clusters the data in the nano pod buffer and returns the specified results</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
@@ -2213,8 +2276,9 @@ data should be truncated</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def run_nano(self, results=None):
-    &#34;&#34;&#34;clusters the data in the nano pod buffer and returns the specified results
+<pre><code class="python">@_is_configured
+def run_nano(self, results=None):
+    &#34;&#34;&#34;Clusters the data in the nano pod buffer and returns the specified results
 
     Args:
         results (str): comma separated list of result specifiers
@@ -2256,7 +2320,7 @@ data should be truncated</dd>
 <span>def <span class="ident">run_streaming_nano</span></span>(<span>self, data, results=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>load streaming data into self-autotuning nano pod instance, run the nano and return results</p>
+<section class="desc"><p>Load streaming data into self-autotuning nano pod instance, run the nano and return results</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>data</code></strong> :&ensp;<code>np.ndarray</code> or <code>list</code></dt>
@@ -2282,8 +2346,9 @@ data should be truncated</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def run_streaming_nano(self, data, results=None):
-    &#34;&#34;&#34;load streaming data into self-autotuning nano pod instance, run the nano and return results
+<pre><code class="python">@_is_configured
+def run_streaming_nano(self, data, results=None):
+    &#34;&#34;&#34;Load streaming data into self-autotuning nano pod instance, run the nano and return results
 
     Args:
         data (np.ndarray or list): numpy array or list of data values
@@ -2362,7 +2427,8 @@ data should be truncated</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def save_nano(self, filename):
+<pre><code class="python">@_is_configured
+def save_nano(self, filename):
     &#34;&#34;&#34;serialize a nano pod instance and save to a local file
 
     Args:

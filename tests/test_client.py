@@ -125,7 +125,8 @@ class TestManagement(object):
         assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BadLogic.license", license_id='sample-license')
 
         # create NanoHandle using badly formatted json
-        assert_raises(bn.BoonException, bn.NanoHandle, license_file="badformat.BoonLogic.license", license_id='sample-license')
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file="badformat.BoonLogic.license",
+                      license_id='sample-license')
 
         # create NanoHandle using non-existent license_id
         assert_raises(bn.BoonException, bn.NanoHandle, license_id='not-a-license')
@@ -472,7 +473,17 @@ class TestCluster(object):
                                                   max_val=[15], weight=[1], streaming_window=1,
                                                   percent_variation=0.05, accuracy=0.99)
 
-        # attempt to load from a file that doesn't exist
+        # attempt to load from a file for a nano that is not configured
+        dataFile = 'Data.csv'
+        success, response = self.nano.load_file(file=dataFile, file_type='csv', append_data=False)
+        assert_equal(success, False)
+        assert_equal(response, 'nano instance is not configured')
+
+        # apply the configuration
+        success, gen_config = self.nano.configure_nano(config)
+        assert_equal(success, True)
+
+        # attempt to load data with a non-existent file
         dataFile = 'BadData.csv'
         success, response = self.nano.load_file(file=dataFile, file_type='csv', append_data=False)
         assert_equal(success, False)
@@ -521,11 +532,12 @@ class TestStreamingCluster(object):
     def teardown(self):
         self.nano.close_nano()
 
-    def testRunNanoStreaming(self):
+    def test_run_nano_streaming(self):
         # create a configuration with single-value min_val, max_val, and weight
         success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10],
                                                   max_val=[15], weight=[1], streaming_window=1,
                                                   percent_variation=0.05, accuracy=0.99)
+        assert_equal(success, True)
 
         # apply the configuration
         success, gen_config = self.nano.configure_nano(config)
@@ -541,6 +553,28 @@ class TestStreamingCluster(object):
         # write the data to the streaming nano
         success, response = self.nano.run_streaming_nano(data=dataBlob, results='All')
         assert_equal(success, True)
+
+    def test_run_nano_streaming_negative(self):
+        # create a configuration with single-value min_val, max_val, and weight
+        success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10],
+                                                  max_val=[15], weight=[1], streaming_window=1,
+                                                  percent_variation=0.05, accuracy=0.99)
+        assert_equal(success, True)
+
+        # apply the configuration
+        success, gen_config = self.nano.configure_nano(config)
+        assert_equal(success, True)
+
+        # load Data.csv and convert to list of floats
+        dataBlob = list()
+        with open('Data.csv', 'r') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                dataBlob = dataBlob + row
+
+        # run streaming nano with bad results specifier
+        success, response = self.nano.run_streaming_nano(data=dataBlob, results='NA')
+        assert_equal(success, False)
 
 
 class TestRest(object):
