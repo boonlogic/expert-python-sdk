@@ -8,10 +8,13 @@ user_agent = 'Boon Logic / expert-python-sdk / urllib3'
 
 def outgoing_data(response):
     if response.status != 200:
-        decoded = json.loads(response.data.decode('utf-8'))
-        if 'code' in decoded and 'message' in decoded:
-            return False, '{}: {}'.format(decoded['code'], decoded['message'])
-        return False, decoded
+        if response.headers['Content-Type'] == 'application/json':
+            decoded = json.loads(response.data.decode('utf-8'))
+            if 'code' in decoded and 'message' in decoded:
+                return False, '{}: {}'.format(decoded['code'], decoded['message'])
+            return False, decoded
+        else:
+            return False, response.reason
     try:
         content_type = response.headers['Content-Type']
         if content_type == 'application/json':

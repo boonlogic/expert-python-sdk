@@ -1,6 +1,7 @@
 from urllib3 import ProxyManager
 from urllib3 import PoolManager
 from urllib3 import Timeout
+from functools import wraps
 import json
 import os
 import tarfile
@@ -142,6 +143,14 @@ class NanoHandle:
             # non-proxy pool
             self.http = PoolManager(timeout=timeout_inst)
 
+    def _is_configured(f):
+        @wraps(f)
+        def inner(*args, **kwargs):
+            if args[0].numeric_format not in ['int16', 'uint16', 'float32']:
+                return False, "nano instance is not configured"
+            return f(*args, **kwargs)
+        return inner
+
     def open_nano(self, instance_id):
         """Creates or attaches to a nano pod instance
 
@@ -181,9 +190,10 @@ class NanoHandle:
         self.http.clear()
         return result, None
 
-    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]), weight=np.array([1]),
+    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]),
+                      weight=np.array([1]),
                       percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
-        """generate a configuration template for the given parameters
+        """Generate a configuration template for the given parameters
 
         A discrete configuration is specified as a list of min, max, weights, and labels
 
@@ -238,7 +248,7 @@ class NanoHandle:
         return simple_get(self, template_cmd)
 
     def configure_nano(self, config):
-        """returns the posted clustering configuration
+        """Returns the posted clustering configuration
 
          Args:
              feature_count (int): number of features per vector
@@ -268,7 +278,7 @@ class NanoHandle:
         return result, response
 
     def nano_list(self):
-        """returns list of nano instances allocated for a pod
+        """Returns list of nano instances allocated for a pod
 
         Returns:
             result (boolean):  true if successful (list was returned)
@@ -281,6 +291,7 @@ class NanoHandle:
 
         return simple_get(self, instance_cmd)
 
+    @_is_configured
     def save_nano(self, filename):
         """serialize a nano pod instance and save to a local file
 
@@ -311,7 +322,7 @@ class NanoHandle:
         return True, None
 
     def restore_nano(self, filename):
-        """restore a nano pod instance from local file
+        """Restore a nano pod instance from local file
 
         Args:
             filename (str): path to local file containing saved pod instance
@@ -352,8 +363,9 @@ class NanoHandle:
 
         return True, response
 
+    @_is_configured
     def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
-        """autotunes the percent variation, min and max for each feature
+        """Autotunes the percent variation, min and max for each feature
 
         Args:
             autotune_pv (boolean):
@@ -380,8 +392,9 @@ class NanoHandle:
         # autotune parameters
         return simple_post(self, config_cmd)
 
+    @_is_configured
     def get_config(self):
-        """gets the configuration for this nano pod instance
+        """Gets the configuration for this nano pod instance
 
         Returns:
             result (boolean): true if successful (configuration was found)
@@ -391,8 +404,9 @@ class NanoHandle:
         config_cmd = self.url + 'clusterConfig/' + self.instance + '?api-tenant=' + self.api_tenant
         return simple_get(self, config_cmd)
 
+    @_is_configured
     def load_file(self, file, file_type, gzip=False, append_data=False):
-        """load nano data from a file
+        """Load nano data from a file
 
         Args:
             file (str): local path to data file
@@ -432,8 +446,9 @@ class NanoHandle:
 
         return multipart_post(self, dataset_cmd, fields=fields)
 
+    @_is_configured
     def load_data(self, data, append_data=False):
-        """load nano data from an existing numpy array or simple python list
+        """Load nano data from an existing numpy array or simple python list
 
         Args:
             data (np.ndarray or list): numpy array or list of data values
@@ -473,8 +488,9 @@ class NanoHandle:
 
         return multipart_post(self, dataset_cmd, fields=fields)
 
+    @_is_configured
     def run_nano(self, results=None):
-        """ clusters the data in the nano pod buffer and returns the specified results
+        """Clusters the data in the nano pod buffer and returns the specified results
 
         Args:
             results (str): comma separated list of result specifiers
@@ -511,8 +527,67 @@ class NanoHandle:
 
         return simple_post(self, nano_cmd)
 
+    @_is_configured
+    def run_streaming_nano(self, data, results=None):
+        """Load streaming data into self-autotuning nano pod instance, run the nano and return results
+
+        Args:
+            data (np.ndarray or list): numpy array or list of data values
+            results (str): comma separated list of result specifiers
+
+                ID = cluster ID
+
+                SI = smoothed anomaly index
+
+                RI = raw anomaly index
+
+                FI = frequency index
+
+                DI = distance index
+
+        Returns:
+            result (boolean): true if successful (data was successful streamed to nano pod instance)
+            response (dict or str): dictionary of results when result is true, error message when result = false
+
+        """
+        if not isinstance(data, np.ndarray):
+            if self.numeric_format == 'int16':
+                data = np.asarray(data, dtype=np.int16)
+            elif self.numeric_format == 'float32':
+                data = np.asarray(data, dtype=np.float32)
+            elif self.numeric_format == 'uint16':
+                data = np.asarray(data, dtype=np.uint16)
+
+        if self.numeric_format == 'int16':
+            data = data.astype(np.int16)
+        elif self.numeric_format == 'float32':
+            data = data.astype(np.float32)
+        elif self.numeric_format == 'uint16':
+            data = data.astype(np.uint16)
+        data = data.tostring()
+        file_name = 'dummy_filename.bin'
+        file_type = 'raw'
+
+        fields = {'data': (file_name, data)}
+
+        results_str = ''
+        if str(results) == 'All':
+            results_str = 'ID,SI,RI,FI,DI'
+        elif results:
+            for result in results.split(','):
+                if result not in ['ID', 'SI', 'RI', 'FI', 'DI']:
+                    return False, 'unknown result "{}" found in results parameter'.format(result)
+
+        # build command
+        streaming_cmd = self.url + 'nanoRunStreaming/' + self.instance + '?api-tenant=' + self.api_tenant
+        streaming_cmd += '&fileType=' + file_type
+        if results:
+            streaming_cmd += '&results=' + results_str
+
+        return multipart_post(self, streaming_cmd, fields=fields)
+
     def get_version(self):
-        """ results related to the bytes processed/in the buffer
+        """Version information for this nano pod
 
         Returns:
             result (boolean): true if successful (version information was retrieved)
@@ -524,8 +599,9 @@ class NanoHandle:
         version_cmd = self.url[:-3] + 'version' + '?api-tenant=' + self.api_tenant
         return simple_get(self, version_cmd)
 
+    @_is_configured
     def get_buffer_status(self):
-        """ results related to the bytes processed/in the buffer
+        """Results related to the bytes processed/in the buffer
 
         Returns:
             result (boolean): true if successful (nano was successfully run)
@@ -535,8 +611,9 @@ class NanoHandle:
         status_cmd = self.url + 'bufferStatus/' + self.instance + '?api-tenant=' + self.api_tenant
         return simple_get(self, status_cmd)
 
+    @_is_configured
     def get_nano_results(self, results='All'):
-        """ results per pattern
+        """Results per pattern
 
         Args:
             results (str): comma separated list of results
@@ -569,8 +646,9 @@ class NanoHandle:
 
         return simple_get(self, results_cmd)
 
+    @_is_configured
     def get_nano_status(self, results='All'):
-        """results in relation to each cluster/overall stats
+        """Results in relation to each cluster/overall stats
 
         Args:
             results (str): comma separated list of results
