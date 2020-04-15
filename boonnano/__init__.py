@@ -577,6 +577,7 @@ class NanoHandle:
             for result in results.split(','):
                 if result not in ['ID', 'SI', 'RI', 'FI', 'DI']:
                     return False, 'unknown result "{}" found in results parameter'.format(result)
+            results_str = results
 
         # build command
         streaming_cmd = self.url + 'nanoRunStreaming/' + self.instance + '?api-tenant=' + self.api_tenant

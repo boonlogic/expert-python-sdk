@@ -550,8 +550,12 @@ class TestStreamingCluster(object):
             for row in csv_reader:
                 dataBlob = dataBlob + row
 
-        # write the data to the streaming nano
+        # write the data to the streaming nano, with restuls == All
         success, response = self.nano.run_streaming_nano(data=dataBlob, results='All')
+        assert_equal(success, True)
+
+        # write the data to the streaming nano, with restuls == 'SI'
+        success, response = self.nano.run_streaming_nano(data=dataBlob, results='SI')
         assert_equal(success, True)
 
     def test_run_nano_streaming_negative(self):
