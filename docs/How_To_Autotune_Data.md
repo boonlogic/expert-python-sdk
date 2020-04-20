@@ -143,4 +143,4 @@ print(json.dumps(response, indent=4))
 
 ```
 
-[expert-python-sdk main page](README.md)
+[expert-python-sdk main page](https://boonlogic.github.io/expert-python-sdk/)

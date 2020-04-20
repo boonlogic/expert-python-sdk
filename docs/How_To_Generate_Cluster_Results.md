@@ -146,4 +146,4 @@ if not success:
     sys.exit(1)
 ```
 
-[expert-python-sdk main page](README.md)
+[expert-python-sdk main page](https://boonlogic.github.io/expert-python-sdk/)
