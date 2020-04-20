@@ -6,7 +6,7 @@ This python package allows ease of access to calls to the BoonLogic Nano API.
 - __Clustering__: [Clustering with the expert-python-sdk](docs/Tutorial_The_General_Pipeline.md)
 - __Autotuning__: [Autotuning with the expert-python-sdk](docs/How_To_Autotune_Data.md)
 - __Results__: [Results after clustering](docs/How_To_Generate_Cluster_Results.md)
-- __SDK Functional Breakdown__: [expert-python-sdk classes and methods](boonnano/index.html)
+- __SDK Functional Breakdown__: [expert-python-sdk classes and methods](docs/boonnano/index.html)
 
 ---------
 ## Installation
