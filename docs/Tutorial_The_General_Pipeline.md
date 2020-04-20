@@ -418,12 +418,4 @@ if not success:
     sys.exit(1)
 ```
 
-
-[How-to: Generate Cluster Results](How_To_Generate_Cluster_Results.md)
-
-[Guide: Results](Guide_Nano_Results)
-
-[Guide: Status](Guide_Nano_Status.md)
-<br/>
-
-[Return to documentation homepage](python-docs.md)
+[expert-python-sdk main page](README.md)
