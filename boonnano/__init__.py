@@ -460,22 +460,7 @@ class NanoHandle:
             response (str): None when result is true, error string when result=false
 
         """
-
-        if not isinstance(data, np.ndarray):
-            if self.numeric_format == 'int16':
-                data = np.asarray(data, dtype=np.int16)
-            elif self.numeric_format == 'float32':
-                data = np.asarray(data, dtype=np.float32)
-            elif self.numeric_format == 'uint16':
-                data = np.asarray(data, dtype=np.uint16)
-
-        if self.numeric_format == 'int16':
-            data = data.astype(np.int16)
-        elif self.numeric_format == 'float32':
-            data = data.astype(np.float32)
-        elif self.numeric_format == 'uint16':
-            data = data.astype(np.uint16)
-        data = data.tostring()
+        data = normalize_nano_data(data, self.numeric_format)
         file_name = 'dummy_filename.bin'
         file_type = 'raw'
 
@@ -550,21 +535,7 @@ class NanoHandle:
             response (dict or str): dictionary of results when result is true, error message when result = false
 
         """
-        if not isinstance(data, np.ndarray):
-            if self.numeric_format == 'int16':
-                data = np.asarray(data, dtype=np.int16)
-            elif self.numeric_format == 'float32':
-                data = np.asarray(data, dtype=np.float32)
-            elif self.numeric_format == 'uint16':
-                data = np.asarray(data, dtype=np.uint16)
-
-        if self.numeric_format == 'int16':
-            data = data.astype(np.int16)
-        elif self.numeric_format == 'float32':
-            data = data.astype(np.float32)
-        elif self.numeric_format == 'uint16':
-            data = data.astype(np.uint16)
-        data = data.tostring()
+        data = normalize_nano_data(data, self.numeric_format)
         file_name = 'dummy_filename.bin'
         file_type = 'raw'
 
@@ -697,3 +668,20 @@ class NanoHandle:
         results_cmd = results_cmd + '&results=' + results_str
 
         return simple_get(self, results_cmd)
+
+def normalize_nano_data(data, numeric_format):
+    # Whatever type data comes in as, cast it to numpy array
+    data = np.asarray(data)
+
+    # Cast numpy array to correct numeric type for serialization
+    if numeric_format == 'int16':
+        data = data.astype(np.int16)
+    elif numeric_format == 'float32':
+        data = data.astype(np.float32)
+    elif numeric_format == 'uint16':
+        data = data.astype(np.uint16)
+
+    # Serialize to binary blob
+    data = data.tostring()
+
+    return data
