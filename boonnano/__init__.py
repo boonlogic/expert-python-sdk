@@ -473,6 +473,23 @@ class NanoHandle:
 
         return multipart_post(self, dataset_cmd, fields=fields)
 
+    def set_learning_status(self, status):
+        """returns list of nano instances allocated for a pod
+
+        Args:
+            status (boolean): true or false of whether to learning is on or off
+
+        Returns:
+            result (boolean):  true if successful (list was returned)
+            response (str): json dictionary of pod instances when result=true, error string when result=false
+
+        """
+
+        # build command
+        learning_cmd = self.url + 'learning/' + self.instance + '?enable=' + str(status).lower() + '&api-tenant=' + self.api_tenant
+
+        return simple_post(self, learning_cmd)
+
     def run_nano(self, results=None):
         """ clusters the data in the nano pod buffer and returns the specified results
 
