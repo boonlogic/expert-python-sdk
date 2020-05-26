@@ -401,6 +401,10 @@ class TestCluster(object):
         success, response = self.nano.load_data(data=np.array(dataBlob), append_data=False)
         assert_equal(success, True)
 
+        # load part of the data
+        success, response = self.nano.load_data(data=dataBlob[:(int)(len(dataBlob)/2)], append_data=False)
+        assert_equal(success, True)
+
         # run the nano, ask for all results
         success, response = self.nano.run_nano(results='All')
         assert_equal(success, True)
@@ -432,10 +436,27 @@ class TestCluster(object):
                                                   'frequencyIndexes', 'distanceIndexes', 'totalInferences',
                                                   'numClusters'])
 
-        # fetch additional nano status 'PCA'
-        success, response = self.nano.get_nano_status(results='PCA')
+        # fetch additional nano status 'numClusters'
+        success, response = self.nano.get_nano_status(results='numClusters')
         assert_equal(success, True)
-        assert_list_equal(list(response.keys()), ['PCA'])
+        assert_list_equal(list(response.keys()), ['numClusters'])
+
+        # turn off learning
+        success, response2 = self.nano.set_learning_status(False)
+        assert_equal(success, True)
+
+        # load second half of data
+        success, response2 = self.nano.load_data(data=dataBlob[(int)(len(dataBlob)/2):], append_data=False)
+        assert_equal(success, True)
+
+        # run the nano
+        success, response2 = self.nano.run_nano(results=None)
+        assert_equal(success, True)
+
+        # ask for the nano status result, 'numClusters'
+        success, response2 = self.nano.get_nano_status(results='numClusters')
+        assert_equal(success, True)
+        assert_equal(response['numClusters'], response2['numClusters'])
 
         # test autotune
         success, response = self.nano.autotune_config(autotune_pv=True, autotune_range=True, by_feature=False)
@@ -497,6 +518,10 @@ class TestCluster(object):
 
         # run a nano with bad results specifier
         success, response = self.nano.run_nano(results='NA')
+        assert_equal(success, False)
+
+        # set learning to a non boolean
+        success, response = self.nano.set_learning_status(status=None)
         assert_equal(success, False)
 
         # get nano results with bad results specifier
