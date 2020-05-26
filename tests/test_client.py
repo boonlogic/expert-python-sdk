@@ -31,6 +31,8 @@ def find_host_addr():
 
 
 init_done = False
+
+
 def build_test_environment():
     global init_done
     if init_done:
@@ -123,7 +125,8 @@ class TestManagement(object):
         assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BadLogic.license", license_id='sample-license')
 
         # create NanoHandle using badly formatted json
-        assert_raises(bn.BoonException, bn.NanoHandle, license_file="badformat.BoonLogic.license", license_id='sample-license')
+        assert_raises(bn.BoonException, bn.NanoHandle, license_file="badformat.BoonLogic.license",
+                      license_id='sample-license')
 
         # create NanoHandle using non-existent license_id
         assert_raises(bn.BoonException, bn.NanoHandle, license_id='not-a-license')
@@ -309,7 +312,7 @@ class TestConfigure(object):
         assert_equal(response, '606: numericFormat in query should be one of [uint16 float32 int16]')
 
         # test create_config with bad min_val
-        success, response = self.nano.create_config(numeric_format='int64', feature_count=4,
+        success, response = self.nano.create_config(numeric_format='int16', feature_count=4,
                                                     min_val=-15, max_val=[15.0, 14, 13, 12],
                                                     weight=[1, 1, 2, 1], label=["l1", "l2", "l3", "l4"],
                                                     percent_variation=0.04,
@@ -318,7 +321,7 @@ class TestConfigure(object):
         assert_equal(response, 'min_val must be list or numpy array')
 
         # test create_config with bad max_val
-        success, response = self.nano.create_config(numeric_format='int64', feature_count=4,
+        success, response = self.nano.create_config(numeric_format='int16', feature_count=4,
                                                     min_val=[-15], max_val=10,
                                                     weight=[1, 1, 2, 1], label=["l1", "l2", "l3", "l4"],
                                                     percent_variation=0.04,
@@ -327,7 +330,7 @@ class TestConfigure(object):
         assert_equal(response, 'max_val must be list or numpy array')
 
         # test create_config with bad max_val
-        success, response = self.nano.create_config(numeric_format='int64', feature_count=4,
+        success, response = self.nano.create_config(numeric_format='int16', feature_count=4,
                                                     min_val=[-15], max_val=[10],
                                                     weight=1, label=["l1", "l2", "l3", "l4"],
                                                     percent_variation=0.04,
@@ -336,7 +339,7 @@ class TestConfigure(object):
         assert_equal(response, 'weight must be list or numpy array')
 
         # test create_config with bad label
-        success, response = self.nano.create_config(numeric_format='int64', feature_count=4,
+        success, response = self.nano.create_config(numeric_format='int16', feature_count=4,
                                                     min_val=[-15], max_val=[10],
                                                     weight=[1], label="mylabel",
                                                     percent_variation=0.04,
@@ -491,7 +494,17 @@ class TestCluster(object):
                                                   max_val=[15], weight=[1], streaming_window=1,
                                                   percent_variation=0.05, accuracy=0.99)
 
-        # attempt to load from a file that doesn't exist
+        # attempt to load from a file for a nano that is not configured
+        dataFile = 'Data.csv'
+        success, response = self.nano.load_file(file=dataFile, file_type='csv', append_data=False)
+        assert_equal(success, False)
+        assert_equal(response, 'nano instance is not configured')
+
+        # apply the configuration
+        success, gen_config = self.nano.configure_nano(config)
+        assert_equal(success, True)
+
+        # attempt to load data with a non-existent file
         dataFile = 'BadData.csv'
         success, response = self.nano.load_file(file=dataFile, file_type='csv', append_data=False)
         assert_equal(success, False)
@@ -523,6 +536,74 @@ class TestCluster(object):
         success, response = self.nano.save_nano('/badpath/junk/bad-saved-nano-1')
         assert_equal(success, False)
         assert_equal(response, 'No such file or directory')
+
+
+class TestStreamingCluster(object):
+
+    def __init__(self):
+        build_test_environment()
+        try:
+            self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
+            assert_equal(self.nano.license_id, 'default')
+        except bn.BoonException as be:
+            assert_false(False, 'test for default license_id failed')
+
+    def setUp(self):
+        clean_nano_instances(self.nano)
+        success, response = self.nano.open_nano('instance-1')
+        assert_equal(success, True)
+        assert_equal(response['instanceID'], 'instance-1')
+
+    def teardown(self):
+        self.nano.close_nano()
+
+    def test_run_nano_streaming(self):
+        # create a configuration with single-value min_val, max_val, and weight
+        success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10],
+                                                  max_val=[15], weight=[1], streaming_window=1,
+                                                  percent_variation=0.05, accuracy=0.99)
+        assert_equal(success, True)
+
+        # apply the configuration
+        success, gen_config = self.nano.configure_nano(config)
+        assert_equal(success, True)
+
+        # load Data.csv and convert to list of floats
+        dataBlob = list()
+        with open('Data.csv', 'r') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                dataBlob = dataBlob + row
+
+        # write the data to the streaming nano, with restuls == All
+        success, response = self.nano.run_streaming_nano(data=dataBlob, results='All')
+        assert_equal(success, True)
+
+        # write the data to the streaming nano, with restuls == 'SI'
+        success, response = self.nano.run_streaming_nano(data=dataBlob, results='SI')
+        assert_equal(success, True)
+
+    def test_run_nano_streaming_negative(self):
+        # create a configuration with single-value min_val, max_val, and weight
+        success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10],
+                                                  max_val=[15], weight=[1], streaming_window=1,
+                                                  percent_variation=0.05, accuracy=0.99)
+        assert_equal(success, True)
+
+        # apply the configuration
+        success, gen_config = self.nano.configure_nano(config)
+        assert_equal(success, True)
+
+        # load Data.csv and convert to list of floats
+        dataBlob = list()
+        with open('Data.csv', 'r') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                dataBlob = dataBlob + row
+
+        # run streaming nano with bad results specifier
+        success, response = self.nano.run_streaming_nano(data=dataBlob, results='NA')
+        assert_equal(success, False)
 
 
 class TestRest(object):
