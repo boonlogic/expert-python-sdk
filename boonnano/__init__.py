@@ -10,6 +10,7 @@ from .rest import simple_delete
 from .rest import simple_post
 from .rest import multipart_post
 import numpy as np
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 __all__ = ['BoonException', 'NanoHandle']
 
