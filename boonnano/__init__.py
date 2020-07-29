@@ -10,7 +10,7 @@ from .rest import simple_delete
 from .rest import simple_post
 from .rest import multipart_post
 import numpy as np
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+# urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 __all__ = ['BoonException', 'NanoHandle']
 
@@ -191,9 +191,11 @@ class NanoHandle:
         self.http.clear()
         return result, None
 
-    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]),
-                      weight=np.array([1]),
-                      percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
+    def create_config(self, feature_count, numeric_format, cluster_mode='batch', min_val=0, max_val=1,
+                      weight=1, label=None,
+                      percent_variation=.05, streaming_window=1, accuracy=.99,
+                      autotunePV=True, autotuneRange=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None,
+                      streaming_autotune=True, streaming_buffer=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000):
         """Generate a configuration template for the given parameters
 
         A discrete configuration is specified as a list of min, max, weights, and labels
@@ -211,42 +213,85 @@ class NanoHandle:
             percent_variation (float):
             streaming_window (integer):
             accuracy (float):
+            autotunePV (bool):
+            autotuneRange (bool):
+            autotune_by_feature (bool):
+            autotune_max_clusters (int):
+            exclusions (list):
+            streaming_autotune (bool):
+            streaming_buffer (int):
+            learning_numerator (int):
+            learning_denominator (int):
+            learning_max_clusters (int):
+            learning_samples (int):
+
 
         Returns:
             result (boolean): true if successful (configuration was successfully created)
             response (dict or str): configuration dictionary when result is true, error string when result is false
 
         """
-        template_cmd = self.url + 'configTemplate/' + '?api-tenant=' + self.api_tenant
-        template_cmd += '&featureCount=' + str(feature_count)
-        template_cmd += '&numericFormat=' + str(numeric_format)
-        if isinstance(min_val, list):
-            template_cmd += '&minVal=' + ",".join([str(s) for s in min_val])
-        elif isinstance(min_val, np.ndarray):
-            template_cmd += '&minVal=' + ",".join([str(s) for s in min_val])
+
+        if isinstance(min_val, int) or isinstance(min_val, float):
+            min_val = np.array([min_val] * feature_count)
+        if isinstance(max_val, int) or isinstance(max_val, float):
+            max_val = np.array([max_val] * feature_count)
+        if isinstance(weight, int):
+            weight = np.array([weight] * feature_count)
+
+        config = {}
+        config['clusterMode'] = cluster_mode
+        config['numericFormat'] = numeric_format
+        config['features'] = []
+
+        if (isinstance(min_val, list) or isinstance(min_val, np.ndarray)) and (isinstance(max_val, list) or isinstance(max_val, np.ndarray)) and (isinstance(weight, list) or isinstance(weight, np.ndarray)):
+            if len(min_val) != len(max_val) or len(min_val) != len(weight):
+                return False, "parameters must be lists of the same length"
+
+            for min, max, w in zip(min_val, max_val, weight):
+                tempDict = {}
+                if numeric_format == 'float32':
+                    tempDict['minVal'] = float(min)
+                    tempDict['maxVal'] = float(max)
+                else:
+                    tempDict['minVal'] = int(min)
+                    tempDict['maxVal'] = int(max)
+                tempDict['weight'] = int(w)
+                config['features'].append(tempDict)
         else:
-            return False, "min_val must be list or numpy array"
-        if isinstance(max_val, list):
-            template_cmd += '&maxVal=' + ",".join([str(s) for s in max_val])
-        elif isinstance(max_val, np.ndarray):
-            template_cmd += '&maxVal=' + ",".join([str(s) for s in max_val])
-        else:
-            return False, "max_val must be list or numpy array"
-        if isinstance(weight, list):
-            template_cmd += '&weight=' + ",".join([str(s) for s in weight])
-        elif isinstance(weight, np.ndarray):
-            template_cmd += '&weight=' + ",".join([str(s) for s in weight])
-        else:
-            return False, "weight must be list or numpy array"
+            return False, "min_val, max_val and weight must be list or numpy array"
+
         if isinstance(label, list):
-            template_cmd += '&label=' + ",".join([str(s) for s in label])
+            if len(label) != len(min_val):
+                return False, "label must be the same length as other parameters"
+            for i, l in enumerate(label):
+                config['features'][i]['label'] = l
         elif label:
             return False, "label must be list"
-        template_cmd += '&percentVariation=' + str(percent_variation)
-        template_cmd += '&streamingWindowSize=' + str(streaming_window)
-        template_cmd += '&accuracy=' + str(accuracy)
 
-        return simple_get(self, template_cmd)
+        config['percentVariation'] = percent_variation
+        config['streamingWindowSize'] = streaming_window
+        config['accuracy'] = accuracy
+
+        config['autoTuning'] = {}
+        config['autoTuning']['autoTunePV'] = autotunePV
+        config['autoTuning']['autoTuneRange'] = autotuneRange
+        config['autoTuning']['autoTuneByFeature'] = autotune_by_feature
+        config['autoTuning']['maxClusters'] = autotune_max_clusters
+        if isinstance(exclusions, list):
+            config['autoTuning']['exclusions'] = ",".join([int(s) for s in exclusions])
+        elif exclusions:
+            return False, 'exclusions must be a list'
+
+        config['streaming'] = {}
+        config['streaming']['enableAutoTuning'] = streaming_autotune
+        config['streaming']['samplesToBuffer'] = streaming_buffer
+        config['streaming']['learningRateNumerator'] = learning_numerator
+        config['streaming']['learningRateDenominator'] = learning_denominator
+        config['streaming']['learningMaxClusters'] = learning_max_clusters
+        config['streaming']['learningMaxSamples'] = learning_samples
+
+        return config
 
     def configure_nano(self, config):
         """Returns the posted clustering configuration
