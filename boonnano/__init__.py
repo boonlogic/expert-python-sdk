@@ -293,7 +293,13 @@ class NanoHandle:
 
         return config
 
-    def configure_nano(self, config):
+    def configure_nano(self, feature_count, numeric_format, cluster_mode='batch', min_val=0, max_val=1,
+                      weight=1, label=None,
+                      percent_variation=.05, streaming_window=1, accuracy=.99,
+                      autotunePV=True, autotuneRange=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None,
+                      streaming_autotune=True, streaming_buffer=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000,
+                      config=None):
+
         """Returns the posted clustering configuration
 
          Args:
@@ -301,18 +307,24 @@ class NanoHandle:
              numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
              min: list of minimum values per feature, if specified as a single value, use that on all features
              max: list of maximum values per feature, if specified as a single value, use that on all features
-             weight (float):
-             labels (list):
-             percent_variation (float):
-             streaming_window (integer):
-             accuracy (float):
-             config (dict):
+             weight (float): influence each column has on creating a new cluster
+             labels (list): name of each feature (if applicable)
+             percent_variation (float): amount of variation within each cluster
+             streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
+             accuracy (float): statistical accuracy of the clusters
+             config (dict): dictionary of configuration parameters
 
          Returns:
              result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
              response (dict or str): configuration dictionary when result is true, error string when result is false
 
          """
+
+         if config is None:
+             config = create_config(feature_count, numeric_format, cluster_mode, min_val, max_val, weight, label,
+                               percent_variation, streaming_window, accuracy,
+                               autotunePV, autotuneRange, autotune_by_feature, autotune_max_clusters, exclusions,
+                               streaming_autotune, streaming_buffer, learning_numerator, learning_denominator, learning_max_clusters, learning_samples)
 
         body = json.dumps(config)
 
@@ -412,12 +424,6 @@ class NanoHandle:
     @_is_configured
     def autotune_config(self):
         """Autotunes the percent variation, min and max for each feature
-
-        Args:
-            autotune_pv (boolean):
-            autotune_range (boolean):
-            by_feature (boolean):
-            exclusions (list):
 
         Returns:
             result (boolean): true if successful (autotuning was completed)
@@ -545,6 +551,8 @@ class NanoHandle:
 
                 DI = distance index
 
+                All = ID,SI,RI,FI,DI
+
         Returns:
             result (boolean): true if successful (nano was successfully run)
             response (dict or str): dictionary of results when result is true, error message when result = false
@@ -584,6 +592,8 @@ class NanoHandle:
                 FI = frequency index
 
                 DI = distance index
+
+                All = ID,SI,RI,FI,DI
 
         Returns:
             result (boolean): true if successful (data was successful streamed to nano pod instance)
@@ -645,17 +655,17 @@ class NanoHandle:
         Args:
             results (str): comma separated list of results
 
-                ID: cluster ID
+                ID = cluster ID
 
-                SI: smoothed anomaly index
+                SI = smoothed anomaly index
 
-                RI: raw anomaly index
+                RI = raw anomaly index
 
-                FI: frequency index
+                FI = frequency index
 
-                DI: distance index
+                DI = distance index
 
-                All: ID,SI,RI,FI,DI
+                All = ID,SI,RI,FI,DI
 
         """
         # build results command
