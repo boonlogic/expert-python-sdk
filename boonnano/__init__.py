@@ -410,7 +410,7 @@ class NanoHandle:
         return True, response
 
     @_is_configured
-    def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
+    def autotune_config(self):
         """Autotunes the percent variation, min and max for each feature
 
         Args:
@@ -427,13 +427,6 @@ class NanoHandle:
 
         # build command
         config_cmd = self.url + 'autoTuneConfig/' + self.instance + '?api-tenant=' + self.api_tenant
-        config_cmd += '&byFeature=' + str(by_feature).lower()
-        config_cmd += '&autoTunePV=' + str(autotune_pv).lower()
-        config_cmd += '&autoTuneRange=' + str(autotune_range).lower()
-        if isinstance(exclusions, list):
-            config_cmd += '&exclusions=' + ",".join([str(s) for s in exclusions])
-        elif exclusions:
-            return False, 'exclusions must be a list'
 
         # autotune parameters
         return simple_post(self, config_cmd)
@@ -699,14 +692,14 @@ class NanoHandle:
 
                 distanceIndexes = distance index (includes 0 cluster)
 
-                patternMemory = base64 pattern memory (overall)
-
                 totalInferences = total number of patterns clustered (overall)
 
                 averageInferenceTime = time in milliseconds to cluster per
                     pattern (not available if uploading from serialized nano) (overall)
 
                 numClusters = total number of clusters (includes 0 cluster) (overall)
+
+                All = PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,numClusters
 
         Returns:
             result (boolean): true if successful (nano was successfully run)
