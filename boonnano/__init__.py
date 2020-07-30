@@ -210,20 +210,20 @@ class NanoHandle:
             max_val (list): corresponding maximum value, a single element list assigns all features with same max_val
             weight (list): weight for this feature, a single element list assigns all features with same weight
             label (list): list of labels to assign to features
-            percent_variation (float):
-            streaming_window (integer):
-            accuracy (float):
-            autotunePV (bool):
-            autotuneRange (bool):
-            autotune_by_feature (bool):
-            autotune_max_clusters (int):
-            exclusions (list):
-            streaming_autotune (bool):
-            streaming_buffer (int):
-            learning_numerator (int):
-            learning_denominator (int):
-            learning_max_clusters (int):
-            learning_samples (int):
+            percent_variation (float): amount of variation allowed within clusters
+            streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
+            accuracy (float): statistical accuracy of the clusters
+            autotunePV (bool): whether to autotune the percent variation
+            autotuneRange (bool): whether to autotune the min and max values
+            autotune_by_feature (bool): whether to have individually set min and max values for each feature
+            autotune_max_clusters (int): max number of clusters allowed
+            exclusions (list): features to exclude while autotuning
+            streaming_autotune (bool): whether to autotune while in streaming mode
+            streaming_buffer (int): number of samples to autotune on
+            learning_numerator (int): max number of new clusters learned
+            learning_denominator (int): number of samples over which the new clusters are learned
+            learning_max_clusters (int): max number of clusters before turning off learning
+            learning_samples (int): max number of samples before turning off learning
 
 
         Returns:
@@ -312,6 +312,17 @@ class NanoHandle:
              percent_variation (float): amount of variation within each cluster
              streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
              accuracy (float): statistical accuracy of the clusters
+             autotunePV (bool): whether to autotune the percent variation
+             autotuneRange (bool): whether to autotune the min and max values
+             autotune_by_feature (bool): whether to have individually set min and max values for each feature
+             autotune_max_clusters (int): max number of clusters allowed
+             exclusions (list): features to exclude while autotuning
+             streaming_autotune (bool): whether to autotune while in streaming mode
+             streaming_buffer (int): number of samples to autotune on
+             learning_numerator (int): max number of new clusters learned
+             learning_denominator (int): number of samples over which the new clusters are learned
+             learning_max_clusters (int): max number of clusters before turning off learning
+             learning_samples (int): max number of samples before turning off learning
              config (dict): dictionary of configuration parameters
 
          Returns:
