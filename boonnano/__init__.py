@@ -279,7 +279,7 @@ class NanoHandle:
         config['autoTuning']['autoTuneByFeature'] = autotune_by_feature
         config['autoTuning']['maxClusters'] = autotune_max_clusters
         if isinstance(exclusions, list):
-            config['autoTuning']['exclusions'] = ",".join([int(s) for s in exclusions])
+            config['autoTuning']['exclusions'] = exclusions
         elif exclusions:
             return False, 'exclusions must be a list'
 
