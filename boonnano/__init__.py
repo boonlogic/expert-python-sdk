@@ -10,6 +10,7 @@ from .rest import simple_delete
 from .rest import simple_post
 from .rest import multipart_post
 import numpy as np
+# urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 __all__ = ['BoonException', 'NanoHandle']
 
@@ -190,9 +191,11 @@ class NanoHandle:
         self.http.clear()
         return result, None
 
-    def create_config(self, feature_count, numeric_format, min_val=np.array([0]), max_val=np.array([1]),
-                      weight=np.array([1]),
-                      percent_variation=.05, streaming_window=1, accuracy=.99, label=None):
+    def create_config(self, feature_count, numeric_format, cluster_mode='batch', min_val=0, max_val=1,
+                      weight=1, label=None,
+                      percent_variation=.05, streaming_window=1, accuracy=.99,
+                      autotunePV=True, autotuneRange=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None,
+                      streaming_autotune=True, streaming_buffer=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000):
         """Generate a configuration template for the given parameters
 
         A discrete configuration is specified as a list of min, max, weights, and labels
@@ -207,47 +210,96 @@ class NanoHandle:
             max_val (list): corresponding maximum value, a single element list assigns all features with same max_val
             weight (list): weight for this feature, a single element list assigns all features with same weight
             label (list): list of labels to assign to features
-            percent_variation (float):
-            streaming_window (integer):
-            accuracy (float):
+            percent_variation (float): amount of variation allowed within clusters
+            streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
+            accuracy (float): statistical accuracy of the clusters
+            autotunePV (bool): whether to autotune the percent variation
+            autotuneRange (bool): whether to autotune the min and max values
+            autotune_by_feature (bool): whether to have individually set min and max values for each feature
+            autotune_max_clusters (int): max number of clusters allowed
+            exclusions (list): features to exclude while autotuning
+            streaming_autotune (bool): whether to autotune while in streaming mode
+            streaming_buffer (int): number of samples to autotune on
+            learning_numerator (int): max number of new clusters learned
+            learning_denominator (int): number of samples over which the new clusters are learned
+            learning_max_clusters (int): max number of clusters before turning off learning
+            learning_samples (int): max number of samples before turning off learning
+
 
         Returns:
             result (boolean): true if successful (configuration was successfully created)
             response (dict or str): configuration dictionary when result is true, error string when result is false
 
         """
-        template_cmd = self.url + 'configTemplate/' + '?api-tenant=' + self.api_tenant
-        template_cmd += '&featureCount=' + str(feature_count)
-        template_cmd += '&numericFormat=' + str(numeric_format)
-        if isinstance(min_val, list):
-            template_cmd += '&minVal=' + ",".join([str(s) for s in min_val])
-        elif isinstance(min_val, np.ndarray):
-            template_cmd += '&minVal=' + ",".join([str(s) for s in min_val])
+
+        if isinstance(min_val, int) or isinstance(min_val, float):
+            min_val = np.array([min_val] * feature_count)
+        if isinstance(max_val, int) or isinstance(max_val, float):
+            max_val = np.array([max_val] * feature_count)
+        if isinstance(weight, int):
+            weight = np.array([weight] * feature_count)
+
+        config = {}
+        config['clusterMode'] = cluster_mode
+        config['numericFormat'] = numeric_format
+        config['features'] = []
+
+        if (isinstance(min_val, list) or isinstance(min_val, np.ndarray)) and (isinstance(max_val, list) or isinstance(max_val, np.ndarray)) and (isinstance(weight, list) or isinstance(weight, np.ndarray)):
+            if len(min_val) != len(max_val) or len(min_val) != len(weight):
+                return False, "parameters must be lists of the same length"
+
+            for min, max, w in zip(min_val, max_val, weight):
+                tempDict = {}
+                if numeric_format == 'float32':
+                    tempDict['minVal'] = float(min)
+                    tempDict['maxVal'] = float(max)
+                else:
+                    tempDict['minVal'] = int(min)
+                    tempDict['maxVal'] = int(max)
+                tempDict['weight'] = int(w)
+                config['features'].append(tempDict)
         else:
-            return False, "min_val must be list or numpy array"
-        if isinstance(max_val, list):
-            template_cmd += '&maxVal=' + ",".join([str(s) for s in max_val])
-        elif isinstance(max_val, np.ndarray):
-            template_cmd += '&maxVal=' + ",".join([str(s) for s in max_val])
-        else:
-            return False, "max_val must be list or numpy array"
-        if isinstance(weight, list):
-            template_cmd += '&weight=' + ",".join([str(s) for s in weight])
-        elif isinstance(weight, np.ndarray):
-            template_cmd += '&weight=' + ",".join([str(s) for s in weight])
-        else:
-            return False, "weight must be list or numpy array"
+            return False, "min_val, max_val and weight must be list or numpy array"
+
         if isinstance(label, list):
-            template_cmd += '&label=' + ",".join([str(s) for s in label])
+            if len(label) != len(min_val):
+                return False, "label must be the same length as other parameters"
+            for i, l in enumerate(label):
+                config['features'][i]['label'] = l
         elif label:
             return False, "label must be list"
-        template_cmd += '&percentVariation=' + str(percent_variation)
-        template_cmd += '&streamingWindowSize=' + str(streaming_window)
-        template_cmd += '&accuracy=' + str(accuracy)
 
-        return simple_get(self, template_cmd)
+        config['percentVariation'] = percent_variation
+        config['streamingWindowSize'] = streaming_window
+        config['accuracy'] = accuracy
 
-    def configure_nano(self, config):
+        config['autoTuning'] = {}
+        config['autoTuning']['autoTunePV'] = autotunePV
+        config['autoTuning']['autoTuneRange'] = autotuneRange
+        config['autoTuning']['autoTuneByFeature'] = autotune_by_feature
+        config['autoTuning']['maxClusters'] = autotune_max_clusters
+        if isinstance(exclusions, list):
+            config['autoTuning']['exclusions'] = exclusions
+        elif exclusions:
+            return False, 'exclusions must be a list'
+
+        config['streaming'] = {}
+        config['streaming']['enableAutoTuning'] = streaming_autotune
+        config['streaming']['samplesToBuffer'] = streaming_buffer
+        config['streaming']['learningRateNumerator'] = learning_numerator
+        config['streaming']['learningRateDenominator'] = learning_denominator
+        config['streaming']['learningMaxClusters'] = learning_max_clusters
+        config['streaming']['learningMaxSamples'] = learning_samples
+
+        return config
+
+    def configure_nano(self, feature_count, numeric_format, cluster_mode='batch', min_val=0, max_val=1,
+                      weight=1, label=None,
+                      percent_variation=.05, streaming_window=1, accuracy=.99,
+                      autotunePV=True, autotuneRange=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None,
+                      streaming_autotune=True, streaming_buffer=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000,
+                      config=None):
+
         """Returns the posted clustering configuration
 
          Args:
@@ -255,18 +307,35 @@ class NanoHandle:
              numeric_format (str): numeric type of data (one of "float32", "uint16", or "int16")
              min: list of minimum values per feature, if specified as a single value, use that on all features
              max: list of maximum values per feature, if specified as a single value, use that on all features
-             weight (float):
-             labels (list):
-             percent_variation (float):
-             streaming_window (integer):
-             accuracy (float):
-             config (dict):
+             weight (float): influence each column has on creating a new cluster
+             labels (list): name of each feature (if applicable)
+             percent_variation (float): amount of variation within each cluster
+             streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
+             accuracy (float): statistical accuracy of the clusters
+             autotunePV (bool): whether to autotune the percent variation
+             autotuneRange (bool): whether to autotune the min and max values
+             autotune_by_feature (bool): whether to have individually set min and max values for each feature
+             autotune_max_clusters (int): max number of clusters allowed
+             exclusions (list): features to exclude while autotuning
+             streaming_autotune (bool): whether to autotune while in streaming mode
+             streaming_buffer (int): number of samples to autotune on
+             learning_numerator (int): max number of new clusters learned
+             learning_denominator (int): number of samples over which the new clusters are learned
+             learning_max_clusters (int): max number of clusters before turning off learning
+             learning_samples (int): max number of samples before turning off learning
+             config (dict): dictionary of configuration parameters
 
          Returns:
              result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
              response (dict or str): configuration dictionary when result is true, error string when result is false
 
          """
+
+        if config is None:
+            config = self.create_config(feature_count, numeric_format, cluster_mode, min_val, max_val, weight, label,
+                                        percent_variation, streaming_window, accuracy,
+                                        autotunePV, autotuneRange, autotune_by_feature, autotune_max_clusters, exclusions,
+                                        streaming_autotune, streaming_buffer, learning_numerator, learning_denominator, learning_max_clusters, learning_samples)
 
         body = json.dumps(config)
 
@@ -364,14 +433,8 @@ class NanoHandle:
         return True, response
 
     @_is_configured
-    def autotune_config(self, autotune_pv=True, autotune_range=True, by_feature=False, exclusions=None):
+    def autotune_config(self):
         """Autotunes the percent variation, min and max for each feature
-
-        Args:
-            autotune_pv (boolean):
-            autotune_range (boolean):
-            by_feature (boolean):
-            exclusions (list):
 
         Returns:
             result (boolean): true if successful (autotuning was completed)
@@ -381,13 +444,6 @@ class NanoHandle:
 
         # build command
         config_cmd = self.url + 'autoTuneConfig/' + self.instance + '?api-tenant=' + self.api_tenant
-        config_cmd += '&byFeature=' + str(by_feature).lower()
-        config_cmd += '&autoTunePV=' + str(autotune_pv).lower()
-        config_cmd += '&autoTuneRange=' + str(autotune_range).lower()
-        if isinstance(exclusions, list):
-            config_cmd += '&exclusions=' + ",".join([str(s) for s in exclusions])
-        elif exclusions:
-            return False, 'exclusions must be a list'
 
         # autotune parameters
         return simple_post(self, config_cmd)
@@ -506,6 +562,8 @@ class NanoHandle:
 
                 DI = distance index
 
+                All = ID,SI,RI,FI,DI
+
         Returns:
             result (boolean): true if successful (nano was successfully run)
             response (dict or str): dictionary of results when result is true, error message when result = false
@@ -545,6 +603,8 @@ class NanoHandle:
                 FI = frequency index
 
                 DI = distance index
+
+                All = ID,SI,RI,FI,DI
 
         Returns:
             result (boolean): true if successful (data was successful streamed to nano pod instance)
@@ -606,17 +666,17 @@ class NanoHandle:
         Args:
             results (str): comma separated list of results
 
-                ID: cluster ID
+                ID = cluster ID
 
-                SI: smoothed anomaly index
+                SI = smoothed anomaly index
 
-                RI: raw anomaly index
+                RI = raw anomaly index
 
-                FI: frequency index
+                FI = frequency index
 
-                DI: distance index
+                DI = distance index
 
-                All: ID,SI,RI,FI,DI
+                All = ID,SI,RI,FI,DI
 
         """
         # build results command
@@ -653,14 +713,14 @@ class NanoHandle:
 
                 distanceIndexes = distance index (includes 0 cluster)
 
-                patternMemory = base64 pattern memory (overall)
-
                 totalInferences = total number of patterns clustered (overall)
 
                 averageInferenceTime = time in milliseconds to cluster per
                     pattern (not available if uploading from serialized nano) (overall)
 
                 numClusters = total number of clusters (includes 0 cluster) (overall)
+
+                All = PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,numClusters
 
         Returns:
             result (boolean): true if successful (nano was successfully run)
