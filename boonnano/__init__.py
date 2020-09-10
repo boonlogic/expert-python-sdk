@@ -332,10 +332,10 @@ class NanoHandle:
          """
 
         if config is None:
-            config = create_config(feature_count, numeric_format, cluster_mode, min_val, max_val, weight, label,
-                               percent_variation, streaming_window, accuracy,
-                               autotunePV, autotuneRange, autotune_by_feature, autotune_max_clusters, exclusions,
-                               streaming_autotune, streaming_buffer, learning_numerator, learning_denominator, learning_max_clusters, learning_samples)
+            config = self.create_config(feature_count, numeric_format, cluster_mode, min_val, max_val, weight, label,
+                                        percent_variation, streaming_window, accuracy,
+                                        autotunePV, autotuneRange, autotune_by_feature, autotune_max_clusters, exclusions,
+                                        streaming_autotune, streaming_buffer, learning_numerator, learning_denominator, learning_max_clusters, learning_samples)
 
         body = json.dumps(config)
 
