@@ -405,9 +405,9 @@ class NanoHandle:
         # verify that input file is a valid nano file (gzip'd tar with Magic Number)
         try:
             with tarfile.open(filename, 'r:gz') as tp:
-                with tp.extractfile('BoonNano/MagicNumber') as magic_fp:
+                with tp.extractfile('/CommonState/MagicNumber') as magic_fp:
                     magic_num = magic_fp.read()
-                    if magic_num != b'\xef\xbe':
+                    if magic_num != b'\xda\xba':
                         return False, 'file {} is not a Boon Logic nano-formatted file, bad magic number'.format(
                             filename)
         except KeyError:
@@ -443,7 +443,7 @@ class NanoHandle:
         """
 
         # build command
-        config_cmd = self.url + 'autoTuneConfig/' + self.instance + '?api-tenant=' + self.api_tenant
+        config_cmd = self.url + 'autoTune/' + self.instance + '?api-tenant=' + self.api_tenant
 
         # autotune parameters
         return simple_post(self, config_cmd)
