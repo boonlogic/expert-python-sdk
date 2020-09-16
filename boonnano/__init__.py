@@ -405,7 +405,7 @@ class NanoHandle:
         # verify that input file is a valid nano file (gzip'd tar with Magic Number)
         try:
             with tarfile.open(filename, 'r:gz') as tp:
-                with tp.extractfile('CommonState/MagicNumber') as magic_fp:
+                with tp.extractfile('/CommonState/MagicNumber') as magic_fp:
                     magic_num = magic_fp.read()
                     if magic_num != b'\xda\xba':
                         return False, 'file {} is not a Boon Logic nano-formatted file, bad magic number'.format(
