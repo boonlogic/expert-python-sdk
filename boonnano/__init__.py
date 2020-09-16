@@ -443,7 +443,7 @@ class NanoHandle:
         """
 
         # build command
-        config_cmd = self.url + 'autoTuneConfig/' + self.instance + '?api-tenant=' + self.api_tenant
+        config_cmd = self.url + 'autoTune/' + self.instance + '?api-tenant=' + self.api_tenant
 
         # autotune parameters
         return simple_post(self, config_cmd)
