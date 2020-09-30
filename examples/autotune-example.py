@@ -8,7 +8,7 @@ import sys
 
 # create new nano instance
 try:
-    nano = bn.NanoHandle()
+    nano = bn
 except bn.BoonException as be:
     print(be)
     sys.exit(1)
@@ -20,8 +20,8 @@ if not success:
     sys.exit(1)
 
 # create the configuration
-success, response = nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10], max_val=[15],
-                                       percent_variation=0.05, accuracy=0.99, weight=[1], streaming_window=1)
+success, response = nano.create_config(numeric_format='float32', feature_count=20, min_val=-10, max_val=15,
+                                       percent_variation=0.05, accuracy=0.99, weight=1, streaming_window=1)
 if not success:
     print("create_config failed: {}".format(response))
     sys.exit(1)

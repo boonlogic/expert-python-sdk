@@ -92,7 +92,7 @@ import sys
 
 # create new nano instance
 try:
-    nano = bn.NanoHandle()
+    nano = bn
 except bn.BoonException as be:
     print(be)
     sys.exit(1)

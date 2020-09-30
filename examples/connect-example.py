@@ -3,7 +3,7 @@ import json
 import sys
 
 #
-# connectivy example for boonnano
+# connectivity example for boonnano
 #
 
 # create new nano handle

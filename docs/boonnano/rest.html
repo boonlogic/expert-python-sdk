@@ -27,6 +27,7 @@
 <pre><code class="python">import json
 import boonnano
 import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 &#34;&#34;&#34;a collection of methods to standardize/isolate http request/response&#34;&#34;&#34;
 
