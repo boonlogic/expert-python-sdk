@@ -252,8 +252,8 @@ class TestConfigure(object):
     def test_configure(self):
 
         # create a configuration with single-value min_val, max_val, and weight
-        success, config = self.nano.create_config(numeric_format='float32', feature_count=5, min_val=[-10],
-                                                  max_val=[15], weight=[1], streaming_window=1,
+        success, config = self.nano.create_config(numeric_format='float32', feature_count=5, min_val=-10,
+                                                  max_val=15, weight=1, streaming_window=1,
                                                   percent_variation=0.05, accuracy=0.99)
         assert_equal(success, True)
         assert_equal(config['numericFormat'], 'float32')
@@ -263,7 +263,7 @@ class TestConfigure(object):
         assert_equal(len(config['features']), 5)
 
         # apply the configuration
-        success, gen_config = self.nano.configure_nano(config)
+        success, gen_config = self.nano.configure_nano(config=config)
         assert_equal(success, True)
         assert_dict_equal(config, gen_config)
 
@@ -273,7 +273,7 @@ class TestConfigure(object):
         assert_dict_equal(config, get_response)
 
         # use the configuration template generator to create a per feature template
-        success, config = self.nano.create_config(numeric_format='int16', feature_count=4,
+        success, config = self.nano.create_config(feature_count=4, numeric_format='int16',
                                                   min_val=[-15, -14, -13, -12], max_val=[15.0, 14, 13, 12],
                                                   weight=[1, 1, 2, 1], label=["l1", "l2", "l3", "l4"],
                                                   percent_variation=0.04,
@@ -292,7 +292,7 @@ class TestConfigure(object):
         assert_equal(config['streamingWindowSize'], 1)
 
         # create the same configuration using numpy arrays
-        success, npconfig = self.nano.create_config(numeric_format='int16', feature_count=4,
+        success, npconfig = self.nano.create_config(feature_count=4, numeric_format='int16',
                                                     min_val=np.array([-15, -14, -13, -12]),
                                                     max_val=np.array([15.0, 14, 13, 12]),
                                                     weight=np.array([1, 1, 2, 1]), label=["l1", "l2", "l3", "l4"],
@@ -304,44 +304,44 @@ class TestConfigure(object):
     def test_configure_negative(self):
 
         # test get_config_template with bad numeric_format
-        success, response = self.nano.create_config(numeric_format='int64', feature_count=5, min_val=[-10],
-                                                    max_val=[15],
-                                                    weight=[1], streaming_window=1, percent_variation=0.05,
-                                                    accuracy=0.99)
+        success, response = self.nano.configure_nano(numeric_format='int64', feature_count=5, min_val=-10,
+                                                     max_val=15,
+                                                     weight=1, streaming_window=1, percent_variation=0.05,
+                                                     accuracy=0.99)
         assert_equal(success, False)
-        assert_equal(response, '606: numericFormat in query should be one of [uint16 float32 int16]')
+        assert_equal(response, '606: numericFormat in body should be one of [int16 float32 uint16]')
 
         # test create_config with bad min_val
         success, response = self.nano.create_config(numeric_format='int16', feature_count=4,
-                                                    min_val=-15, max_val=[15.0, 14, 13, 12],
+                                                    min_val=[-15, -15], max_val=[15.0, 14, 13, 12],
                                                     weight=[1, 1, 2, 1], label=["l1", "l2", "l3", "l4"],
                                                     percent_variation=0.04,
                                                     streaming_window=1, accuracy=0.99)
         assert_equal(success, False)
-        assert_equal(response, 'min_val must be list or numpy array')
+        assert_equal(response, 'parameters must be lists of the same length')
 
         # test create_config with bad max_val
         success, response = self.nano.create_config(numeric_format='int16', feature_count=4,
-                                                    min_val=[-15], max_val=10,
+                                                    min_val=-15, max_val=[10, 10],
                                                     weight=[1, 1, 2, 1], label=["l1", "l2", "l3", "l4"],
                                                     percent_variation=0.04,
                                                     streaming_window=1, accuracy=0.99)
         assert_equal(success, False)
-        assert_equal(response, 'max_val must be list or numpy array')
+        assert_equal(response, 'parameters must be lists of the same length')
 
         # test create_config with bad max_val
         success, response = self.nano.create_config(numeric_format='int16', feature_count=4,
-                                                    min_val=[-15], max_val=[10],
-                                                    weight=1, label=["l1", "l2", "l3", "l4"],
+                                                    min_val=-15, max_val=10,
+                                                    weight=[1, 1], label=["l1", "l2", "l3", "l4"],
                                                     percent_variation=0.04,
                                                     streaming_window=1, accuracy=0.99)
         assert_equal(success, False)
-        assert_equal(response, 'weight must be list or numpy array')
+        assert_equal(response, 'parameters must be lists of the same length')
 
         # test create_config with bad label
         success, response = self.nano.create_config(numeric_format='int16', feature_count=4,
-                                                    min_val=[-15], max_val=[10],
-                                                    weight=[1], label="mylabel",
+                                                    min_val=-15, max_val=10,
+                                                    weight=1, label="mylabel",
                                                     percent_variation=0.04,
                                                     streaming_window=1, accuracy=0.99)
         assert_equal(success, False)
@@ -368,12 +368,10 @@ class TestCluster(object):
         self.nano.close_nano()
 
     def test_load_data(self):
-        # create a configuration with single-value min_val, max_val, and weight
-        success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10],
-                                                  max_val=[15], weight=[1], streaming_window=1,
-                                                  percent_variation=0.05, accuracy=0.99)
         # apply the configuration
-        success, gen_config = self.nano.configure_nano(config)
+        success, config = self.nano.configure_nano(feature_count=20, numeric_format='float32', min_val=-10,
+                                                   max_val=15, weight=1, streaming_window=1,
+                                                   percent_variation=0.05, accuracy=0.99)
         assert_equal(success, True)
 
         # load data set
@@ -402,7 +400,7 @@ class TestCluster(object):
         assert_equal(success, True)
 
         # load part of the data
-        success, response = self.nano.load_data(data=dataBlob[:(int)(len(dataBlob)/2)], append_data=False)
+        success, response = self.nano.load_data(data=dataBlob[:(int)(len(dataBlob) / 2)], append_data=False)
         assert_equal(success, True)
 
         # run the nano, ask for all results
@@ -446,7 +444,7 @@ class TestCluster(object):
         assert_equal(success, True)
 
         # load second half of data
-        success, response2 = self.nano.load_data(data=dataBlob[(int)(len(dataBlob)/2):], append_data=False)
+        success, response2 = self.nano.load_data(data=dataBlob[(int)(len(dataBlob) / 2):], append_data=False)
         assert_equal(success, True)
 
         # run the nano
@@ -459,23 +457,33 @@ class TestCluster(object):
         assert_equal(response['numClusters'], response2['numClusters'])
 
         # test autotune
-        success, response = self.nano.autotune_config(autotune_pv=True, autotune_range=True, by_feature=False)
+        success, config = self.nano.configure_nano(feature_count=20, numeric_format='float32', min_val=-10,
+                                                   max_val=15, weight=1, streaming_window=1,
+                                                   percent_variation=0.05, accuracy=0.99,
+                                                   autotune_pv=True, autotune_range=True, autotune_by_feature=False)
+        success, response = self.nano.autotune_config()
         assert_equal(success, True)
 
         # test autotune but exclude features 1 and 3
-        success, response = self.nano.autotune_config(autotune_pv=True, autotune_range=True, by_feature=False,
-                                                      exclusions=[1, 3])
+        success, config = self.nano.configure_nano(feature_count=20, numeric_format='float32', min_val=-10,
+                                                   max_val=15, weight=1, streaming_window=1,
+                                                   percent_variation=0.05, accuracy=0.99,
+                                                   autotune_pv=True, autotune_range=True, autotune_by_feature=False,
+                                                   exclusions=[1, 3])
+        success, response = self.nano.autotune_config()
         assert_equal(success, True)
 
         # do a quick negative test where exclusions is not a list
-        # test autotune but exclude features 1 and 3
-        success, response = self.nano.autotune_config(autotune_pv=True, autotune_range=True, by_feature=False,
-                                                      exclusions=10)
+        success, config = self.nano.configure_nano(feature_count=20, numeric_format='float32', min_val=-10,
+                                                   max_val=15, weight=1, streaming_window=1,
+                                                   percent_variation=0.05, accuracy=0.99,
+                                                   autotune_pv=True, autotune_range=True, autotune_by_feature=False,
+                                                   exclusions=10)
         assert_equal(success, False)
-        assert_equal(response, 'exclusions must be a list')
+        assert_equal(config, 'exclusions must be a list')
 
         # save the configuration
-        success, response = self.nano.save_nano('saved-nano-1')
+        success, response = self.nano.save_nano('./saved-nano-1')
         assert_equal(success, True)
 
         # restore the configuration
@@ -490,8 +498,8 @@ class TestCluster(object):
     def test_load_data_negative(self):
 
         # create a configuration with single-value min_val, max_val, and weight
-        success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10],
-                                                  max_val=[15], weight=[1], streaming_window=1,
+        success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=-10,
+                                                  max_val=15, weight=1, streaming_window=1,
                                                   percent_variation=0.05, accuracy=0.99)
 
         # attempt to load from a file for a nano that is not configured
@@ -501,7 +509,7 @@ class TestCluster(object):
         assert_equal(response, 'nano instance is not configured')
 
         # apply the configuration
-        success, gen_config = self.nano.configure_nano(config)
+        success, gen_config = self.nano.configure_nano(config=config)
         assert_equal(success, True)
 
         # attempt to load data with a non-existent file
@@ -559,13 +567,14 @@ class TestStreamingCluster(object):
 
     def test_run_nano_streaming(self):
         # create a configuration with single-value min_val, max_val, and weight
-        success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10],
-                                                  max_val=[15], weight=[1], streaming_window=1,
+        success, config = self.nano.create_config(numeric_format='float32', cluster_mode='streaming',
+                                                  feature_count=20, min_val=-10,
+                                                  max_val=15, weight=1, streaming_window=1,
                                                   percent_variation=0.05, accuracy=0.99)
         assert_equal(success, True)
 
         # apply the configuration
-        success, gen_config = self.nano.configure_nano(config)
+        success, gen_config = self.nano.configure_nano(config=config)
         assert_equal(success, True)
 
         # load Data.csv and convert to list of floats
@@ -575,23 +584,23 @@ class TestStreamingCluster(object):
             for row in csv_reader:
                 dataBlob = dataBlob + row
 
-        # write the data to the streaming nano, with restuls == All
+        # write the data to the streaming nano, with results == All
         success, response = self.nano.run_streaming_nano(data=dataBlob, results='All')
         assert_equal(success, True)
 
-        # write the data to the streaming nano, with restuls == 'SI'
+        # write the data to the streaming nano, with results == 'SI'
         success, response = self.nano.run_streaming_nano(data=dataBlob, results='SI')
         assert_equal(success, True)
 
     def test_run_nano_streaming_negative(self):
         # create a configuration with single-value min_val, max_val, and weight
-        success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=[-10],
-                                                  max_val=[15], weight=[1], streaming_window=1,
+        success, config = self.nano.create_config(feature_count=20, numeric_format='float32', min_val=-10,
+                                                  max_val=15, weight=1, streaming_window=1,
                                                   percent_variation=0.05, accuracy=0.99)
         assert_equal(success, True)
 
         # apply the configuration
-        success, gen_config = self.nano.configure_nano(config)
+        success, gen_config = self.nano.configure_nano(config=config)
         assert_equal(success, True)
 
         # load Data.csv and convert to list of floats

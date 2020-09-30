@@ -1,4 +1,5 @@
 boonnano.egg-info/
 dist/
 local-env/
+tests/saved-nano-1
 .DS_Store

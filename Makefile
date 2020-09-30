@@ -10,7 +10,7 @@ init:
 test: local-env-check
 	@. local-env/bin/activate; \
 	cd tests ; \
-	coverage run --source=boonnano -m nose -verbosity=2 test_client.py; \
+	coverage run --source=boonnano -m nose -verbosity=2 test_client.py && \
 	coverage html
 
 pypi:
