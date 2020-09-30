@@ -26,18 +26,6 @@ class BoonException(Exception):
         self.message = message
 
 
-class NpEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        elif isinstance(obj, np.floating):
-            return float(obj)
-        elif isinstance(obj, np.ndarray):
-            return obj.tolist()
-        else:
-            return super(NpEncoder, self).default(obj)
-
-
 class NanoHandle:
 
     def __init__(self, license_id='default', license_file="~/.BoonLogic.license", timeout=120.0):
@@ -249,11 +237,11 @@ class NanoHandle:
         """
 
         if isinstance(min_val, int) or isinstance(min_val, float):
-            min_val = np.array([min_val] * feature_count)
+            min_val = [min_val] * feature_count
         if isinstance(max_val, int) or isinstance(max_val, float):
-            max_val = np.array([max_val] * feature_count)
+            max_val = [max_val] * feature_count
         if isinstance(weight, int):
-            weight = np.array([weight] * feature_count)
+            weight = [weight] * feature_count
 
         if exclusions is None:
             exclusions = []
@@ -362,7 +350,7 @@ class NanoHandle:
                                                  learning_max_clusters, learning_samples)
             if not success:
                 return False, config
-        body = json.dumps(config, cls=NpEncoder)
+        body = json.dumps(config)
 
         config_cmd = self.url + 'clusterConfig/' + self.instance + '?api-tenant=' + self.api_tenant
         result, response = simple_post(self, config_cmd, body=body)
