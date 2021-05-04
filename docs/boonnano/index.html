@@ -3,21 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.5" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>boonnano API documentation</title>
 <meta name="description" content="" />
-<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
-<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
 </head>
 <body>
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>boonnano</code></h1>
+<h1 class="title">Package <code>boonnano</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -52,21 +54,9 @@ class BoonException(Exception):
         self.message = message
 
 
-class NpEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        elif isinstance(obj, np.floating):
-            return float(obj)
-        elif isinstance(obj, np.ndarray):
-            return obj.tolist()
-        else:
-            return super(NpEncoder, self).default(obj)
-
-
 class NanoHandle:
 
-    def __init__(self, license_id=&#39;default&#39;, license_file=&#34;~/.BoonLogic.license&#34;, timeout=120.0):
+    def __init__(self, license_id=&#39;default&#39;, license_file=&#34;~/.BoonLogic.license&#34;, timeout=120.0, verify=True, cert=None):
         &#34;&#34;&#34;Primary handle for BoonNano Pod instances
 
         The is the primary handle to manage a nano pod instance
@@ -75,6 +65,9 @@ class NanoHandle:
             license_id (str): license identifier label found within the .BoonLogic.license configuration file
             license_file (str): path to .BoonLogic license file
             timeout (float): read timeout for http requests
+            verify:  Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
+            cert (bool): if String, path to ssl client cert file (.pem). If Tuple, (‘cert’, ‘key’) pair.
+        
 
         Environment:
             BOON_LICENSE_FILE: sets license_file path
@@ -83,6 +76,9 @@ class NanoHandle:
             BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
             BOON_SERVER: overrides the server as found in .BoonLogic.license file
             PROXY_SERVER: overrides the proxy server as found in .BoonLogic.license file
+            BOON_SSL_CERT: path to ssl client cert file (.pem)
+            BOON_SSL_VERIFY: Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
+
 
         Example:
             ```python
@@ -94,80 +90,73 @@ class NanoHandle:
             ```
 
         &#34;&#34;&#34;
-        self.license_file = license_file
         self.license_id = None
         self.api_key = None
         self.api_tenant = None
         self.instance = &#39;&#39;
         self.numeric_format = &#39;&#39;
 
+        env_license_file = os.environ.get(&#39;BOON_LICENSE_FILE&#39;, None)
+        env_license_id = os.environ.get(&#39;BOON_LICENSE_ID&#39;, None)
+        env_api_key = os.environ.get(&#39;BOON_API_KEY&#39;, None)
+        env_api_tenant = os.environ.get(&#39;BOON_API_TENANT&#39;, None)
+        env_server = os.environ.get(&#39;BOON_SERVER&#39;, None)
+        env_proxy_server = os.environ.get(&#39;PROXY_SERVER&#39;, None)
+        env_cert = os.environ.get(&#39;BOON_SSL_CERT&#39;, None)
+        env_verify = os.environ.get(&#39;BOON_SSL_VERIFY&#39;, None)
+
+        # certificates
+        self.cert = &#39;CERT_REQUIRED&#39; if env_cert else {None: &#39;CERT_NONE&#39;, True: &#39;CERT_REQUIRED&#39;}[cert]
+        if env_verify:
+            if env_verify.lower() == &#39;false&#39;:
+                self.verify = False
+            elif env_verify.lower() == &#39;true&#39;:
+                self.verify = True
+            else:
+                self.verify = env_verify
+        else:
+            self.verify = verify
+
         # when license_id comes in as None, use &#39;default&#39;
         if license_id is None:
             license_id = &#39;default&#39;
 
-        license_file_env = os.getenv(&#39;BOON_LICENSE_FILE&#39;)
-        if license_file_env:
-            # license file path was specified in environment
-            license_file = license_file_env
+        license_file = env_license_file if env_license_file else license_file
+        self.license_id = env_license_id if env_license_id else license_id
 
         license_path = os.path.expanduser(license_file)
-        if os.path.exists(license_path):
-            try:
-                with open(license_path, &#34;r&#34;) as json_file:
-                    file_data = json.load(json_file)
-            except json.JSONDecodeError as e:
-                raise BoonException(
-                    &#34;json formatting error in .BoonLogic.license file, {}, line: {}, col: {}&#34;.format(e.msg, e.lineno,
-                                                                                                     e.colno))
-        else:
-            raise BoonException(&#34;file {} does not exist&#34;.format(license_path))
+        if not os.path.exists(license_path):
+            raise BoonException(&#34;license file {} does not exist&#34;.format(license_path))
+        try:
+            with open(license_path, &#34;r&#34;) as json_file:
+                file_data = json.load(json_file)
+        except json.JSONDecodeError as e:
+            raise BoonException(
+                &#34;json formatting error in .BoonLogic.license file, {}, line: {}, col: {}&#34;.format(e.msg, e.lineno,
+                                                                                                     e.colno))       
+        try:
+            license_data = file_data[self.license_id]
+        except KeyError:
+            raise BoonException(&#34;license_id \&#34;{}\&#34; not found in license file&#34;.format(self.license_id))
 
-        # load the license block, environment gets precedence
-        license_env = os.getenv(&#39;BOON_LICENSE_ID&#39;)
-        if license_env:
-            # license id was specified through environment
-            if license_env in file_data:
-                self.license_id = license_env
-            else:
-                raise BoonException(
-                    &#34;BOON_LICENSE_ID value of &#39;{}&#39; not found in .BoonLogic.license file&#34;.format(license_env))
-        else:
-            if license_id in file_data:
-                self.license_id = license_id
-            else:
-                raise BoonException(&#34;license_id &#39;{}&#39; not found in .BoonLogic.license file&#34;.format(license_id))
+        try:
+            self.api_key = env_api_key if env_api_key else license_data[&#39;api-key&#39;]
+        except KeyError:
+            raise BoonException(&#34;\&#34;api-key\&#34; is missing from the specified license in license file&#34;)
 
-        license_block = file_data[self.license_id]
+        try:
+            self.api_tenant = env_api_tenant if env_api_tenant else license_data[&#39;api-tenant&#39;]
+        except KeyError:
+            raise BoonException(&#34;\&#34;api-tenant\&#34; is missing from the specified license in license file&#34;)
 
-        # load the api-key, environment gets precedence
-        self.api_key = os.getenv(&#39;BOON_API_KEY&#39;)
-        if not self.api_key:
-            if &#39;api-key&#39; not in license_block.keys():
-                raise BoonException(
-                    &#34;&#39;api-key&#39; is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic.license file&#34;)
-            self.api_key = license_block[&#39;api-key&#39;]
+        try:
+            self.server = env_server if env_server else license_data[&#39;server&#39;]
+        except KeyError:
+            raise BoonException(&#34;\&#34;server\&#34; is missing from the specified license in license file&#34;)
 
-        # load the server, environment gets precedence
-        self.server = os.getenv(&#39;BOON_SERVER&#39;)
-        if not self.server:
-            if &#39;server&#39; not in license_block.keys():
-                raise BoonException(
-                    &#34;&#39;server&#39; is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic.license file&#34;)
-            self.server = license_block[&#39;server&#39;]
-
-        # load the tenant, environment gets precedence
-        self.api_tenant = os.getenv(&#39;BOON_TENANT&#39;)
-        if not self.api_tenant:
-            if &#39;api-tenant&#39; not in license_block.keys():
-                raise BoonException(
-                    &#34;&#39;api-tenant&#39; is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic.license file&#34;)
-            self.api_tenant = license_block[&#39;api-tenant&#39;]
-
-        # load the https proxy (if any)
-        self.proxy_server = os.getenv(&#39;PROXY_SERVER&#39;)
-        if not self.proxy_server:
-            if &#39;proxy-server&#39; in license_block.keys():
-                self.proxy_server = license_block[&#39;proxy-server&#39;]
+        self.proxy_server = env_proxy_server 
+        if not self.proxy_server and &#39;proxy-server&#39; in license_data.keys():
+            self.proxy_server = license_data[&#39;proxy-server&#39;]
 
         # set up base url
         self.url = self.server + &#39;/expert/v3/&#39;
@@ -178,10 +167,10 @@ class NanoHandle:
         timeout_inst = Timeout(connect=30.0, read=timeout)
         if self.proxy_server:
             # proxy pool
-            self.http = ProxyManager(self.proxy_server, maxsize=10, timeout=timeout_inst)
+            self.http = ProxyManager(self.proxy_server, maxsize=10, timeout=timeout_inst, cert_reqs=self.cert)
         else:
             # non-proxy pool
-            self.http = PoolManager(timeout=timeout_inst)
+            self.http = PoolManager(timeout=timeout_inst, cert_reqs=self.cert)
 
     def _is_configured(f):
         @wraps(f)
@@ -275,11 +264,11 @@ class NanoHandle:
         &#34;&#34;&#34;
 
         if isinstance(min_val, int) or isinstance(min_val, float):
-            min_val = np.array([min_val] * feature_count)
+            min_val = [min_val] * feature_count
         if isinstance(max_val, int) or isinstance(max_val, float):
-            max_val = np.array([max_val] * feature_count)
+            max_val = [max_val] * feature_count
         if isinstance(weight, int):
-            weight = np.array([weight] * feature_count)
+            weight = [weight] * feature_count
 
         if exclusions is None:
             exclusions = []
@@ -326,7 +315,7 @@ class NanoHandle:
         elif exclusions:
             return False, &#39;exclusions must be a list&#39;
 
-        if config[&#39;clusterMode&#39;] is &#39;streaming&#39;:
+        if config[&#39;clusterMode&#39;] == &#39;streaming&#39;:
             config[&#39;streaming&#39;] = {}
             config[&#39;streaming&#39;][&#39;enableAutoTuning&#39;] = streaming_autotune
             config[&#39;streaming&#39;][&#39;samplesToBuffer&#39;] = streaming_buffer
@@ -388,7 +377,7 @@ class NanoHandle:
                                                  learning_max_clusters, learning_samples)
             if not success:
                 return False, config
-        body = json.dumps(config, cls=NpEncoder)
+        body = json.dumps(config)
 
         config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
         result, response = simple_post(self, config_cmd, body=body)
@@ -599,6 +588,25 @@ class NanoHandle:
 
         return simple_post(self, learning_cmd)
 
+    def set_root_cause_status(self, status):
+        &#34;&#34;&#34;configures whether or not to save new clusters coming in for root cause analysis
+
+        Args:
+            status (boolean): true or false of whether root cause is on or off
+
+        Returns:
+            result (boolean):  true if successful (list was returned)
+            response (str): status of root cause
+
+        &#34;&#34;&#34;
+        if status not in [True, False]:
+            return False, &#39;status must be a boolean&#39;
+        # build command
+        learning_cmd = self.url + &#39;rootCause/&#39; + self.instance + &#39;?enable=&#39; + str(
+            status).lower() + &#39;&amp;api-tenant=&#39; + self.api_tenant
+
+        return simple_post(self, learning_cmd)
+
     def run_nano(self, results=None):
         &#34;&#34;&#34;Clusters the data in the nano pod buffer and returns the specified results
 
@@ -801,6 +809,53 @@ class NanoHandle:
         results_cmd = results_cmd + &#39;&amp;results=&#39; + results_str
 
         return simple_get(self, results_cmd)
+
+    def get_root_cause(self, id_list=None, pattern_list=None):
+        &#34;&#34;&#34;Get root cause
+
+        Args:
+            id_list (list): list of IDs to return the root cause for
+            pattern_list (list): list of pattern vectors to calculate the root cause against the model
+
+        Returns:
+            A list containing the root cause for each pattern/id provided for a sensor:
+
+                [float]
+
+        Raises:
+            BoonException: if Amber cloud gives non-200 response
+        &#34;&#34;&#34;
+        if id_list is None and pattern_list is None:
+            raise BoonException(&#39;Must specify either list of ID(s) or list of pattern(s).&#39;)
+
+        response = {&#39;RootCauseFromID&#39;: [], &#39;RootCauseFromPattern&#39;: []}
+        if id_list is not None:
+            id_list = [str(element) for element in id_list]
+            rc_cmd = self.url + &#39;rootCauseFromID/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+            rc_cmd = rc_cmd + &#39;&amp;clusterID=&#39; + &#34;,&#34;.join(id_list)
+
+            success, status = simple_get(self, rc_cmd)
+            if success:
+                response[&#39;RootCauseFromID&#39;] = status
+            else:
+                return success, status
+
+        if pattern_list is not None:
+            if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided    
+                pattern_list = [pattern_list] 
+            else:
+                for i, pattern in enumerate(pattern_list):
+                    pattern_list[i] = &#39;,&#39;.join([str(element) for element in pattern])
+            rc_cmd = self.url + &#39;rootCauseFromPattern/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+            rc_cmd = rc_cmd + &#39;&amp;pattern=&#39; + &#39;[[&#39; + &#34;],[&#34;.join(pattern_list) + &#39;]]&#39;
+
+            success, status = simple_get(self, rc_cmd)
+            if success:
+                response[&#39;RootCauseFromPattern&#39;] = status
+            else:
+                return success, status
+
+        return True, response
 
 
 def normalize_nano_data(data, numeric_format):
@@ -826,7 +881,7 @@ def normalize_nano_data(data, numeric_format):
 <dl>
 <dt><code class="name"><a title="boonnano.rest" href="rest.html">boonnano.rest</a></code></dt>
 <dd>
-<section class="desc"></section>
+<div class="desc"></div>
 </dd>
 </dl>
 </section>
@@ -842,7 +897,7 @@ def normalize_nano_data(data, numeric_format):
 <span>(</span><span>message)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Common base class for all non-exit exceptions.</p></section>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -859,10 +914,10 @@ def normalize_nano_data(data, numeric_format):
 </dd>
 <dt id="boonnano.NanoHandle"><code class="flex name class">
 <span>class <span class="ident">NanoHandle</span></span>
-<span>(</span><span>license_id='default', license_file='~/.BoonLogic.license', timeout=120.0)</span>
+<span>(</span><span>license_id='default', license_file='~/.BoonLogic.license', timeout=120.0, verify=True, cert=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Primary handle for BoonNano Pod instances</p>
+<div class="desc"><p>Primary handle for BoonNano Pod instances</p>
 <p>The is the primary handle to manage a nano pod instance</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -872,36 +927,34 @@ def normalize_nano_data(data, numeric_format):
 <dd>path to .BoonLogic license file</dd>
 <dt><strong><code>timeout</code></strong> :&ensp;<code>float</code></dt>
 <dd>read timeout for http requests</dd>
+<dt><strong><code>verify</code></strong></dt>
+<dd>Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use</dd>
+<dt><strong><code>cert</code></strong> :&ensp;<code>bool</code></dt>
+<dd>if String, path to ssl client cert file (.pem). If Tuple, (‘cert’, ‘key’) pair.</dd>
 </dl>
 <h2 id="environment">Environment</h2>
-<dl>
-<dt><strong><code>BOON_LICENSE_FILE</code></strong></dt>
-<dd>sets license_file path</dd>
-<dt><strong><code>BOON_LICENSE_ID</code></strong></dt>
-<dd>sets license_id</dd>
-<dt><strong><code>BOON_API_KEY</code></strong></dt>
-<dd>overrides the api-key as found in .BoonLogic.license file</dd>
-<dt><strong><code>BOON_API_TENANT</code></strong></dt>
-<dd>overrides the api-tenant as found in .BoonLogic.license file</dd>
-<dt><strong><code>BOON_SERVER</code></strong></dt>
-<dd>overrides the server as found in .BoonLogic.license file</dd>
-<dt><strong><code>PROXY_SERVER</code></strong></dt>
-<dd>overrides the proxy server as found in .BoonLogic.license file</dd>
-</dl>
+<p>BOON_LICENSE_FILE: sets license_file path
+BOON_LICENSE_ID: sets license_id
+BOON_API_KEY: overrides the api-key as found in .BoonLogic.license file
+BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
+BOON_SERVER: overrides the server as found in .BoonLogic.license file
+PROXY_SERVER: overrides the proxy server as found in .BoonLogic.license file
+BOON_SSL_CERT: path to ssl client cert file (.pem)
+BOON_SSL_VERIFY: Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use</p>
 <h2 id="example">Example</h2>
-<pre><code class="python">try:
+<pre><code class="language-python">try:
     nano = bn.NanoHandle()
 except bn.BoonException as be:
     print(be)
     sys.exit(1)
-</code></pre></section>
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class NanoHandle:
 
-    def __init__(self, license_id=&#39;default&#39;, license_file=&#34;~/.BoonLogic.license&#34;, timeout=120.0):
+    def __init__(self, license_id=&#39;default&#39;, license_file=&#34;~/.BoonLogic.license&#34;, timeout=120.0, verify=True, cert=None):
         &#34;&#34;&#34;Primary handle for BoonNano Pod instances
 
         The is the primary handle to manage a nano pod instance
@@ -910,6 +963,9 @@ except bn.BoonException as be:
             license_id (str): license identifier label found within the .BoonLogic.license configuration file
             license_file (str): path to .BoonLogic license file
             timeout (float): read timeout for http requests
+            verify:  Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
+            cert (bool): if String, path to ssl client cert file (.pem). If Tuple, (‘cert’, ‘key’) pair.
+        
 
         Environment:
             BOON_LICENSE_FILE: sets license_file path
@@ -918,6 +974,9 @@ except bn.BoonException as be:
             BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
             BOON_SERVER: overrides the server as found in .BoonLogic.license file
             PROXY_SERVER: overrides the proxy server as found in .BoonLogic.license file
+            BOON_SSL_CERT: path to ssl client cert file (.pem)
+            BOON_SSL_VERIFY: Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
+
 
         Example:
             ```python
@@ -929,80 +988,73 @@ except bn.BoonException as be:
             ```
 
         &#34;&#34;&#34;
-        self.license_file = license_file
         self.license_id = None
         self.api_key = None
         self.api_tenant = None
         self.instance = &#39;&#39;
         self.numeric_format = &#39;&#39;
 
+        env_license_file = os.environ.get(&#39;BOON_LICENSE_FILE&#39;, None)
+        env_license_id = os.environ.get(&#39;BOON_LICENSE_ID&#39;, None)
+        env_api_key = os.environ.get(&#39;BOON_API_KEY&#39;, None)
+        env_api_tenant = os.environ.get(&#39;BOON_API_TENANT&#39;, None)
+        env_server = os.environ.get(&#39;BOON_SERVER&#39;, None)
+        env_proxy_server = os.environ.get(&#39;PROXY_SERVER&#39;, None)
+        env_cert = os.environ.get(&#39;BOON_SSL_CERT&#39;, None)
+        env_verify = os.environ.get(&#39;BOON_SSL_VERIFY&#39;, None)
+
+        # certificates
+        self.cert = &#39;CERT_REQUIRED&#39; if env_cert else {None: &#39;CERT_NONE&#39;, True: &#39;CERT_REQUIRED&#39;}[cert]
+        if env_verify:
+            if env_verify.lower() == &#39;false&#39;:
+                self.verify = False
+            elif env_verify.lower() == &#39;true&#39;:
+                self.verify = True
+            else:
+                self.verify = env_verify
+        else:
+            self.verify = verify
+
         # when license_id comes in as None, use &#39;default&#39;
         if license_id is None:
             license_id = &#39;default&#39;
 
-        license_file_env = os.getenv(&#39;BOON_LICENSE_FILE&#39;)
-        if license_file_env:
-            # license file path was specified in environment
-            license_file = license_file_env
+        license_file = env_license_file if env_license_file else license_file
+        self.license_id = env_license_id if env_license_id else license_id
 
         license_path = os.path.expanduser(license_file)
-        if os.path.exists(license_path):
-            try:
-                with open(license_path, &#34;r&#34;) as json_file:
-                    file_data = json.load(json_file)
-            except json.JSONDecodeError as e:
-                raise BoonException(
-                    &#34;json formatting error in .BoonLogic.license file, {}, line: {}, col: {}&#34;.format(e.msg, e.lineno,
-                                                                                                     e.colno))
-        else:
-            raise BoonException(&#34;file {} does not exist&#34;.format(license_path))
+        if not os.path.exists(license_path):
+            raise BoonException(&#34;license file {} does not exist&#34;.format(license_path))
+        try:
+            with open(license_path, &#34;r&#34;) as json_file:
+                file_data = json.load(json_file)
+        except json.JSONDecodeError as e:
+            raise BoonException(
+                &#34;json formatting error in .BoonLogic.license file, {}, line: {}, col: {}&#34;.format(e.msg, e.lineno,
+                                                                                                     e.colno))       
+        try:
+            license_data = file_data[self.license_id]
+        except KeyError:
+            raise BoonException(&#34;license_id \&#34;{}\&#34; not found in license file&#34;.format(self.license_id))
 
-        # load the license block, environment gets precedence
-        license_env = os.getenv(&#39;BOON_LICENSE_ID&#39;)
-        if license_env:
-            # license id was specified through environment
-            if license_env in file_data:
-                self.license_id = license_env
-            else:
-                raise BoonException(
-                    &#34;BOON_LICENSE_ID value of &#39;{}&#39; not found in .BoonLogic.license file&#34;.format(license_env))
-        else:
-            if license_id in file_data:
-                self.license_id = license_id
-            else:
-                raise BoonException(&#34;license_id &#39;{}&#39; not found in .BoonLogic.license file&#34;.format(license_id))
+        try:
+            self.api_key = env_api_key if env_api_key else license_data[&#39;api-key&#39;]
+        except KeyError:
+            raise BoonException(&#34;\&#34;api-key\&#34; is missing from the specified license in license file&#34;)
 
-        license_block = file_data[self.license_id]
+        try:
+            self.api_tenant = env_api_tenant if env_api_tenant else license_data[&#39;api-tenant&#39;]
+        except KeyError:
+            raise BoonException(&#34;\&#34;api-tenant\&#34; is missing from the specified license in license file&#34;)
 
-        # load the api-key, environment gets precedence
-        self.api_key = os.getenv(&#39;BOON_API_KEY&#39;)
-        if not self.api_key:
-            if &#39;api-key&#39; not in license_block.keys():
-                raise BoonException(
-                    &#34;&#39;api-key&#39; is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic.license file&#34;)
-            self.api_key = license_block[&#39;api-key&#39;]
+        try:
+            self.server = env_server if env_server else license_data[&#39;server&#39;]
+        except KeyError:
+            raise BoonException(&#34;\&#34;server\&#34; is missing from the specified license in license file&#34;)
 
-        # load the server, environment gets precedence
-        self.server = os.getenv(&#39;BOON_SERVER&#39;)
-        if not self.server:
-            if &#39;server&#39; not in license_block.keys():
-                raise BoonException(
-                    &#34;&#39;server&#39; is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic.license file&#34;)
-            self.server = license_block[&#39;server&#39;]
-
-        # load the tenant, environment gets precedence
-        self.api_tenant = os.getenv(&#39;BOON_TENANT&#39;)
-        if not self.api_tenant:
-            if &#39;api-tenant&#39; not in license_block.keys():
-                raise BoonException(
-                    &#34;&#39;api-tenant&#39; is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic.license file&#34;)
-            self.api_tenant = license_block[&#39;api-tenant&#39;]
-
-        # load the https proxy (if any)
-        self.proxy_server = os.getenv(&#39;PROXY_SERVER&#39;)
-        if not self.proxy_server:
-            if &#39;proxy-server&#39; in license_block.keys():
-                self.proxy_server = license_block[&#39;proxy-server&#39;]
+        self.proxy_server = env_proxy_server 
+        if not self.proxy_server and &#39;proxy-server&#39; in license_data.keys():
+            self.proxy_server = license_data[&#39;proxy-server&#39;]
 
         # set up base url
         self.url = self.server + &#39;/expert/v3/&#39;
@@ -1013,10 +1065,10 @@ except bn.BoonException as be:
         timeout_inst = Timeout(connect=30.0, read=timeout)
         if self.proxy_server:
             # proxy pool
-            self.http = ProxyManager(self.proxy_server, maxsize=10, timeout=timeout_inst)
+            self.http = ProxyManager(self.proxy_server, maxsize=10, timeout=timeout_inst, cert_reqs=self.cert)
         else:
             # non-proxy pool
-            self.http = PoolManager(timeout=timeout_inst)
+            self.http = PoolManager(timeout=timeout_inst, cert_reqs=self.cert)
 
     def _is_configured(f):
         @wraps(f)
@@ -1110,11 +1162,11 @@ except bn.BoonException as be:
         &#34;&#34;&#34;
 
         if isinstance(min_val, int) or isinstance(min_val, float):
-            min_val = np.array([min_val] * feature_count)
+            min_val = [min_val] * feature_count
         if isinstance(max_val, int) or isinstance(max_val, float):
-            max_val = np.array([max_val] * feature_count)
+            max_val = [max_val] * feature_count
         if isinstance(weight, int):
-            weight = np.array([weight] * feature_count)
+            weight = [weight] * feature_count
 
         if exclusions is None:
             exclusions = []
@@ -1161,7 +1213,7 @@ except bn.BoonException as be:
         elif exclusions:
             return False, &#39;exclusions must be a list&#39;
 
-        if config[&#39;clusterMode&#39;] is &#39;streaming&#39;:
+        if config[&#39;clusterMode&#39;] == &#39;streaming&#39;:
             config[&#39;streaming&#39;] = {}
             config[&#39;streaming&#39;][&#39;enableAutoTuning&#39;] = streaming_autotune
             config[&#39;streaming&#39;][&#39;samplesToBuffer&#39;] = streaming_buffer
@@ -1223,7 +1275,7 @@ except bn.BoonException as be:
                                                  learning_max_clusters, learning_samples)
             if not success:
                 return False, config
-        body = json.dumps(config, cls=NpEncoder)
+        body = json.dumps(config)
 
         config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
         result, response = simple_post(self, config_cmd, body=body)
@@ -1434,6 +1486,25 @@ except bn.BoonException as be:
 
         return simple_post(self, learning_cmd)
 
+    def set_root_cause_status(self, status):
+        &#34;&#34;&#34;configures whether or not to save new clusters coming in for root cause analysis
+
+        Args:
+            status (boolean): true or false of whether root cause is on or off
+
+        Returns:
+            result (boolean):  true if successful (list was returned)
+            response (str): status of root cause
+
+        &#34;&#34;&#34;
+        if status not in [True, False]:
+            return False, &#39;status must be a boolean&#39;
+        # build command
+        learning_cmd = self.url + &#39;rootCause/&#39; + self.instance + &#39;?enable=&#39; + str(
+            status).lower() + &#39;&amp;api-tenant=&#39; + self.api_tenant
+
+        return simple_post(self, learning_cmd)
+
     def run_nano(self, results=None):
         &#34;&#34;&#34;Clusters the data in the nano pod buffer and returns the specified results
 
@@ -1635,7 +1706,54 @@ except bn.BoonException as be:
         results_cmd = self.url + &#39;nanoStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
         results_cmd = results_cmd + &#39;&amp;results=&#39; + results_str
 
-        return simple_get(self, results_cmd)</code></pre>
+        return simple_get(self, results_cmd)
+
+    def get_root_cause(self, id_list=None, pattern_list=None):
+        &#34;&#34;&#34;Get root cause
+
+        Args:
+            id_list (list): list of IDs to return the root cause for
+            pattern_list (list): list of pattern vectors to calculate the root cause against the model
+
+        Returns:
+            A list containing the root cause for each pattern/id provided for a sensor:
+
+                [float]
+
+        Raises:
+            BoonException: if Amber cloud gives non-200 response
+        &#34;&#34;&#34;
+        if id_list is None and pattern_list is None:
+            raise BoonException(&#39;Must specify either list of ID(s) or list of pattern(s).&#39;)
+
+        response = {&#39;RootCauseFromID&#39;: [], &#39;RootCauseFromPattern&#39;: []}
+        if id_list is not None:
+            id_list = [str(element) for element in id_list]
+            rc_cmd = self.url + &#39;rootCauseFromID/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+            rc_cmd = rc_cmd + &#39;&amp;clusterID=&#39; + &#34;,&#34;.join(id_list)
+
+            success, status = simple_get(self, rc_cmd)
+            if success:
+                response[&#39;RootCauseFromID&#39;] = status
+            else:
+                return success, status
+
+        if pattern_list is not None:
+            if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided    
+                pattern_list = [pattern_list] 
+            else:
+                for i, pattern in enumerate(pattern_list):
+                    pattern_list[i] = &#39;,&#39;.join([str(element) for element in pattern])
+            rc_cmd = self.url + &#39;rootCauseFromPattern/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+            rc_cmd = rc_cmd + &#39;&amp;pattern=&#39; + &#39;[[&#39; + &#34;],[&#34;.join(pattern_list) + &#39;]]&#39;
+
+            success, status = simple_get(self, rc_cmd)
+            if success:
+                response[&#39;RootCauseFromPattern&#39;] = status
+            else:
+                return success, status
+
+        return True, response</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -1643,14 +1761,10 @@ except bn.BoonException as be:
 <span>def <span class="ident">autotune_config</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Autotunes the percent variation, min and max for each feature</p>
+<div class="desc"><p>Autotunes the percent variation, min and max for each feature</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (autotuning was completed)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>configuration dictionary when result is true, error string when result is false</dd>
-</dl></section>
+<p>result (boolean): true if successful (autotuning was completed)
+response (dict or str): configuration dictionary when result is true, error string when result is false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1676,14 +1790,11 @@ def autotune_config(self):
 <span>def <span class="ident">close_nano</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Closes the pod instance</p>
+<div class="desc"><p>Closes the pod instance</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano pod instance was closed)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
+<p>result (boolean):
+true if successful (nano pod instance was closed)
+response (str): None when result is true, error string when result=false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1711,7 +1822,7 @@ def autotune_config(self):
 <span>def <span class="ident">configure_nano</span></span>(<span>self, feature_count=1, numeric_format='float32', cluster_mode='batch', min_val=0, max_val=1, weight=1, label=None, percent_variation=0.05, streaming_window=1, accuracy=0.99, autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None, streaming_autotune=True, streaming_buffer=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000, config=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Returns the posted clustering configuration</p>
+<div class="desc"><p>Returns the posted clustering configuration</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>feature_count</code></strong> :&ensp;<code>int</code></dt>
@@ -1760,12 +1871,8 @@ def autotune_config(self):
 <dd>dictionary of configuration parameters</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (configuration was successfully loaded into nano pod instance)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>configuration dictionary when result is true, error string when result is false</dd>
-</dl></section>
+<p>result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
+response (dict or str): configuration dictionary when result is true, error string when result is false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1821,7 +1928,7 @@ def autotune_config(self):
                                              learning_max_clusters, learning_samples)
         if not success:
             return False, config
-    body = json.dumps(config, cls=NpEncoder)
+    body = json.dumps(config)
 
     config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
     result, response = simple_post(self, config_cmd, body=body)
@@ -1835,7 +1942,7 @@ def autotune_config(self):
 <span>def <span class="ident">create_config</span></span>(<span>self, feature_count, numeric_format, cluster_mode='batch', min_val=0, max_val=1, weight=1, label=None, percent_variation=0.05, streaming_window=1, accuracy=0.99, autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None, streaming_autotune=True, streaming_buffer=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Generate a configuration template for the given parameters</p>
+<div class="desc"><p>Generate a configuration template for the given parameters</p>
 <p>A discrete configuration is specified as a list of min, max, weights, and labels</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -1887,12 +1994,8 @@ a single element list assigns all features with same min_val</dd>
 <dd>max number of samples before turning off learning</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (configuration was successfully created)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>configuration dictionary when result is true, error string when result is false</dd>
-</dl></section>
+<p>result (boolean): true if successful (configuration was successfully created)
+response (dict or str): configuration dictionary when result is true, error string when result is false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1941,11 +2044,11 @@ a single element list assigns all features with same min_val</dd>
     &#34;&#34;&#34;
 
     if isinstance(min_val, int) or isinstance(min_val, float):
-        min_val = np.array([min_val] * feature_count)
+        min_val = [min_val] * feature_count
     if isinstance(max_val, int) or isinstance(max_val, float):
-        max_val = np.array([max_val] * feature_count)
+        max_val = [max_val] * feature_count
     if isinstance(weight, int):
-        weight = np.array([weight] * feature_count)
+        weight = [weight] * feature_count
 
     if exclusions is None:
         exclusions = []
@@ -1992,7 +2095,7 @@ a single element list assigns all features with same min_val</dd>
     elif exclusions:
         return False, &#39;exclusions must be a list&#39;
 
-    if config[&#39;clusterMode&#39;] is &#39;streaming&#39;:
+    if config[&#39;clusterMode&#39;] == &#39;streaming&#39;:
         config[&#39;streaming&#39;] = {}
         config[&#39;streaming&#39;][&#39;enableAutoTuning&#39;] = streaming_autotune
         config[&#39;streaming&#39;][&#39;samplesToBuffer&#39;] = streaming_buffer
@@ -2008,14 +2111,10 @@ a single element list assigns all features with same min_val</dd>
 <span>def <span class="ident">get_buffer_status</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Results related to the bytes processed/in the buffer</p>
+<div class="desc"><p>Results related to the bytes processed/in the buffer</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano was successfully run)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
+<p>result (boolean): true if successful (nano was successfully run)
+response (dict or str): dictionary of results when result is true, error message when result = false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2037,14 +2136,10 @@ def get_buffer_status(self):
 <span>def <span class="ident">get_config</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Gets the configuration for this nano pod instance</p>
+<div class="desc"><p>Gets the configuration for this nano pod instance</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (configuration was found)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>configuration dictionary when result is true, error string when result is false</dd>
-</dl></section>
+<p>result (boolean): true if successful (configuration was found)
+response (dict or str): configuration dictionary when result is true, error string when result is false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2066,7 +2161,7 @@ def get_config(self):
 <span>def <span class="ident">get_nano_results</span></span>(<span>self, results='All')</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Results per pattern</p>
+<div class="desc"><p>Results per pattern</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
@@ -2081,12 +2176,8 @@ def get_config(self):
 </dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano was successfully run)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
+<p>result (boolean): true if successful (nano was successfully run)
+response (dict or str): dictionary of results when result is true, error message when result = false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2135,7 +2226,7 @@ def get_nano_results(self, results=&#39;All&#39;):
 <span>def <span class="ident">get_nano_status</span></span>(<span>self, results='All')</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Results in relation to each cluster/overall stats</p>
+<div class="desc"><p>Results in relation to each cluster/overall stats</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
@@ -2155,12 +2246,8 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 </dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano was successfully run)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
+<p>result (boolean): true if successful (nano was successfully run)
+response (dict or str): dictionary of results when result is true, error message when result = false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2217,18 +2304,87 @@ def get_nano_status(self, results=&#39;All&#39;):
     return simple_get(self, results_cmd)</code></pre>
 </details>
 </dd>
+<dt id="boonnano.NanoHandle.get_root_cause"><code class="name flex">
+<span>def <span class="ident">get_root_cause</span></span>(<span>self, id_list=None, pattern_list=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get root cause</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id_list</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of IDs to return the root cause for</dd>
+<dt><strong><code>pattern_list</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of pattern vectors to calculate the root cause against the model</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A list containing the root cause for each pattern/id provided for a sensor:</p>
+<pre><code>[float]
+</code></pre>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code><a title="boonnano.BoonException" href="#boonnano.BoonException">BoonException</a></code></dt>
+<dd>if Amber cloud gives non-200 response</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_root_cause(self, id_list=None, pattern_list=None):
+    &#34;&#34;&#34;Get root cause
+
+    Args:
+        id_list (list): list of IDs to return the root cause for
+        pattern_list (list): list of pattern vectors to calculate the root cause against the model
+
+    Returns:
+        A list containing the root cause for each pattern/id provided for a sensor:
+
+            [float]
+
+    Raises:
+        BoonException: if Amber cloud gives non-200 response
+    &#34;&#34;&#34;
+    if id_list is None and pattern_list is None:
+        raise BoonException(&#39;Must specify either list of ID(s) or list of pattern(s).&#39;)
+
+    response = {&#39;RootCauseFromID&#39;: [], &#39;RootCauseFromPattern&#39;: []}
+    if id_list is not None:
+        id_list = [str(element) for element in id_list]
+        rc_cmd = self.url + &#39;rootCauseFromID/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        rc_cmd = rc_cmd + &#39;&amp;clusterID=&#39; + &#34;,&#34;.join(id_list)
+
+        success, status = simple_get(self, rc_cmd)
+        if success:
+            response[&#39;RootCauseFromID&#39;] = status
+        else:
+            return success, status
+
+    if pattern_list is not None:
+        if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided    
+            pattern_list = [pattern_list] 
+        else:
+            for i, pattern in enumerate(pattern_list):
+                pattern_list[i] = &#39;,&#39;.join([str(element) for element in pattern])
+        rc_cmd = self.url + &#39;rootCauseFromPattern/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
+        rc_cmd = rc_cmd + &#39;&amp;pattern=&#39; + &#39;[[&#39; + &#34;],[&#34;.join(pattern_list) + &#39;]]&#39;
+
+        success, status = simple_get(self, rc_cmd)
+        if success:
+            response[&#39;RootCauseFromPattern&#39;] = status
+        else:
+            return success, status
+
+    return True, response</code></pre>
+</details>
+</dd>
 <dt id="boonnano.NanoHandle.get_version"><code class="name flex">
 <span>def <span class="ident">get_version</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Version information for this nano pod</p>
+<div class="desc"><p>Version information for this nano pod</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (version information was retrieved)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
+<p>result (boolean): true if successful (version information was retrieved)
+response (dict or str): dictionary of results when result is true, error message when result = false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2251,7 +2407,7 @@ def get_nano_status(self, results=&#39;All&#39;):
 <span>def <span class="ident">load_data</span></span>(<span>self, data, append_data=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Load nano data from an existing numpy array or simple python list</p>
+<div class="desc"><p>Load nano data from an existing numpy array or simple python list</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>data</code></strong> :&ensp;<code>np.ndarray</code> or <code>list</code></dt>
@@ -2261,12 +2417,8 @@ def get_nano_status(self, results=&#39;All&#39;):
 data should be truncated</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (data was successful loaded into nano pod instance)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
+<p>result (boolean): true if successful (data was successful loaded into nano pod instance)
+response (str): None when result is true, error string when result=false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2303,7 +2455,7 @@ def load_data(self, data, append_data=False):
 <span>def <span class="ident">load_file</span></span>(<span>self, file, file_type, gzip=False, append_data=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Load nano data from a file</p>
+<div class="desc"><p>Load nano data from a file</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>file</code></strong> :&ensp;<code>str</code></dt>
@@ -2317,12 +2469,8 @@ def load_data(self, data, append_data=False):
 data should be truncated</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (file was successful loaded into nano pod instance)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
+<p>result (boolean): true if successful (file was successful loaded into nano pod instance)
+response (str): None when result is true, error string when result=false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2374,14 +2522,11 @@ def load_file(self, file, file_type, gzip=False, append_data=False):
 <span>def <span class="ident">nano_list</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Returns list of nano instances allocated for a pod</p>
+<div class="desc"><p>Returns list of nano instances allocated for a pod</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (list was returned)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>json dictionary of pod instances when result=true, error string when result=false</dd>
-</dl></section>
+<p>result (boolean):
+true if successful (list was returned)
+response (str): json dictionary of pod instances when result=true, error string when result=false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2405,7 +2550,7 @@ def load_file(self, file, file_type, gzip=False, append_data=False):
 <span>def <span class="ident">open_nano</span></span>(<span>self, instance_id)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Creates or attaches to a nano pod instance</p>
+<div class="desc"><p>Creates or attaches to a nano pod instance</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
@@ -2413,11 +2558,11 @@ def load_file(self, file, file_type, gzip=False, append_data=False):
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><strong><code>boolean</code></strong></dt>
+<dt><code>boolean</code></dt>
 <dd>true if successful (instance is created or attached)</dd>
-<dt><strong><code>str</code></strong></dt>
+<dt><code>str</code></dt>
 <dd>None when result is true, error string when result=false</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2448,19 +2593,16 @@ def load_file(self, file, file_type, gzip=False, append_data=False):
 <span>def <span class="ident">restore_nano</span></span>(<span>self, filename)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Restore a nano pod instance from local file</p>
+<div class="desc"><p>Restore a nano pod instance from local file</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
 <dd>path to local file containing saved pod instance</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano pod instance was restored)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
+<p>result (boolean):
+true if successful (nano pod instance was restored)
+response (str): None when result is true, error string when result=false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2512,7 +2654,7 @@ def load_file(self, file, file_type, gzip=False, append_data=False):
 <span>def <span class="ident">run_nano</span></span>(<span>self, results=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Clusters the data in the nano pod buffer and returns the specified results</p>
+<div class="desc"><p>Clusters the data in the nano pod buffer and returns the specified results</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
@@ -2527,12 +2669,8 @@ def load_file(self, file, file_type, gzip=False, append_data=False):
 </dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano was successfully run)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
+<p>result (boolean): true if successful (nano was successfully run)
+response (dict or str): dictionary of results when result is true, error message when result = false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2582,7 +2720,7 @@ def load_file(self, file, file_type, gzip=False, append_data=False):
 <span>def <span class="ident">run_streaming_nano</span></span>(<span>self, data, results=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Load streaming data into self-autotuning nano pod instance, run the nano and return results</p>
+<div class="desc"><p>Load streaming data into self-autotuning nano pod instance, run the nano and return results</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>data</code></strong> :&ensp;<code>np.ndarray</code> or <code>list</code></dt>
@@ -2599,12 +2737,8 @@ def load_file(self, file, file_type, gzip=False, append_data=False):
 </dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (data was successful streamed to nano pod instance)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
+<p>result (boolean): true if successful (data was successful streamed to nano pod instance)
+response (dict or str): dictionary of results when result is true, error message when result = false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2662,19 +2796,16 @@ def run_streaming_nano(self, data, results=None):
 <span>def <span class="ident">save_nano</span></span>(<span>self, filename)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>serialize a nano pod instance and save to a local file</p>
+<div class="desc"><p>serialize a nano pod instance and save to a local file</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
 <dd>path to local file where saved pod instance should be written</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (pod instance was written)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
+<p>result (boolean):
+true if successful (pod instance was written)
+response (str): None when result is true, error string when result=false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2714,19 +2845,16 @@ def save_nano(self, filename):
 <span>def <span class="ident">set_learning_status</span></span>(<span>self, status)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>returns list of nano instances allocated for a pod</p>
+<div class="desc"><p>returns list of nano instances allocated for a pod</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>status</code></strong> :&ensp;<code>boolean</code></dt>
 <dd>true or false of whether to learning is on or off</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (list was returned)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>json dictionary of pod instances when result=true, error string when result=false</dd>
-</dl></section>
+<p>result (boolean):
+true if successful (list was returned)
+response (str): json dictionary of pod instances when result=true, error string when result=false</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2746,6 +2874,44 @@ def save_nano(self, filename):
         return False, &#39;status must be a boolean&#39;
     # build command
     learning_cmd = self.url + &#39;learning/&#39; + self.instance + &#39;?enable=&#39; + str(
+        status).lower() + &#39;&amp;api-tenant=&#39; + self.api_tenant
+
+    return simple_post(self, learning_cmd)</code></pre>
+</details>
+</dd>
+<dt id="boonnano.NanoHandle.set_root_cause_status"><code class="name flex">
+<span>def <span class="ident">set_root_cause_status</span></span>(<span>self, status)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>configures whether or not to save new clusters coming in for root cause analysis</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>status</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true or false of whether root cause is on or off</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>result (boolean):
+true if successful (list was returned)
+response (str): status of root cause</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_root_cause_status(self, status):
+    &#34;&#34;&#34;configures whether or not to save new clusters coming in for root cause analysis
+
+    Args:
+        status (boolean): true or false of whether root cause is on or off
+
+    Returns:
+        result (boolean):  true if successful (list was returned)
+        response (str): status of root cause
+
+    &#34;&#34;&#34;
+    if status not in [True, False]:
+        return False, &#39;status must be a boolean&#39;
+    # build command
+    learning_cmd = self.url + &#39;rootCause/&#39; + self.instance + &#39;?enable=&#39; + str(
         status).lower() + &#39;&amp;api-tenant=&#39; + self.api_tenant
 
     return simple_post(self, learning_cmd)</code></pre>
@@ -2774,7 +2940,7 @@ def save_nano(self, filename):
 </li>
 <li>
 <h4><code><a title="boonnano.NanoHandle" href="#boonnano.NanoHandle">NanoHandle</a></code></h4>
-<ul class="two-column">
+<ul class="">
 <li><code><a title="boonnano.NanoHandle.autotune_config" href="#boonnano.NanoHandle.autotune_config">autotune_config</a></code></li>
 <li><code><a title="boonnano.NanoHandle.close_nano" href="#boonnano.NanoHandle.close_nano">close_nano</a></code></li>
 <li><code><a title="boonnano.NanoHandle.configure_nano" href="#boonnano.NanoHandle.configure_nano">configure_nano</a></code></li>
@@ -2783,6 +2949,7 @@ def save_nano(self, filename):
 <li><code><a title="boonnano.NanoHandle.get_config" href="#boonnano.NanoHandle.get_config">get_config</a></code></li>
 <li><code><a title="boonnano.NanoHandle.get_nano_results" href="#boonnano.NanoHandle.get_nano_results">get_nano_results</a></code></li>
 <li><code><a title="boonnano.NanoHandle.get_nano_status" href="#boonnano.NanoHandle.get_nano_status">get_nano_status</a></code></li>
+<li><code><a title="boonnano.NanoHandle.get_root_cause" href="#boonnano.NanoHandle.get_root_cause">get_root_cause</a></code></li>
 <li><code><a title="boonnano.NanoHandle.get_version" href="#boonnano.NanoHandle.get_version">get_version</a></code></li>
 <li><code><a title="boonnano.NanoHandle.load_data" href="#boonnano.NanoHandle.load_data">load_data</a></code></li>
 <li><code><a title="boonnano.NanoHandle.load_file" href="#boonnano.NanoHandle.load_file">load_file</a></code></li>
@@ -2793,6 +2960,7 @@ def save_nano(self, filename):
 <li><code><a title="boonnano.NanoHandle.run_streaming_nano" href="#boonnano.NanoHandle.run_streaming_nano">run_streaming_nano</a></code></li>
 <li><code><a title="boonnano.NanoHandle.save_nano" href="#boonnano.NanoHandle.save_nano">save_nano</a></code></li>
 <li><code><a title="boonnano.NanoHandle.set_learning_status" href="#boonnano.NanoHandle.set_learning_status">set_learning_status</a></code></li>
+<li><code><a title="boonnano.NanoHandle.set_root_cause_status" href="#boonnano.NanoHandle.set_root_cause_status">set_root_cause_status</a></code></li>
 </ul>
 </li>
 </ul>
@@ -2801,9 +2969,7 @@ def save_nano(self, filename):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
 </body>
 </html>
