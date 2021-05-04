@@ -28,7 +28,7 @@ class BoonException(Exception):
 
 class NanoHandle:
 
-    def __init__(self, license_id='default', license_file="~/.BoonLogic.license", timeout=120.0):
+    def __init__(self, license_id='default', license_file="~/.BoonLogic.license", timeout=120.0, verify=True, cert=None):
         """Primary handle for BoonNano Pod instances
 
         The is the primary handle to manage a nano pod instance
@@ -37,6 +37,9 @@ class NanoHandle:
             license_id (str): license identifier label found within the .BoonLogic.license configuration file
             license_file (str): path to .BoonLogic license file
             timeout (float): read timeout for http requests
+            verify:  Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
+            cert (bool): if String, path to ssl client cert file (.pem). If Tuple, (‘cert’, ‘key’) pair.
+        
 
         Environment:
             BOON_LICENSE_FILE: sets license_file path
@@ -45,6 +48,9 @@ class NanoHandle:
             BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
             BOON_SERVER: overrides the server as found in .BoonLogic.license file
             PROXY_SERVER: overrides the proxy server as found in .BoonLogic.license file
+            BOON_SSL_CERT: path to ssl client cert file (.pem)
+            BOON_SSL_VERIFY: Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
+
 
         Example:
             ```python
@@ -56,80 +62,73 @@ class NanoHandle:
             ```
 
         """
-        self.license_file = license_file
         self.license_id = None
         self.api_key = None
         self.api_tenant = None
         self.instance = ''
         self.numeric_format = ''
 
+        env_license_file = os.environ.get('BOON_LICENSE_FILE', None)
+        env_license_id = os.environ.get('BOON_LICENSE_ID', None)
+        env_api_key = os.environ.get('BOON_API_KEY', None)
+        env_api_tenant = os.environ.get('BOON_API_TENANT', None)
+        env_server = os.environ.get('BOON_SERVER', None)
+        env_proxy_server = os.environ.get('PROXY_SERVER', None)
+        env_cert = os.environ.get('BOON_SSL_CERT', None)
+        env_verify = os.environ.get('BOON_SSL_VERIFY', None)
+
+        # certificates
+        self.cert = 'CERT_REQUIRED' if env_cert else {None: 'CERT_NONE', True: 'CERT_REQUIRED'}[cert]
+        if env_verify:
+            if env_verify.lower() == 'false':
+                self.verify = False
+            elif env_verify.lower() == 'true':
+                self.verify = True
+            else:
+                self.verify = env_verify
+        else:
+            self.verify = verify
+
         # when license_id comes in as None, use 'default'
         if license_id is None:
             license_id = 'default'
 
-        license_file_env = os.getenv('BOON_LICENSE_FILE')
-        if license_file_env:
-            # license file path was specified in environment
-            license_file = license_file_env
+        license_file = env_license_file if env_license_file else license_file
+        self.license_id = env_license_id if env_license_id else license_id
 
         license_path = os.path.expanduser(license_file)
-        if os.path.exists(license_path):
-            try:
-                with open(license_path, "r") as json_file:
-                    file_data = json.load(json_file)
-            except json.JSONDecodeError as e:
-                raise BoonException(
-                    "json formatting error in .BoonLogic.license file, {}, line: {}, col: {}".format(e.msg, e.lineno,
-                                                                                                     e.colno))
-        else:
-            raise BoonException("file {} does not exist".format(license_path))
+        if not os.path.exists(license_path):
+            raise BoonException("license file {} does not exist".format(license_path))
+        try:
+            with open(license_path, "r") as json_file:
+                file_data = json.load(json_file)
+        except json.JSONDecodeError as e:
+            raise BoonException(
+                "json formatting error in .BoonLogic.license file, {}, line: {}, col: {}".format(e.msg, e.lineno,
+                                                                                                     e.colno))       
+        try:
+            license_data = file_data[self.license_id]
+        except KeyError:
+            raise BoonException("license_id \"{}\" not found in license file".format(self.license_id))
 
-        # load the license block, environment gets precedence
-        license_env = os.getenv('BOON_LICENSE_ID')
-        if license_env:
-            # license id was specified through environment
-            if license_env in file_data:
-                self.license_id = license_env
-            else:
-                raise BoonException(
-                    "BOON_LICENSE_ID value of '{}' not found in .BoonLogic.license file".format(license_env))
-        else:
-            if license_id in file_data:
-                self.license_id = license_id
-            else:
-                raise BoonException("license_id '{}' not found in .BoonLogic.license file".format(license_id))
+        try:
+            self.api_key = env_api_key if env_api_key else license_data['api-key']
+        except KeyError:
+            raise BoonException("\"api-key\" is missing from the specified license in license file")
 
-        license_block = file_data[self.license_id]
+        try:
+            self.api_tenant = env_api_tenant if env_api_tenant else license_data['api-tenant']
+        except KeyError:
+            raise BoonException("\"api-tenant\" is missing from the specified license in license file")
 
-        # load the api-key, environment gets precedence
-        self.api_key = os.getenv('BOON_API_KEY')
-        if not self.api_key:
-            if 'api-key' not in license_block.keys():
-                raise BoonException(
-                    "'api-key' is missing from configuration, set via BOON_API_KEY or in ~/.BoonLogic.license file")
-            self.api_key = license_block['api-key']
+        try:
+            self.server = env_server if env_server else license_data['server']
+        except KeyError:
+            raise BoonException("\"server\" is missing from the specified license in license file")
 
-        # load the server, environment gets precedence
-        self.server = os.getenv('BOON_SERVER')
-        if not self.server:
-            if 'server' not in license_block.keys():
-                raise BoonException(
-                    "'server' is missing from configuration, set via BOON_SERVER or in ~/.BoonLogic.license file")
-            self.server = license_block['server']
-
-        # load the tenant, environment gets precedence
-        self.api_tenant = os.getenv('BOON_TENANT')
-        if not self.api_tenant:
-            if 'api-tenant' not in license_block.keys():
-                raise BoonException(
-                    "'api-tenant' is missing from configuration, set via BOON_TENANT or in ~/.BoonLogic.license file")
-            self.api_tenant = license_block['api-tenant']
-
-        # load the https proxy (if any)
-        self.proxy_server = os.getenv('PROXY_SERVER')
-        if not self.proxy_server:
-            if 'proxy-server' in license_block.keys():
-                self.proxy_server = license_block['proxy-server']
+        self.proxy_server = env_proxy_server 
+        if not self.proxy_server and 'proxy-server' in license_data.keys():
+            self.proxy_server = license_data['proxy-server']
 
         # set up base url
         self.url = self.server + '/expert/v3/'
@@ -140,10 +139,10 @@ class NanoHandle:
         timeout_inst = Timeout(connect=30.0, read=timeout)
         if self.proxy_server:
             # proxy pool
-            self.http = ProxyManager(self.proxy_server, maxsize=10, timeout=timeout_inst)
+            self.http = ProxyManager(self.proxy_server, maxsize=10, timeout=timeout_inst, cert_reqs=self.cert)
         else:
             # non-proxy pool
-            self.http = PoolManager(timeout=timeout_inst)
+            self.http = PoolManager(timeout=timeout_inst, cert_reqs=self.cert)
 
     def _is_configured(f):
         @wraps(f)
@@ -288,7 +287,7 @@ class NanoHandle:
         elif exclusions:
             return False, 'exclusions must be a list'
 
-        if config['clusterMode'] is 'streaming':
+        if config['clusterMode'] == 'streaming':
             config['streaming'] = {}
             config['streaming']['enableAutoTuning'] = streaming_autotune
             config['streaming']['samplesToBuffer'] = streaming_buffer
@@ -561,6 +560,25 @@ class NanoHandle:
 
         return simple_post(self, learning_cmd)
 
+    def set_root_cause_status(self, status):
+        """configures whether or not to save new clusters coming in for root cause analysis
+
+        Args:
+            status (boolean): true or false of whether root cause is on or off
+
+        Returns:
+            result (boolean):  true if successful (list was returned)
+            response (str): status of root cause
+
+        """
+        if status not in [True, False]:
+            return False, 'status must be a boolean'
+        # build command
+        learning_cmd = self.url + 'rootCause/' + self.instance + '?enable=' + str(
+            status).lower() + '&api-tenant=' + self.api_tenant
+
+        return simple_post(self, learning_cmd)
+
     def run_nano(self, results=None):
         """Clusters the data in the nano pod buffer and returns the specified results
 
@@ -763,6 +781,53 @@ class NanoHandle:
         results_cmd = results_cmd + '&results=' + results_str
 
         return simple_get(self, results_cmd)
+
+    def get_root_cause(self, id_list=None, pattern_list=None):
+        """Get root cause
+
+        Args:
+            id_list (list): list of IDs to return the root cause for
+            pattern_list (list): list of pattern vectors to calculate the root cause against the model
+
+        Returns:
+            A list containing the root cause for each pattern/id provided for a sensor:
+
+                [float]
+
+        Raises:
+            BoonException: if Amber cloud gives non-200 response
+        """
+        if id_list is None and pattern_list is None:
+            raise BoonException('Must specify either list of ID(s) or list of pattern(s).')
+
+        response = {'RootCauseFromID': [], 'RootCauseFromPattern': []}
+        if id_list is not None:
+            id_list = [str(element) for element in id_list]
+            rc_cmd = self.url + 'rootCauseFromID/' + self.instance + '?api-tenant=' + self.api_tenant
+            rc_cmd = rc_cmd + '&clusterID=' + ",".join(id_list)
+
+            success, status = simple_get(self, rc_cmd)
+            if success:
+                response['RootCauseFromID'] = status
+            else:
+                return success, status
+
+        if pattern_list is not None:
+            if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided    
+                pattern_list = [pattern_list] 
+            else:
+                for i, pattern in enumerate(pattern_list):
+                    pattern_list[i] = ','.join([str(element) for element in pattern])
+            rc_cmd = self.url + 'rootCauseFromPattern/' + self.instance + '?api-tenant=' + self.api_tenant
+            rc_cmd = rc_cmd + '&pattern=' + '[[' + "],[".join(pattern_list) + ']]'
+
+            success, status = simple_get(self, rc_cmd)
+            if success:
+                response['RootCauseFromPattern'] = status
+            else:
+                return success, status
+
+        return True, response
 
 
 def normalize_nano_data(data, numeric_format):

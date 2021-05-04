@@ -33,7 +33,7 @@ def find_host_addr():
 init_done = False
 
 
-def build_test_environment():
+def build_environment():
     global init_done
     if init_done:
         return
@@ -55,14 +55,14 @@ def build_test_environment():
     init_done = True
 
 
-class TestManagement(object):
+class Test1Management(object):
 
     # This test class verifies the NanoHandle/open/close functionality
     # Setup is skipped
     def __init__(self):
-        build_test_environment()
+        build_environment()
 
-    def test_nano_handle(self):
+    def test_01_nano_handle(self):
 
         # successful nano-handle created with default options
         try:
@@ -103,9 +103,9 @@ class TestManagement(object):
             assert_false(False, 'test for BOON_LICENSE_ID = sample-license failed')
         os.environ.pop('BOON_LICENSE_ID')
 
-        # override BOON_API_KEY, BOON_TENANT and BOON_SERVER
+        # override BOON_API_KEY, BOON_API_TENANT and BOON_SERVER
         os.environ['BOON_API_KEY'] = 'new-key'
-        os.environ['BOON_TENANT'] = 'new-tenant'
+        os.environ['BOON_API_TENANT'] = 'new-tenant'
         os.environ['BOON_SERVER'] = 'new-server:9999'
         try:
             nano = bn.NanoHandle(license_file=".BoonLogic.license")
@@ -116,10 +116,10 @@ class TestManagement(object):
         except bn.BoonException as be:
             assert_false(False, 'test for environment override failed')
         os.environ.pop('BOON_API_KEY')
-        os.environ.pop('BOON_TENANT')
+        os.environ.pop('BOON_API_TENANT')
         os.environ.pop('BOON_SERVER')
 
-    def test_nano_handle_negative(self):
+    def test_02_nano_handle_negative(self):
 
         # create NanoHandle using bad license path
         assert_raises(bn.BoonException, bn.NanoHandle, license_file=".BadLogic.license", license_id='sample-license')
@@ -148,7 +148,7 @@ class TestManagement(object):
         # create NanoHandle with missing server
         assert_raises(bn.BoonException, bn.NanoHandle, license_file="no-server.BoonLogic.license")
 
-    def test_open_close(self):
+    def test_03_open_close(self):
 
         # allocate four nano handles and open an instance for each
         for license_file in [".BoonLogic.proxy", ".BoonLogic.license"]:
@@ -203,10 +203,10 @@ class TestManagement(object):
             assert_equal(success, False)
 
 
-class TestResults(object):
+class Test2Results(object):
 
     def __init__(self):
-        build_test_environment()
+        build_environment()
         try:
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')
@@ -222,7 +222,7 @@ class TestResults(object):
     def teardown(self):
         self.nano.close_nano()
 
-    def test_get_version(self):
+    def test_01_get_version(self):
         success, response = self.nano.get_version()
         assert_equal(success, True)
         assert_list_equal(list(response.keys()),
@@ -230,10 +230,10 @@ class TestResults(object):
                            'swagger-ui'])
 
 
-class TestConfigure(object):
+class Test3Configure(object):
 
     def __init__(self):
-        build_test_environment()
+        build_environment()
         try:
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')
@@ -249,7 +249,7 @@ class TestConfigure(object):
     def teardown(self):
         self.nano.close_nano()
 
-    def test_configure(self):
+    def test_01_configure(self):
 
         # create a configuration with single-value min_val, max_val, and weight
         success, config = self.nano.create_config(numeric_format='float32', feature_count=5, min_val=-10,
@@ -301,7 +301,7 @@ class TestConfigure(object):
         assert_equal(success, True)
         assert_dict_equal(config, npconfig)
 
-    def test_configure_negative(self):
+    def test_02_configure_negative(self):
 
         # test get_config_template with bad numeric_format
         success, response = self.nano.configure_nano(numeric_format='int64', feature_count=5, min_val=-10,
@@ -348,10 +348,10 @@ class TestConfigure(object):
         assert_equal(response, 'label must be list')
 
 
-class TestCluster(object):
+class Test4Cluster(object):
 
     def __init__(self):
-        build_test_environment()
+        build_environment()
         try:
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')
@@ -367,7 +367,7 @@ class TestCluster(object):
     def teardown(self):
         self.nano.close_nano()
 
-    def test_load_data(self):
+    def test_01_load_data(self):
         # apply the configuration
         success, config = self.nano.configure_nano(feature_count=20, numeric_format='float32', min_val=-10,
                                                    max_val=15, weight=1, streaming_window=1,
@@ -423,6 +423,10 @@ class TestCluster(object):
         assert_equal(success, True)
         assert_dict_equal(response, response2)
 
+        # get root cause for a pattern before root cause is turned on (still works)
+        success, response = self.nano.get_root_cause(pattern_list=[[1]*len(config['features'])*config['streamingWindowSize']])
+        assert_equal(success, True)
+
         # fetch the buffer status
         success, response = self.nano.get_buffer_status()
         assert_equal(success, True)
@@ -443,12 +447,21 @@ class TestCluster(object):
         success, response2 = self.nano.set_learning_status(False)
         assert_equal(success, True)
 
+        # turn on root cause analysis
+        success, response2 = self.nano.set_root_cause_status(True)
+        assert_equal(success, True)
+        assert_equal(response2, True)
+
         # load second half of data
         success, response2 = self.nano.load_data(data=dataBlob[(int)(len(dataBlob) / 2):], append_data=False)
         assert_equal(success, True)
 
         # run the nano
         success, response2 = self.nano.run_nano(results=None)
+        assert_equal(success, True)
+
+        # get root cause from IDs
+        success, root_cause = self.nano.get_root_cause(id_list=[1])
         assert_equal(success, True)
 
         # ask for the nano status result, 'numClusters'
@@ -495,7 +508,7 @@ class TestCluster(object):
         assert_equal(success, False)
         assert_equal(response, 'corrupt file bad-magic.tgz')
 
-    def test_load_data_negative(self):
+    def test_02_load_data_negative(self):
 
         # create a configuration with single-value min_val, max_val, and weight
         success, config = self.nano.create_config(numeric_format='float32', feature_count=20, min_val=-10,
@@ -507,6 +520,11 @@ class TestCluster(object):
         success, response = self.nano.load_file(file=dataFile, file_type='csv', append_data=False)
         assert_equal(success, False)
         assert_equal(response, 'nano instance is not configured')
+
+        # get root cause before configured
+        success, response = self.nano.get_root_cause(id_list=[1,1], pattern_list=[[1,2,3]])
+        assert_equal(success, False)
+        assert_equal(response, '400: The clustering parameters have not been initialized')
 
         # apply the configuration
         success, gen_config = self.nano.configure_nano(config=config)
@@ -532,6 +550,10 @@ class TestCluster(object):
         success, response = self.nano.set_learning_status(status=None)
         assert_equal(success, False)
 
+        # set root cause status to a non boolean
+        success, response = self.nano.set_root_cause_status(status=None)
+        assert_equal(success, False)
+
         # get nano results with bad results specifier
         success, response = self.nano.get_nano_results(results='NA')
         assert_equal(success, False)
@@ -546,10 +568,10 @@ class TestCluster(object):
         assert_equal(response, 'No such file or directory')
 
 
-class TestStreamingCluster(object):
+class Test5StreamingCluster(object):
 
     def __init__(self):
-        build_test_environment()
+        build_environment()
         try:
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')
@@ -565,7 +587,7 @@ class TestStreamingCluster(object):
     def teardown(self):
         self.nano.close_nano()
 
-    def test_run_nano_streaming(self):
+    def test_01_run_nano_streaming(self):
         # create a configuration with single-value min_val, max_val, and weight
         success, config = self.nano.create_config(numeric_format='float32', cluster_mode='streaming',
                                                   feature_count=20, min_val=-10,
@@ -592,7 +614,7 @@ class TestStreamingCluster(object):
         success, response = self.nano.run_streaming_nano(data=dataBlob, results='SI')
         assert_equal(success, True)
 
-    def test_run_nano_streaming_negative(self):
+    def test_02_run_nano_streaming_negative(self):
         # create a configuration with single-value min_val, max_val, and weight
         success, config = self.nano.create_config(feature_count=20, numeric_format='float32', min_val=-10,
                                                   max_val=15, weight=1, streaming_window=1,
@@ -615,10 +637,10 @@ class TestStreamingCluster(object):
         assert_equal(success, False)
 
 
-class TestRest(object):
+class Test6Rest(object):
 
     def __init__(self):
-        build_test_environment()
+        build_environment()
         try:
             self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
             assert_equal(self.nano.license_id, 'default')
@@ -632,9 +654,11 @@ class TestRest(object):
         assert_equal(response['instanceID'], 'instance-1')
 
     def teardown(self):
+        os.environ['BOON_SERVER'] = ''
+        self.nano = bn.NanoHandle(license_file="./.BoonLogic.license")
         self.nano.close_nano()
 
-    def negative_test(self):
+    def test_01_negative(self):
 
         # override server with a bad one
         os.environ['BOON_SERVER'] = 'not-a-server:9999'
