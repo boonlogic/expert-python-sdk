@@ -2,4 +2,8 @@ boonnano.egg-info/
 dist/
 local-env/
 tests/saved-nano-1
+examples/sample-nano-image
 .DS_Store
+*/__pycache__
+.coverage
+tests/htmlcov

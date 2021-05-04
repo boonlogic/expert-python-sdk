@@ -40,7 +40,7 @@ def simple_get(nano_handle, get_cmd):
                 'x-token': nano_handle.api_key,
                 'Content-Type': 'application/json',
                 'User-Agent': user_agent
-        }
+            }
         )
     except Exception as e:
         return False, 'request failed: {}'.format(e)
