@@ -36,7 +36,10 @@ user_agent = &#39;Boon Logic / expert-python-sdk / urllib3&#39;
 def outgoing_data(response):
     if response.status != 200:
         if response.headers[&#39;Content-Type&#39;] == &#39;application/json&#39;:
-            decoded = json.loads(response.data.decode(&#39;utf-8&#39;))
+            if response.data.decode(&#39;utf-8&#39;) == &#39;&#39;:
+                decoded = {&#39;code&#39;: response.status, &#39;message&#39;: &#34;empty response&#34;}
+            else:
+                decoded = json.loads(response.data.decode(&#39;utf-8&#39;))
             if &#39;code&#39; in decoded and &#39;message&#39; in decoded:
                 return False, &#39;{}: {}&#39;.format(decoded[&#39;code&#39;], decoded[&#39;message&#39;])
             return False, decoded
@@ -172,7 +175,10 @@ def simple_delete(nano_handle, delete_cmd):
 <pre><code class="python">def outgoing_data(response):
     if response.status != 200:
         if response.headers[&#39;Content-Type&#39;] == &#39;application/json&#39;:
-            decoded = json.loads(response.data.decode(&#39;utf-8&#39;))
+            if response.data.decode(&#39;utf-8&#39;) == &#39;&#39;:
+                decoded = {&#39;code&#39;: response.status, &#39;message&#39;: &#34;empty response&#34;}
+            else:
+                decoded = json.loads(response.data.decode(&#39;utf-8&#39;))
             if &#39;code&#39; in decoded and &#39;message&#39; in decoded:
                 return False, &#39;{}: {}&#39;.format(decoded[&#39;code&#39;], decoded[&#39;message&#39;])
             return False, decoded
