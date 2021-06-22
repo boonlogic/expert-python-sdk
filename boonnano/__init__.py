@@ -196,8 +196,8 @@ class NanoHandle:
                       weight=1, label=None,
                       percent_variation=0.05, streaming_window=1, accuracy=0.99,
                       autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000,
-                      exclusions=None, streaming_autotune=True, streaming_buffer=10000, learning_numerator=10,
-                      learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000):
+                      exclusions=None, streaming_autotune=True, streaming_buffer=10000, anomaly_history_window=10000,
+                      learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000):
         """Generate a configuration template for the given parameters
 
         A discrete configuration is specified as a list of min, max, weights, and labels
@@ -223,6 +223,7 @@ class NanoHandle:
             exclusions (list): features to exclude while autotuning
             streaming_autotune (bool): whether to autotune while in streaming mode
             streaming_buffer (int): number of samples to autotune on
+            anomaly_history_window (int): number of samples to use in AH calculation
             learning_numerator (int): max number of new clusters learned
             learning_denominator (int): number of samples over which the new clusters are learned
             learning_max_clusters (int): max number of clusters before turning off learning
@@ -291,6 +292,7 @@ class NanoHandle:
             config['streaming'] = {}
             config['streaming']['enableAutoTuning'] = streaming_autotune
             config['streaming']['samplesToBuffer'] = streaming_buffer
+            config['streaming']['anomalyHistoryWindow'] = anomaly_history_window
             config['streaming']['learningRateNumerator'] = learning_numerator
             config['streaming']['learningRateDenominator'] = learning_denominator
             config['streaming']['learningMaxClusters'] = learning_max_clusters
@@ -303,8 +305,8 @@ class NanoHandle:
                        percent_variation=.05, streaming_window=1, accuracy=.99,
                        autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000,
                        exclusions=None,
-                       streaming_autotune=True, streaming_buffer=10000, learning_numerator=10,
-                       learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000,
+                       streaming_autotune=True, streaming_buffer=10000, anomaly_history_window=10000,
+                       learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000,
                        config=None):
 
         """Returns the posted clustering configuration
@@ -327,6 +329,7 @@ class NanoHandle:
              exclusions (list): features to exclude while autotuning
              streaming_autotune (bool): whether to autotune while in streaming mode
              streaming_buffer (int): number of samples to autotune on
+             anomaly_history_window (int): number of samples to use for AH calculation
              learning_numerator (int): max number of new clusters learned
              learning_denominator (int): number of samples over which the new clusters are learned
              learning_max_clusters (int): max number of clusters before turning off learning
@@ -344,8 +347,8 @@ class NanoHandle:
                                                  label, percent_variation, streaming_window, accuracy,
                                                  autotune_pv, autotune_range, autotune_by_feature,
                                                  autotune_max_clusters, exclusions,
-                                                 streaming_autotune, streaming_buffer, learning_numerator,
-                                                 learning_denominator,
+                                                 streaming_autotune, streaming_buffer, anomaly_history_window,
+                                                 learning_numerator, learning_denominator,
                                                  learning_max_clusters, learning_samples)
             if not success:
                 return False, config
