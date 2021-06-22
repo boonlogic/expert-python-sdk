@@ -526,7 +526,7 @@ class Test4Cluster(object):
         assert_equal(response, 'nano instance is not configured')
 
         # get root cause before configured
-        success, response = self.nano.get_root_cause(id_list=[1,1], pattern_list=[[1,2,3]])
+        success, response = self.nano.get_root_cause(id_list=[1,1])
         assert_equal(success, False)
         assert_equal(response, '400: The clustering parameters have not been initialized')
 
