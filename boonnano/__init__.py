@@ -785,7 +785,7 @@ class NanoHandle:
 
         return simple_get(self, results_cmd)
 
-    def get_root_cause(self, id_list=None, pattern_list=None):
+    def get_root_cause(self, id_list=[], pattern_list=[]):
         """Get root cause
 
         Args:
@@ -800,37 +800,26 @@ class NanoHandle:
         Raises:
             BoonException: if Amber cloud gives non-200 response
         """
-        if id_list is None and pattern_list is None:
+
+        if len(id_list) != 0 and len(pattern_list) != 0:
             raise BoonException('Must specify either list of ID(s) or list of pattern(s).')
-
-        response = {'RootCauseFromID': [], 'RootCauseFromPattern': []}
-        if id_list is not None:
+        rc_cmd = self.url + 'rootCauseAnalysis/' + self.instance + '?api-tenant=' + self.api_tenant
+        if len(id_list) != 0:
+            # IDs
             id_list = [str(element) for element in id_list]
-            rc_cmd = self.url + 'rootCauseFromID/' + self.instance + '?api-tenant=' + self.api_tenant
-            rc_cmd = rc_cmd + '&clusterID=' + ",".join(id_list)
-
-            success, status = simple_get(self, rc_cmd)
-            if success:
-                response['RootCauseFromID'] = status
-            else:
-                return success, status
-
-        if pattern_list is not None:
-            if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided    
-                pattern_list = [pattern_list] 
+            rc_cmd = rc_cmd + '&clusterID=[' + ",".join(id_list) + ']'
+        elif len(pattern_list) != 0:
+            # patterns
+            if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided
+                pattern_list = [pattern_list]
             else:
                 for i, pattern in enumerate(pattern_list):
                     pattern_list[i] = ','.join([str(element) for element in pattern])
-            rc_cmd = self.url + 'rootCauseFromPattern/' + self.instance + '?api-tenant=' + self.api_tenant
-            rc_cmd = rc_cmd + '&pattern=' + '[[' + "],[".join(pattern_list) + ']]'
+            url_call = url_call + '&pattern=[[' + "],[".join(pattern_list) + ']]'
+        else:
+            raise BoonException('Must specify either cluster IDs or patterns to analyze')
 
-            success, status = simple_get(self, rc_cmd)
-            if success:
-                response['RootCauseFromPattern'] = status
-            else:
-                return success, status
-
-        return True, response
+        return simple_get(self, rc_cmd)
 
 
 def normalize_nano_data(data, numeric_format):
