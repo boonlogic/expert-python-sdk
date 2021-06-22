@@ -802,7 +802,7 @@ class NanoHandle:
         """
 
         if len(id_list) != 0 and len(pattern_list) != 0:
-            raise BoonException('Must specify either list of ID(s) or list of pattern(s).')
+            raise BoonException('Cannot specify both list of ID(s) and list of pattern(s).')
         rc_cmd = self.url + 'rootCauseAnalysis/' + self.instance + '?api-tenant=' + self.api_tenant
         if len(id_list) != 0:
             # IDs
@@ -815,7 +815,7 @@ class NanoHandle:
             else:
                 for i, pattern in enumerate(pattern_list):
                     pattern_list[i] = ','.join([str(element) for element in pattern])
-            url_call = url_call + '&pattern=[[' + "],[".join(pattern_list) + ']]'
+            rc_cmd = rc_cmd + '&pattern=[[' + "],[".join(pattern_list) + ']]'
         else:
             raise BoonException('Must specify either cluster IDs or patterns to analyze')
 
