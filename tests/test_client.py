@@ -252,9 +252,13 @@ class Test3Configure(object):
     def test_01_configure(self):
 
         # create a configuration with single-value min_val, max_val, and weight
-        success, config = self.nano.create_config(numeric_format='float32', feature_count=5, min_val=-10,
-                                                  max_val=15, weight=1, streaming_window=1,
-                                                  percent_variation=0.05, accuracy=0.99)
+        success, config = self.nano.create_config(numeric_format='float32', cluster_mode='streaming',
+                                                  feature_count=5, min_val=-10, max_val=15, weight=1,
+                                                  streaming_window=1, percent_variation=0.05, accuracy=0.99,
+                                                  autotune_pv=False, autotune_range=False, autotune_by_feature=False,
+                                                  autotune_max_clusters=2000, exclusions=[1],
+                                                  streaming_autotune=False, streaming_buffer=5000, anomaly_history_window=1000,
+                                                  learning_numerator=1, learning_denominator=1000, learning_max_clusters=2000, learning_samples=50000)
         assert_equal(success, True)
         assert_equal(config['numericFormat'], 'float32')
         assert_equal(config['accuracy'], 0.99)
@@ -522,7 +526,7 @@ class Test4Cluster(object):
         assert_equal(response, 'nano instance is not configured')
 
         # get root cause before configured
-        success, response = self.nano.get_root_cause(id_list=[1,1], pattern_list=[[1,2,3]])
+        success, response = self.nano.get_root_cause(id_list=[1,1])
         assert_equal(success, False)
         assert_equal(response, '400: The clustering parameters have not been initialized')
 

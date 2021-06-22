@@ -196,8 +196,8 @@ class NanoHandle:
                       weight=1, label=None,
                       percent_variation=0.05, streaming_window=1, accuracy=0.99,
                       autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000,
-                      exclusions=None, streaming_autotune=True, streaming_buffer=10000, learning_numerator=10,
-                      learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000):
+                      exclusions=None, streaming_autotune=True, streaming_buffer=10000, anomaly_history_window=10000,
+                      learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000):
         """Generate a configuration template for the given parameters
 
         A discrete configuration is specified as a list of min, max, weights, and labels
@@ -223,6 +223,7 @@ class NanoHandle:
             exclusions (list): features to exclude while autotuning
             streaming_autotune (bool): whether to autotune while in streaming mode
             streaming_buffer (int): number of samples to autotune on
+            anomaly_history_window (int): number of samples to use in AH calculation
             learning_numerator (int): max number of new clusters learned
             learning_denominator (int): number of samples over which the new clusters are learned
             learning_max_clusters (int): max number of clusters before turning off learning
@@ -291,6 +292,7 @@ class NanoHandle:
             config['streaming'] = {}
             config['streaming']['enableAutoTuning'] = streaming_autotune
             config['streaming']['samplesToBuffer'] = streaming_buffer
+            config['streaming']['anomalyHistoryWindow'] = anomaly_history_window
             config['streaming']['learningRateNumerator'] = learning_numerator
             config['streaming']['learningRateDenominator'] = learning_denominator
             config['streaming']['learningMaxClusters'] = learning_max_clusters
@@ -303,8 +305,8 @@ class NanoHandle:
                        percent_variation=.05, streaming_window=1, accuracy=.99,
                        autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000,
                        exclusions=None,
-                       streaming_autotune=True, streaming_buffer=10000, learning_numerator=10,
-                       learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000,
+                       streaming_autotune=True, streaming_buffer=10000, anomaly_history_window=10000,
+                       learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000,
                        config=None):
 
         """Returns the posted clustering configuration
@@ -327,6 +329,7 @@ class NanoHandle:
              exclusions (list): features to exclude while autotuning
              streaming_autotune (bool): whether to autotune while in streaming mode
              streaming_buffer (int): number of samples to autotune on
+             anomaly_history_window (int): number of samples to use for AH calculation
              learning_numerator (int): max number of new clusters learned
              learning_denominator (int): number of samples over which the new clusters are learned
              learning_max_clusters (int): max number of clusters before turning off learning
@@ -344,8 +347,8 @@ class NanoHandle:
                                                  label, percent_variation, streaming_window, accuracy,
                                                  autotune_pv, autotune_range, autotune_by_feature,
                                                  autotune_max_clusters, exclusions,
-                                                 streaming_autotune, streaming_buffer, learning_numerator,
-                                                 learning_denominator,
+                                                 streaming_autotune, streaming_buffer, anomaly_history_window,
+                                                 learning_numerator, learning_denominator,
                                                  learning_max_clusters, learning_samples)
             if not success:
                 return False, config
@@ -782,7 +785,7 @@ class NanoHandle:
 
         return simple_get(self, results_cmd)
 
-    def get_root_cause(self, id_list=None, pattern_list=None):
+    def get_root_cause(self, id_list=[], pattern_list=[]):
         """Get root cause
 
         Args:
@@ -797,37 +800,26 @@ class NanoHandle:
         Raises:
             BoonException: if Amber cloud gives non-200 response
         """
-        if id_list is None and pattern_list is None:
-            raise BoonException('Must specify either list of ID(s) or list of pattern(s).')
 
-        response = {'RootCauseFromID': [], 'RootCauseFromPattern': []}
-        if id_list is not None:
+        if len(id_list) != 0 and len(pattern_list) != 0:
+            raise BoonException('Cannot specify both list of ID(s) and list of pattern(s).')
+        rc_cmd = self.url + 'rootCauseAnalysis/' + self.instance + '?api-tenant=' + self.api_tenant
+        if len(id_list) != 0:
+            # IDs
             id_list = [str(element) for element in id_list]
-            rc_cmd = self.url + 'rootCauseFromID/' + self.instance + '?api-tenant=' + self.api_tenant
-            rc_cmd = rc_cmd + '&clusterID=' + ",".join(id_list)
-
-            success, status = simple_get(self, rc_cmd)
-            if success:
-                response['RootCauseFromID'] = status
-            else:
-                return success, status
-
-        if pattern_list is not None:
-            if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided    
-                pattern_list = [pattern_list] 
+            rc_cmd = rc_cmd + '&clusterID=[' + ",".join(id_list) + ']'
+        elif len(pattern_list) != 0:
+            # patterns
+            if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided
+                pattern_list = [pattern_list]
             else:
                 for i, pattern in enumerate(pattern_list):
                     pattern_list[i] = ','.join([str(element) for element in pattern])
-            rc_cmd = self.url + 'rootCauseFromPattern/' + self.instance + '?api-tenant=' + self.api_tenant
-            rc_cmd = rc_cmd + '&pattern=' + '[[' + "],[".join(pattern_list) + ']]'
+            rc_cmd = rc_cmd + '&pattern=[[' + "],[".join(pattern_list) + ']]'
+        else:
+            raise BoonException('Must specify either cluster IDs or patterns to analyze')
 
-            success, status = simple_get(self, rc_cmd)
-            if success:
-                response['RootCauseFromPattern'] = status
-            else:
-                return success, status
-
-        return True, response
+        return simple_get(self, rc_cmd)
 
 
 def normalize_nano_data(data, numeric_format):
