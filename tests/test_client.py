@@ -438,9 +438,9 @@ class Test4Cluster(object):
         # fetch additional nano status 'All'
         success, response = self.nano.get_nano_status(results='All')
         assert_equal(success, True)
-        assert_list_equal(list(response.keys()), ['PCA', 'clusterGrowth', 'clusterSizes', 'anomalyIndexes',
+        assert_list_equal(sorted(list(response.keys())), sorted(['PCA', 'clusterGrowth', 'clusterSizes', 'anomalyIndexes',
                                                   'frequencyIndexes', 'distanceIndexes', 'totalInferences',
-                                                  'numClusters'])
+                                                  'numClusters']))
 
         # fetch additional nano status 'numClusters'
         success, response = self.nano.get_nano_status(results='numClusters')
