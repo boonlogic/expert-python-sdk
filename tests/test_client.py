@@ -410,7 +410,7 @@ class Test4Cluster(object):
         # run the nano, ask for all results
         success, response = self.nano.run_nano(results='All')
         assert_equal(success, True)
-        assert_list_equal(list(response.keys()), ['ID', 'SI', 'RI', 'FI', 'DI'])
+        assert_list_equal(sorted(list(response.keys())), sorted(['ID', 'SI', 'RI', 'FI', 'DI']))
 
         # ask again for the the nano results
         success, response2 = self.nano.get_nano_results(results='All')
