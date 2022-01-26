@@ -225,9 +225,9 @@ class Test2Results(object):
     def test_01_get_version(self):
         success, response = self.nano.get_version()
         assert_equal(success, True)
-        assert_list_equal(list(response.keys()),
-                          ['release', 'api-version', 'nano-secure', 'builder', 'expert-api', 'expert-common',
-                           'swagger-ui'])
+        assert_list_equal(sorted(list(response.keys())),
+                          sorted(['release', 'api-version', 'nano-secure', 'builder', 'expert-api', 'expert-common',
+                           'swagger-ui']))
 
 
 class Test3Configure(object):
