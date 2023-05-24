@@ -2,11 +2,11 @@
     "default": {
         "api-key": "no-key",
         "api-tenant": "no-tenant",
-        "server": "http://localhost:5008"
+        "server": "http://localhost:6007"
     },
     "sample-license": {
         "api-key": "sample-key",
         "api-tenant": "sample-tenant",
-        "server": "http://samplehost:5007"
+        "server": "http://sample.host:5007"
     }
 }

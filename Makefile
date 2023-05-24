@@ -8,10 +8,19 @@ init:
 	echo "" && \
 	echo "virtual environment configured, use 'source local-env/bin/activate' to enable it"
 
+format-check: format
+	git diff --exit-code; if [ $$? -ne 0 ]; then echo "format-check failed"; exit 1; fi; \
+	echo "*** format-check passed"
+
+format:
+	@. local-env/bin/activate && \
+	pip install black && \
+	black boonnano
+
 test: local-env-check
-	@. local-env/bin/activate; \
-	cd tests ; \
-	coverage run --source=boonnano -m nose -verbosity=2 test_client.py && \
+	@. local-env/bin/activate && \
+	cd tests && \
+	coverage run --source=boonnano -m pytest -x -vv test_client.py && \
 	coverage html
 
 pypi:
