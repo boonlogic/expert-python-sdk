@@ -36,6 +36,6 @@ local-env-check:
 
 docs:
 	@. local-env/bin/activate; \
-	pdoc3 --force -o docs --html boonnano
+	pdoc3 --force -o docs --template-dir docs --html boonnano
 
 .PHONY: docs init test pypi local-env-check
