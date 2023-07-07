@@ -1,12 +1,14 @@
+![Logo](https://github.com/boonlogic/expert-python-sdk/blob/master/docs/BoonLogic.png?raw=true)
+
 # Python SDK Documentation
 This python package allows ease of access to calls to the BoonLogic Nano API.
 
 - __Website__: [boonlogic.com](https://boonlogic.com)
 - __Documentation__: [Boon Docs Main Page](https://docs.boonlogic.com)
-- __Clustering__: [Clustering with the expert-python-sdk](docs/Tutorial_The_General_Pipeline.md)
-- __Autotuning__: [Autotuning with the expert-python-sdk](docs/How_To_Autotune_Data.md)
-- __Results__: [Results after clustering](docs/How_To_Generate_Cluster_Results.md)
-- __SDK Functional Breakdown__: [expert-python-sdk classes and methods](docs/boonnano/index.html)
+- __Clustering__: [Clustering with the expert-python-sdk]({{ site.baseurl}}/docs/Tutorial_The_General_Pipeline.md)
+- __Autotuning__: [Autotuning with the expert-python-sdk]({{ site.baseurl}}/docs/How_To_Autotune_Data.md)
+- __Results__: [Results after clustering]({{ site.baseurl}}/docs/How_To_Generate_Cluster_Results.md)
+- __SDK Functional Breakdown__: [expert-python-sdk classes and methods]({{ site.baseurl}}/docs/boonnano/index.html)(docs/boonnano/index.html)
 
 ---------
 ## Installation

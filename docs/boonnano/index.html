@@ -3,885 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.5" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>boonnano API documentation</title>
 <meta name="description" content="" />
-<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
-<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
 </head>
 <body>
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>boonnano</code></h1>
+<h1 class="title">Package <code>boonnano</code></h1>
 </header>
 <section id="section-intro">
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">from urllib3 import ProxyManager
-from urllib3 import PoolManager
-from urllib3 import Timeout
-from functools import wraps
-import json
-import os
-import tarfile
-from .rest import simple_get
-from .rest import simple_delete
-from .rest import simple_post
-from .rest import multipart_post
-import numpy as np
-
-# urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-__all__ = [&#39;BoonException&#39;, &#39;NanoHandle&#39;]
-
-
-############################
-# BoonNano Python API v3.1 #
-############################
-
-
-class BoonException(Exception):
-    def __init__(self, message):
-        self.message = message
-
-
-class NanoHandle:
-
-    def __init__(self, license_id=&#39;default&#39;, license_file=&#34;~/.BoonLogic.license&#34;, timeout=120.0, verify=True, cert=None):
-        &#34;&#34;&#34;Primary handle for BoonNano Pod instances
-
-        The is the primary handle to manage a nano pod instance
-
-        Args:
-            license_id (str): license identifier label found within the .BoonLogic.license configuration file
-            license_file (str): path to .BoonLogic license file
-            timeout (float): read timeout for http requests
-            verify:  Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
-            cert (bool): if String, path to ssl client cert file (.pem). If Tuple, (‘cert’, ‘key’) pair.
-        
-
-        Environment:
-            BOON_LICENSE_FILE: sets license_file path
-            BOON_LICENSE_ID: sets license_id
-            BOON_API_KEY: overrides the api-key as found in .BoonLogic.license file
-            BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
-            BOON_SERVER: overrides the server as found in .BoonLogic.license file
-            PROXY_SERVER: overrides the proxy server as found in .BoonLogic.license file
-            BOON_SSL_CERT: path to ssl client cert file (.pem)
-            BOON_SSL_VERIFY: Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
-
-
-        Example:
-            ```python
-            try:
-                nano = bn.NanoHandle()
-            except bn.BoonException as be:
-                print(be)
-                sys.exit(1)
-            ```
-
-        &#34;&#34;&#34;
-        self.license_id = None
-        self.api_key = None
-        self.api_tenant = None
-        self.instance = &#39;&#39;
-        self.numeric_format = &#39;&#39;
-
-        env_license_file = os.environ.get(&#39;BOON_LICENSE_FILE&#39;, None)
-        env_license_id = os.environ.get(&#39;BOON_LICENSE_ID&#39;, None)
-        env_api_key = os.environ.get(&#39;BOON_API_KEY&#39;, None)
-        env_api_tenant = os.environ.get(&#39;BOON_API_TENANT&#39;, None)
-        env_server = os.environ.get(&#39;BOON_SERVER&#39;, None)
-        env_proxy_server = os.environ.get(&#39;PROXY_SERVER&#39;, None)
-        env_cert = os.environ.get(&#39;BOON_SSL_CERT&#39;, None)
-        env_verify = os.environ.get(&#39;BOON_SSL_VERIFY&#39;, None)
-
-        # certificates
-        self.cert = &#39;CERT_REQUIRED&#39; if env_cert else {None: &#39;CERT_NONE&#39;, True: &#39;CERT_REQUIRED&#39;}[cert]
-        if env_verify:
-            if env_verify.lower() == &#39;false&#39;:
-                self.verify = False
-            elif env_verify.lower() == &#39;true&#39;:
-                self.verify = True
-            else:
-                self.verify = env_verify
-        else:
-            self.verify = verify
-
-        # when license_id comes in as None, use &#39;default&#39;
-        if license_id is None:
-            license_id = &#39;default&#39;
-
-        license_file = env_license_file if env_license_file else license_file
-        self.license_id = env_license_id if env_license_id else license_id
-
-        license_path = os.path.expanduser(license_file)
-        if not os.path.exists(license_path):
-            raise BoonException(&#34;license file {} does not exist&#34;.format(license_path))
-        try:
-            with open(license_path, &#34;r&#34;) as json_file:
-                file_data = json.load(json_file)
-        except json.JSONDecodeError as e:
-            raise BoonException(
-                &#34;json formatting error in .BoonLogic.license file, {}, line: {}, col: {}&#34;.format(e.msg, e.lineno,
-                                                                                                     e.colno))       
-        try:
-            license_data = file_data[self.license_id]
-        except KeyError:
-            raise BoonException(&#34;license_id \&#34;{}\&#34; not found in license file&#34;.format(self.license_id))
-
-        try:
-            self.api_key = env_api_key if env_api_key else license_data[&#39;api-key&#39;]
-        except KeyError:
-            raise BoonException(&#34;\&#34;api-key\&#34; is missing from the specified license in license file&#34;)
-
-        try:
-            self.api_tenant = env_api_tenant if env_api_tenant else license_data[&#39;api-tenant&#39;]
-        except KeyError:
-            raise BoonException(&#34;\&#34;api-tenant\&#34; is missing from the specified license in license file&#34;)
-
-        try:
-            self.server = env_server if env_server else license_data[&#39;server&#39;]
-        except KeyError:
-            raise BoonException(&#34;\&#34;server\&#34; is missing from the specified license in license file&#34;)
-
-        self.proxy_server = env_proxy_server 
-        if not self.proxy_server and &#39;proxy-server&#39; in license_data.keys():
-            self.proxy_server = license_data[&#39;proxy-server&#39;]
-
-        # set up base url
-        self.url = self.server + &#39;/expert/v3/&#39;
-        if &#34;http&#34; not in self.server:
-            self.url = &#34;http://&#34; + self.url
-
-        # create pool manager
-        timeout_inst = Timeout(connect=30.0, read=timeout)
-        if self.proxy_server:
-            # proxy pool
-            self.http = ProxyManager(self.proxy_server, maxsize=10, timeout=timeout_inst, cert_reqs=self.cert)
-        else:
-            # non-proxy pool
-            self.http = PoolManager(timeout=timeout_inst, cert_reqs=self.cert)
-
-    def _is_configured(f):
-        @wraps(f)
-        def inner(*args, **kwargs):
-            if args[0].numeric_format not in [&#39;int16&#39;, &#39;uint16&#39;, &#39;float32&#39;]:
-                return False, &#34;nano instance is not configured&#34;
-            return f(*args, **kwargs)
-
-        return inner
-
-    def open_nano(self, instance_id):
-        &#34;&#34;&#34;Creates or attaches to a nano pod instance
-
-        Args:
-            instance_id (str): instance identifier to assign to new pod instance
-
-        Returns:
-            boolean: true if successful (instance is created or attached)
-
-            str: None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-        instance_cmd = self.url + &#39;nanoInstance/&#39; + instance_id + &#39;?api-tenant=&#39; + self.api_tenant
-
-        success, response = simple_post(self, instance_cmd)
-        if not success:
-            return False, response
-
-        self.instance = instance_id
-        return success, response
-
-    def close_nano(self):
-        &#34;&#34;&#34;Closes the pod instance
-
-        Returns:
-            result (boolean):  true if successful (nano pod instance was closed)
-            response (str): None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-        close_cmd = self.url + &#39;nanoInstance/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-        # delete instance
-        result, response = simple_delete(self, close_cmd)
-        if not result:
-            return result, response
-
-        self.http.clear()
-        return result, None
-
-    def create_config(self, feature_count, numeric_format, cluster_mode=&#39;batch&#39;, min_val=0, max_val=1,
-                      weight=1, label=None,
-                      percent_variation=0.05, streaming_window=1, accuracy=0.99,
-                      autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000,
-                      exclusions=None, streaming_autotune=True, streaming_buffer=10000, learning_numerator=10,
-                      learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000):
-        &#34;&#34;&#34;Generate a configuration template for the given parameters
-
-        A discrete configuration is specified as a list of min, max, weights, and labels
-
-        Args:
-            feature_count (int): number of features per vector
-            numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
-            cluster_mode (str): &#39;streaming&#39; or &#39;batch&#39; for expert run type
-            min_val: the value that should be considered the minimum value for this feature. This
-                can be set to a value larger than the actual min if you want to treat all value less
-                than that as the same (for instance, to keep a noise spike from having undue influence
-                in the clustering.  a single element list assigns all features with same min_val
-            max_val: corresponding maximum value, a single element list assigns all features with same max_val
-            weight: weight for this feature, a single element list assigns all features with same weight
-            label (list): list of labels to assign to features
-            percent_variation (float): amount of variation allowed within clusters
-            streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
-            accuracy (float): statistical accuracy of the clusters
-            autotune_pv (bool): whether to autotune the percent variation
-            autotune_range (bool): whether to autotune the min and max values
-            autotune_by_feature (bool): whether to have individually set min and max values for each feature
-            autotune_max_clusters (int): max number of clusters allowed
-            exclusions (list): features to exclude while autotuning
-            streaming_autotune (bool): whether to autotune while in streaming mode
-            streaming_buffer (int): number of samples to autotune on
-            learning_numerator (int): max number of new clusters learned
-            learning_denominator (int): number of samples over which the new clusters are learned
-            learning_max_clusters (int): max number of clusters before turning off learning
-            learning_samples (int): max number of samples before turning off learning
-
-
-        Returns:
-            result (boolean): true if successful (configuration was successfully created)
-            response (dict or str): configuration dictionary when result is true, error string when result is false
-
-        &#34;&#34;&#34;
-
-        if isinstance(min_val, int) or isinstance(min_val, float):
-            min_val = [min_val] * feature_count
-        if isinstance(max_val, int) or isinstance(max_val, float):
-            max_val = [max_val] * feature_count
-        if isinstance(weight, int):
-            weight = [weight] * feature_count
-
-        if exclusions is None:
-            exclusions = []
-
-        config = {}
-        config[&#39;clusterMode&#39;] = cluster_mode
-        config[&#39;numericFormat&#39;] = numeric_format
-        config[&#39;features&#39;] = []
-
-        if (isinstance(min_val, list) or isinstance(min_val, np.ndarray)) and (
-                isinstance(max_val, list) or isinstance(max_val, np.ndarray)) and (
-                isinstance(weight, list) or isinstance(weight, np.ndarray)):
-            if len(min_val) != len(max_val) or len(min_val) != len(weight):
-                return False, &#34;parameters must be lists of the same length&#34;
-
-            for min, max, w in zip(min_val, max_val, weight):
-                tempDict = {}
-                tempDict[&#39;minVal&#39;] = min
-                tempDict[&#39;maxVal&#39;] = max
-                tempDict[&#39;weight&#39;] = w
-                config[&#39;features&#39;].append(tempDict)
-        else:
-            return False, &#34;min_val, max_val and weight must be list or numpy array&#34;
-
-        if isinstance(label, list):
-            if len(label) != len(min_val):
-                return False, &#34;label must be the same length as other parameters&#34;
-            for i, l in enumerate(label):
-                config[&#39;features&#39;][i][&#39;label&#39;] = l
-        elif label:
-            return False, &#34;label must be list&#34;
-
-        config[&#39;percentVariation&#39;] = percent_variation
-        config[&#39;accuracy&#39;] = accuracy
-        config[&#39;streamingWindowSize&#39;] = streaming_window
-
-        config[&#39;autoTuning&#39;] = {}
-        config[&#39;autoTuning&#39;][&#39;autoTuneByFeature&#39;] = autotune_by_feature
-        config[&#39;autoTuning&#39;][&#39;autoTunePV&#39;] = autotune_pv
-        config[&#39;autoTuning&#39;][&#39;autoTuneRange&#39;] = autotune_range
-        config[&#39;autoTuning&#39;][&#39;maxClusters&#39;] = autotune_max_clusters
-        if isinstance(exclusions, list):
-            config[&#39;autoTuning&#39;][&#39;exclusions&#39;] = exclusions
-        elif exclusions:
-            return False, &#39;exclusions must be a list&#39;
-
-        if config[&#39;clusterMode&#39;] == &#39;streaming&#39;:
-            config[&#39;streaming&#39;] = {}
-            config[&#39;streaming&#39;][&#39;enableAutoTuning&#39;] = streaming_autotune
-            config[&#39;streaming&#39;][&#39;samplesToBuffer&#39;] = streaming_buffer
-            config[&#39;streaming&#39;][&#39;learningRateNumerator&#39;] = learning_numerator
-            config[&#39;streaming&#39;][&#39;learningRateDenominator&#39;] = learning_denominator
-            config[&#39;streaming&#39;][&#39;learningMaxClusters&#39;] = learning_max_clusters
-            config[&#39;streaming&#39;][&#39;learningMaxSamples&#39;] = learning_samples
-
-        return True, config
-
-    def configure_nano(self, feature_count=1, numeric_format=&#39;float32&#39;, cluster_mode=&#39;batch&#39;, min_val=0, max_val=1,
-                       weight=1, label=None,
-                       percent_variation=.05, streaming_window=1, accuracy=.99,
-                       autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000,
-                       exclusions=None,
-                       streaming_autotune=True, streaming_buffer=10000, learning_numerator=10,
-                       learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000,
-                       config=None):
-
-        &#34;&#34;&#34;Returns the posted clustering configuration
-
-         Args:
-             feature_count (int): number of features per vector
-             numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
-             cluster_mode (str): &#39;streaming&#39; or &#39;batch&#39; mode to run expert
-             min_val: list of minimum values per feature, if specified as a single value, use that on all features
-             max_val: list of maximum values per feature, if specified as a single value, use that on all features
-             weight: influence each column has on creating a new cluster
-             label (list): name of each feature (if applicable)
-             percent_variation (float): amount of variation within each cluster
-             streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
-             accuracy (float): statistical accuracy of the clusters
-             autotune_pv (bool): whether to autotune the percent variation
-             autotune_range (bool): whether to autotune the min and max values
-             autotune_by_feature (bool): whether to have individually set min and max values for each feature
-             autotune_max_clusters (int): max number of clusters allowed
-             exclusions (list): features to exclude while autotuning
-             streaming_autotune (bool): whether to autotune while in streaming mode
-             streaming_buffer (int): number of samples to autotune on
-             learning_numerator (int): max number of new clusters learned
-             learning_denominator (int): number of samples over which the new clusters are learned
-             learning_max_clusters (int): max number of clusters before turning off learning
-             learning_samples (int): max number of samples before turning off learning
-             config (dict): dictionary of configuration parameters
-
-         Returns:
-             result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
-             response (dict or str): configuration dictionary when result is true, error string when result is false
-
-         &#34;&#34;&#34;
-
-        if config is None:
-            success, config = self.create_config(feature_count, numeric_format, cluster_mode, min_val, max_val, weight,
-                                                 label, percent_variation, streaming_window, accuracy,
-                                                 autotune_pv, autotune_range, autotune_by_feature,
-                                                 autotune_max_clusters, exclusions,
-                                                 streaming_autotune, streaming_buffer, learning_numerator,
-                                                 learning_denominator,
-                                                 learning_max_clusters, learning_samples)
-            if not success:
-                return False, config
-        body = json.dumps(config)
-
-        config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        result, response = simple_post(self, config_cmd, body=body)
-        if result:
-            self.numeric_format = config[&#39;numericFormat&#39;]
-
-        return result, response
-
-    def nano_list(self):
-        &#34;&#34;&#34;Returns list of nano instances allocated for a pod
-
-        Returns:
-            result (boolean):  true if successful (list was returned)
-            response (str): json dictionary of pod instances when result=true, error string when result=false
-
-        &#34;&#34;&#34;
-
-        # build command
-        instance_cmd = self.url + &#39;nanoInstances&#39; + &#39;?api-tenant=&#39; + self.api_tenant
-
-        return simple_get(self, instance_cmd)
-
-    @_is_configured
-    def save_nano(self, filename):
-        &#34;&#34;&#34;serialize a nano pod instance and save to a local file
-
-        Args:
-            filename (str): path to local file where saved pod instance should be written
-
-        Returns:
-            result (boolean):  true if successful (pod instance was written)
-            response (str): None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-
-        # build command
-        snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-        # serialize nano
-        result, response = simple_get(self, snapshot_cmd)
-        if not result:
-            return result, response
-
-        # at this point, the call succeeded, saves the result to a local file
-        try:
-            with open(filename, &#39;wb&#39;) as fp:
-                fp.write(response)
-        except Exception as e:
-            return False, e.strerror
-
-        return True, None
-
-    def restore_nano(self, filename):
-        &#34;&#34;&#34;Restore a nano pod instance from local file
-
-        Args:
-            filename (str): path to local file containing saved pod instance
-
-        Returns:
-            result (boolean):  true if successful (nano pod instance was restored)
-            response (str): None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-
-        # verify that input file is a valid nano file (gzip&#39;d tar with Magic Number)
-        try:
-            with tarfile.open(filename, &#39;r:gz&#39;) as tp:
-                with tp.extractfile(&#39;/CommonState/MagicNumber&#39;) as magic_fp:
-                    magic_num = magic_fp.read()
-                    if magic_num != b&#39;\xda\xba&#39;:
-                        return False, &#39;file {} is not a Boon Logic nano-formatted file, bad magic number&#39;.format(
-                            filename)
-        except KeyError:
-            return False, &#39;file {} is not a Boon Logic nano-formatted file&#39;.format(filename)
-        except Exception as e:
-            return False, &#39;corrupt file {}&#39;.format(filename)
-
-        with open(filename, &#39;rb&#39;) as fp:
-            nano = fp.read()
-
-        # build command
-        snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-        fields = {&#39;snapshot&#39;: (filename, nano)}
-
-        result, response = multipart_post(self, snapshot_cmd, fields=fields)
-
-        if not result:
-            return result, response
-
-        self.numeric_format = response[&#39;numericFormat&#39;]
-
-        return True, response
-
-    @_is_configured
-    def autotune_config(self):
-        &#34;&#34;&#34;Autotunes the percent variation, min and max for each feature
-
-        Returns:
-            result (boolean): true if successful (autotuning was completed)
-            response (dict or str): configuration dictionary when result is true, error string when result is false
-
-        &#34;&#34;&#34;
-
-        # build command
-        config_cmd = self.url + &#39;autoTune/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-        # autotune parameters
-        return simple_post(self, config_cmd)
-
-    @_is_configured
-    def get_config(self):
-        &#34;&#34;&#34;Gets the configuration for this nano pod instance
-
-        Returns:
-            result (boolean): true if successful (configuration was found)
-            response (dict or str): configuration dictionary when result is true, error string when result is false
-
-        &#34;&#34;&#34;
-        config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        return simple_get(self, config_cmd)
-
-    @_is_configured
-    def load_file(self, file, file_type, gzip=False, append_data=False):
-        &#34;&#34;&#34;Load nano data from a file
-
-        Args:
-            file (str): local path to data file
-            file_type (str): file type specifier, must be either &#39;cvs&#39; or &#39;raw&#39;
-            gzip (boolean): true if file is gzip&#39;d, false if not gzip&#39;d
-            append_data (boolean): true if data should be appended to previous data, false if existing
-                data should be truncated
-
-        Returns:
-            result (boolean): true if successful (file was successful loaded into nano pod instance)
-            response (str): None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-
-        # load the data file
-        try:
-            with open(file, &#39;rb&#39;) as fp:
-                file_data = fp.read()
-        except FileNotFoundError as e:
-            return False, e.strerror
-        except Exception as e:
-            return False, e
-
-        # verify file_type is set correctly
-        if file_type not in [&#39;csv&#39;, &#39;csv-c&#39;, &#39;raw&#39;, &#39;raw-n&#39;]:
-            return False, &#39;file_type must be &#34;csv&#34;, &#34;csv-c&#34;, &#34;raw&#34; or &#34;raw-n&#34;&#39;
-
-        file_name = os.path.basename(file)
-
-        fields = {&#39;data&#39;: (file_name, file_data)}
-
-        # build command
-        dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        dataset_cmd += &#39;&amp;fileType=&#39; + file_type
-        dataset_cmd += &#39;&amp;gzip=&#39; + str(gzip).lower()
-        dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
-
-        return multipart_post(self, dataset_cmd, fields=fields)
-
-    @_is_configured
-    def load_data(self, data, append_data=False):
-        &#34;&#34;&#34;Load nano data from an existing numpy array or simple python list
-
-        Args:
-            data (np.ndarray or list): numpy array or list of data values
-            append_data (boolean): true if data should be appended to previous data, false if existing
-                data should be truncated
-
-        Returns:
-            result (boolean): true if successful (data was successful loaded into nano pod instance)
-            response (str): None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-        data = normalize_nano_data(data, self.numeric_format)
-        file_name = &#39;dummy_filename.bin&#39;
-        file_type = &#39;raw&#39;
-
-        fields = {&#39;data&#39;: (file_name, data)}
-
-        # build command
-        dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        dataset_cmd += &#39;&amp;fileType=&#39; + file_type
-        dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
-
-        return multipart_post(self, dataset_cmd, fields=fields)
-
-    def set_learning_status(self, status):
-        &#34;&#34;&#34;returns list of nano instances allocated for a pod
-
-        Args:
-            status (boolean): true or false of whether to learning is on or off
-
-        Returns:
-            result (boolean):  true if successful (list was returned)
-            response (str): json dictionary of pod instances when result=true, error string when result=false
-
-        &#34;&#34;&#34;
-        if status not in [True, False]:
-            return False, &#39;status must be a boolean&#39;
-        # build command
-        learning_cmd = self.url + &#39;learning/&#39; + self.instance + &#39;?enable=&#39; + str(
-            status).lower() + &#39;&amp;api-tenant=&#39; + self.api_tenant
-
-        return simple_post(self, learning_cmd)
-
-    def set_root_cause_status(self, status):
-        &#34;&#34;&#34;configures whether or not to save new clusters coming in for root cause analysis
-
-        Args:
-            status (boolean): true or false of whether root cause is on or off
-
-        Returns:
-            result (boolean):  true if successful (list was returned)
-            response (str): status of root cause
-
-        &#34;&#34;&#34;
-        if status not in [True, False]:
-            return False, &#39;status must be a boolean&#39;
-        # build command
-        learning_cmd = self.url + &#39;rootCause/&#39; + self.instance + &#39;?enable=&#39; + str(
-            status).lower() + &#39;&amp;api-tenant=&#39; + self.api_tenant
-
-        return simple_post(self, learning_cmd)
-
-    def run_nano(self, results=None):
-        &#34;&#34;&#34;Clusters the data in the nano pod buffer and returns the specified results
-
-        Args:
-            results (str): comma separated list of result specifiers
-
-                ID = cluster ID
-
-                SI = smoothed anomaly index
-
-                RI = raw anomaly index
-
-                FI = frequency index
-
-                DI = distance index
-
-                All = ID,SI,RI,FI,DI
-
-        Returns:
-            result (boolean): true if successful (nano was successfully run)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-
-        results_str = &#39;&#39;
-        if str(results) == &#39;All&#39;:
-            results_str = &#39;ID,SI,RI,FI,DI&#39;
-        elif results:
-            for result in results.split(&#39;,&#39;):
-                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
-                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-            results_str = results
-
-        # build command
-        nano_cmd = self.url + &#39;nanoRun/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        if results:
-            nano_cmd += &#39;&amp;results=&#39; + results_str
-
-        return simple_post(self, nano_cmd)
-
-    @_is_configured
-    def run_streaming_nano(self, data, results=None):
-        &#34;&#34;&#34;Load streaming data into self-autotuning nano pod instance, run the nano and return results
-
-        Args:
-            data (np.ndarray or list): numpy array or list of data values
-            results (str): comma separated list of result specifiers
-
-                ID = cluster ID
-
-                SI = smoothed anomaly index
-
-                RI = raw anomaly index
-
-                FI = frequency index
-
-                DI = distance index
-
-                All = ID,SI,RI,FI,DI
-
-        Returns:
-            result (boolean): true if successful (data was successful streamed to nano pod instance)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-        data = normalize_nano_data(data, self.numeric_format)
-        file_name = &#39;dummy_filename.bin&#39;
-        file_type = &#39;raw&#39;
-
-        fields = {&#39;data&#39;: (file_name, data)}
-
-        results_str = &#39;&#39;
-        if str(results) == &#39;All&#39;:
-            results_str = &#39;ID,SI,RI,FI,DI&#39;
-        elif results:
-            for result in results.split(&#39;,&#39;):
-                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
-                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-            results_str = results
-
-        # build command
-        streaming_cmd = self.url + &#39;nanoRunStreaming/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        streaming_cmd += &#39;&amp;fileType=&#39; + file_type
-        if results:
-            streaming_cmd += &#39;&amp;results=&#39; + results_str
-
-        return multipart_post(self, streaming_cmd, fields=fields)
-
-    def get_version(self):
-        &#34;&#34;&#34;Version information for this nano pod
-
-        Returns:
-            result (boolean): true if successful (version information was retrieved)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-
-        # build command (minus the v3 portion)
-        version_cmd = self.url[:-3] + &#39;version&#39; + &#39;?api-tenant=&#39; + self.api_tenant
-        return simple_get(self, version_cmd)
-
-    @_is_configured
-    def get_buffer_status(self):
-        &#34;&#34;&#34;Results related to the bytes processed/in the buffer
-
-        Returns:
-            result (boolean): true if successful (nano was successfully run)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-        status_cmd = self.url + &#39;bufferStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        return simple_get(self, status_cmd)
-
-    @_is_configured
-    def get_nano_results(self, results=&#39;All&#39;):
-        &#34;&#34;&#34;Results per pattern
-
-        Args:
-            results (str): comma separated list of results
-
-                ID = cluster ID
-
-                SI = smoothed anomaly index
-
-                RI = raw anomaly index
-
-                FI = frequency index
-
-                DI = distance index
-
-                All = ID,SI,RI,FI,DI
-
-        Returns:
-            result (boolean): true if successful (nano was successfully run)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-        # build results command
-        if str(results) == &#39;All&#39;:
-            results_str = &#39;ID,SI,RI,FI,DI&#39;
-        else:
-            for result in results.split(&#39;,&#39;):
-                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
-                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-            results_str = results
-
-        # build command
-        results_cmd = self.url + &#39;nanoResults/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        results_cmd += &#39;&amp;results=&#39; + results_str
-
-        return simple_get(self, results_cmd)
-
-    @_is_configured
-    def get_nano_status(self, results=&#39;All&#39;):
-        &#34;&#34;&#34;Results in relation to each cluster/overall stats
-
-        Args:
-            results (str): comma separated list of results
-
-                PCA = principal components (includes 0 cluster)
-
-                clusterGrowth = indexes of each increase in cluster (includes 0 cluster)
-
-                clusterSizes = number of patterns in each cluster (includes 0 cluster)
-
-                anomalyIndexes = anomaly index (includes 0 cluster)
-
-                frequencyIndexes = frequency index (includes 0 cluster)
-
-                distanceIndexes = distance index (includes 0 cluster)
-
-                totalInferences = total number of patterns clustered (overall)
-
-                averageInferenceTime = time in milliseconds to cluster per
-                    pattern (not available if uploading from serialized nano) (overall)
-
-                numClusters = total number of clusters (includes 0 cluster) (overall)
-
-                All = PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,numClusters
-
-        Returns:
-            result (boolean): true if successful (nano was successfully run)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-
-        # build results command
-        if str(results) == &#39;All&#39;:
-            results_str = &#39;PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,&#39; \
-                          &#39;distanceIndexes,totalInferences,numClusters&#39;
-        else:
-            for result in results.split(&#39;,&#39;):
-                if result not in [&#39;PCA&#39;, &#39;clusterGrowth&#39;, &#39;clusterSizes&#39;, &#39;anomalyIndexes&#39;, &#39;frequencyIndexes&#39;,
-                                  &#39;distanceIndexes&#39;, &#39;totalInferences&#39;, &#39;numClusters&#39;, &#39;averageInferenceTime&#39;]:
-                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-            results_str = results
-
-        # build command
-        results_cmd = self.url + &#39;nanoStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        results_cmd = results_cmd + &#39;&amp;results=&#39; + results_str
-
-        return simple_get(self, results_cmd)
-
-    def get_root_cause(self, id_list=None, pattern_list=None):
-        &#34;&#34;&#34;Get root cause
-
-        Args:
-            id_list (list): list of IDs to return the root cause for
-            pattern_list (list): list of pattern vectors to calculate the root cause against the model
-
-        Returns:
-            A list containing the root cause for each pattern/id provided for a sensor:
-
-                [float]
-
-        Raises:
-            BoonException: if Amber cloud gives non-200 response
-        &#34;&#34;&#34;
-        if id_list is None and pattern_list is None:
-            raise BoonException(&#39;Must specify either list of ID(s) or list of pattern(s).&#39;)
-
-        response = {&#39;RootCauseFromID&#39;: [], &#39;RootCauseFromPattern&#39;: []}
-        if id_list is not None:
-            id_list = [str(element) for element in id_list]
-            rc_cmd = self.url + &#39;rootCauseFromID/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-            rc_cmd = rc_cmd + &#39;&amp;clusterID=&#39; + &#34;,&#34;.join(id_list)
-
-            success, status = simple_get(self, rc_cmd)
-            if success:
-                response[&#39;RootCauseFromID&#39;] = status
-            else:
-                return success, status
-
-        if pattern_list is not None:
-            if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided    
-                pattern_list = [pattern_list] 
-            else:
-                for i, pattern in enumerate(pattern_list):
-                    pattern_list[i] = &#39;,&#39;.join([str(element) for element in pattern])
-            rc_cmd = self.url + &#39;rootCauseFromPattern/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-            rc_cmd = rc_cmd + &#39;&amp;pattern=&#39; + &#39;[[&#39; + &#34;],[&#34;.join(pattern_list) + &#39;]]&#39;
-
-            success, status = simple_get(self, rc_cmd)
-            if success:
-                response[&#39;RootCauseFromPattern&#39;] = status
-            else:
-                return success, status
-
-        return True, response
-
-
-def normalize_nano_data(data, numeric_format):
-    # Whatever type data comes in as, cast it to numpy array
-    data = np.asarray(data)
-
-    # Cast numpy array to correct numeric type for serialization
-    if numeric_format == &#39;int16&#39;:
-        data = data.astype(np.int16)
-    elif numeric_format == &#39;float32&#39;:
-        data = data.astype(np.float32)
-    elif numeric_format == &#39;uint16&#39;:
-        data = data.astype(np.uint16)
-
-    # Serialize to binary blob
-    data = data.tostring()
-
-    return data</code></pre>
-</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
-<dl>
-<dt><code class="name"><a title="boonnano.rest" href="rest.html">boonnano.rest</a></code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-</dl>
 </section>
 <section>
 </section>
@@ -892,30 +34,22 @@ def normalize_nano_data(data, numeric_format):
 <dl>
 <dt id="boonnano.BoonException"><code class="flex name class">
 <span>class <span class="ident">BoonException</span></span>
-<span>(</span><span>message)</span>
+<span>(</span><span>code=None, message=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Common base class for all non-exit exceptions.</p></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class BoonException(Exception):
-    def __init__(self, message):
-        self.message = message</code></pre>
-</details>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>builtins.Exception</li>
 <li>builtins.BaseException</li>
 </ul>
 </dd>
-<dt id="boonnano.NanoHandle"><code class="flex name class">
-<span>class <span class="ident">NanoHandle</span></span>
+<dt id="boonnano.ExpertClient"><code class="flex name class">
+<span>class <span class="ident">ExpertClient</span></span>
 <span>(</span><span>license_id='default', license_file='~/.BoonLogic.license', timeout=120.0, verify=True, cert=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Primary handle for BoonNano Pod instances</p>
+<div class="desc"><p>Primary handle for BoonNano Pod instances</p>
 <p>The is the primary handle to manage a nano pod instance</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -931,915 +65,54 @@ def normalize_nano_data(data, numeric_format):
 <dd>if String, path to ssl client cert file (.pem). If Tuple, (‘cert’, ‘key’) pair.</dd>
 </dl>
 <h2 id="environment">Environment</h2>
-<dl>
-<dt><strong><code>BOON_LICENSE_FILE</code></strong></dt>
-<dd>sets license_file path</dd>
-<dt><strong><code>BOON_LICENSE_ID</code></strong></dt>
-<dd>sets license_id</dd>
-<dt><strong><code>BOON_API_KEY</code></strong></dt>
-<dd>overrides the api-key as found in .BoonLogic.license file</dd>
-<dt><strong><code>BOON_API_TENANT</code></strong></dt>
-<dd>overrides the api-tenant as found in .BoonLogic.license file</dd>
-<dt><strong><code>BOON_SERVER</code></strong></dt>
-<dd>overrides the server as found in .BoonLogic.license file</dd>
-<dt><strong><code>PROXY_SERVER</code></strong></dt>
-<dd>overrides the proxy server as found in .BoonLogic.license file</dd>
-<dt><strong><code>BOON_SSL_CERT</code></strong></dt>
-<dd>path to ssl client cert file (.pem)</dd>
-<dt><strong><code>BOON_SSL_VERIFY</code></strong></dt>
-<dd>Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use</dd>
-</dl>
+<p>BOON_LICENSE_FILE: sets license_file path
+BOON_LICENSE_ID: sets license_id
+BOON_API_KEY: overrides the api-key as found in .BoonLogic.license file
+BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
+BOON_SERVER: overrides the server as found in .BoonLogic.license file
+PROXY_SERVER: overrides the proxy server as found in .BoonLogic.license file
+BOON_SSL_CERT: path to ssl client cert file (.pem)
+BOON_SSL_VERIFY: Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use</p>
 <h2 id="example">Example</h2>
 <pre><code class="language-python">try:
-    nano = bn.NanoHandle()
+    nano = bn.ExpertClient()
 except bn.BoonException as be:
     print(be)
     sys.exit(1)
-</code></pre></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class NanoHandle:
-
-    def __init__(self, license_id=&#39;default&#39;, license_file=&#34;~/.BoonLogic.license&#34;, timeout=120.0, verify=True, cert=None):
-        &#34;&#34;&#34;Primary handle for BoonNano Pod instances
-
-        The is the primary handle to manage a nano pod instance
-
-        Args:
-            license_id (str): license identifier label found within the .BoonLogic.license configuration file
-            license_file (str): path to .BoonLogic license file
-            timeout (float): read timeout for http requests
-            verify:  Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
-            cert (bool): if String, path to ssl client cert file (.pem). If Tuple, (‘cert’, ‘key’) pair.
-        
-
-        Environment:
-            BOON_LICENSE_FILE: sets license_file path
-            BOON_LICENSE_ID: sets license_id
-            BOON_API_KEY: overrides the api-key as found in .BoonLogic.license file
-            BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
-            BOON_SERVER: overrides the server as found in .BoonLogic.license file
-            PROXY_SERVER: overrides the proxy server as found in .BoonLogic.license file
-            BOON_SSL_CERT: path to ssl client cert file (.pem)
-            BOON_SSL_VERIFY: Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
-
-
-        Example:
-            ```python
-            try:
-                nano = bn.NanoHandle()
-            except bn.BoonException as be:
-                print(be)
-                sys.exit(1)
-            ```
-
-        &#34;&#34;&#34;
-        self.license_id = None
-        self.api_key = None
-        self.api_tenant = None
-        self.instance = &#39;&#39;
-        self.numeric_format = &#39;&#39;
-
-        env_license_file = os.environ.get(&#39;BOON_LICENSE_FILE&#39;, None)
-        env_license_id = os.environ.get(&#39;BOON_LICENSE_ID&#39;, None)
-        env_api_key = os.environ.get(&#39;BOON_API_KEY&#39;, None)
-        env_api_tenant = os.environ.get(&#39;BOON_API_TENANT&#39;, None)
-        env_server = os.environ.get(&#39;BOON_SERVER&#39;, None)
-        env_proxy_server = os.environ.get(&#39;PROXY_SERVER&#39;, None)
-        env_cert = os.environ.get(&#39;BOON_SSL_CERT&#39;, None)
-        env_verify = os.environ.get(&#39;BOON_SSL_VERIFY&#39;, None)
-
-        # certificates
-        self.cert = &#39;CERT_REQUIRED&#39; if env_cert else {None: &#39;CERT_NONE&#39;, True: &#39;CERT_REQUIRED&#39;}[cert]
-        if env_verify:
-            if env_verify.lower() == &#39;false&#39;:
-                self.verify = False
-            elif env_verify.lower() == &#39;true&#39;:
-                self.verify = True
-            else:
-                self.verify = env_verify
-        else:
-            self.verify = verify
-
-        # when license_id comes in as None, use &#39;default&#39;
-        if license_id is None:
-            license_id = &#39;default&#39;
-
-        license_file = env_license_file if env_license_file else license_file
-        self.license_id = env_license_id if env_license_id else license_id
-
-        license_path = os.path.expanduser(license_file)
-        if not os.path.exists(license_path):
-            raise BoonException(&#34;license file {} does not exist&#34;.format(license_path))
-        try:
-            with open(license_path, &#34;r&#34;) as json_file:
-                file_data = json.load(json_file)
-        except json.JSONDecodeError as e:
-            raise BoonException(
-                &#34;json formatting error in .BoonLogic.license file, {}, line: {}, col: {}&#34;.format(e.msg, e.lineno,
-                                                                                                     e.colno))       
-        try:
-            license_data = file_data[self.license_id]
-        except KeyError:
-            raise BoonException(&#34;license_id \&#34;{}\&#34; not found in license file&#34;.format(self.license_id))
-
-        try:
-            self.api_key = env_api_key if env_api_key else license_data[&#39;api-key&#39;]
-        except KeyError:
-            raise BoonException(&#34;\&#34;api-key\&#34; is missing from the specified license in license file&#34;)
-
-        try:
-            self.api_tenant = env_api_tenant if env_api_tenant else license_data[&#39;api-tenant&#39;]
-        except KeyError:
-            raise BoonException(&#34;\&#34;api-tenant\&#34; is missing from the specified license in license file&#34;)
-
-        try:
-            self.server = env_server if env_server else license_data[&#39;server&#39;]
-        except KeyError:
-            raise BoonException(&#34;\&#34;server\&#34; is missing from the specified license in license file&#34;)
-
-        self.proxy_server = env_proxy_server 
-        if not self.proxy_server and &#39;proxy-server&#39; in license_data.keys():
-            self.proxy_server = license_data[&#39;proxy-server&#39;]
-
-        # set up base url
-        self.url = self.server + &#39;/expert/v3/&#39;
-        if &#34;http&#34; not in self.server:
-            self.url = &#34;http://&#34; + self.url
-
-        # create pool manager
-        timeout_inst = Timeout(connect=30.0, read=timeout)
-        if self.proxy_server:
-            # proxy pool
-            self.http = ProxyManager(self.proxy_server, maxsize=10, timeout=timeout_inst, cert_reqs=self.cert)
-        else:
-            # non-proxy pool
-            self.http = PoolManager(timeout=timeout_inst, cert_reqs=self.cert)
-
-    def _is_configured(f):
-        @wraps(f)
-        def inner(*args, **kwargs):
-            if args[0].numeric_format not in [&#39;int16&#39;, &#39;uint16&#39;, &#39;float32&#39;]:
-                return False, &#34;nano instance is not configured&#34;
-            return f(*args, **kwargs)
-
-        return inner
-
-    def open_nano(self, instance_id):
-        &#34;&#34;&#34;Creates or attaches to a nano pod instance
-
-        Args:
-            instance_id (str): instance identifier to assign to new pod instance
-
-        Returns:
-            boolean: true if successful (instance is created or attached)
-
-            str: None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-        instance_cmd = self.url + &#39;nanoInstance/&#39; + instance_id + &#39;?api-tenant=&#39; + self.api_tenant
-
-        success, response = simple_post(self, instance_cmd)
-        if not success:
-            return False, response
-
-        self.instance = instance_id
-        return success, response
-
-    def close_nano(self):
-        &#34;&#34;&#34;Closes the pod instance
-
-        Returns:
-            result (boolean):  true if successful (nano pod instance was closed)
-            response (str): None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-        close_cmd = self.url + &#39;nanoInstance/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-        # delete instance
-        result, response = simple_delete(self, close_cmd)
-        if not result:
-            return result, response
-
-        self.http.clear()
-        return result, None
-
-    def create_config(self, feature_count, numeric_format, cluster_mode=&#39;batch&#39;, min_val=0, max_val=1,
-                      weight=1, label=None,
-                      percent_variation=0.05, streaming_window=1, accuracy=0.99,
-                      autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000,
-                      exclusions=None, streaming_autotune=True, streaming_buffer=10000, learning_numerator=10,
-                      learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000):
-        &#34;&#34;&#34;Generate a configuration template for the given parameters
-
-        A discrete configuration is specified as a list of min, max, weights, and labels
-
-        Args:
-            feature_count (int): number of features per vector
-            numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
-            cluster_mode (str): &#39;streaming&#39; or &#39;batch&#39; for expert run type
-            min_val: the value that should be considered the minimum value for this feature. This
-                can be set to a value larger than the actual min if you want to treat all value less
-                than that as the same (for instance, to keep a noise spike from having undue influence
-                in the clustering.  a single element list assigns all features with same min_val
-            max_val: corresponding maximum value, a single element list assigns all features with same max_val
-            weight: weight for this feature, a single element list assigns all features with same weight
-            label (list): list of labels to assign to features
-            percent_variation (float): amount of variation allowed within clusters
-            streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
-            accuracy (float): statistical accuracy of the clusters
-            autotune_pv (bool): whether to autotune the percent variation
-            autotune_range (bool): whether to autotune the min and max values
-            autotune_by_feature (bool): whether to have individually set min and max values for each feature
-            autotune_max_clusters (int): max number of clusters allowed
-            exclusions (list): features to exclude while autotuning
-            streaming_autotune (bool): whether to autotune while in streaming mode
-            streaming_buffer (int): number of samples to autotune on
-            learning_numerator (int): max number of new clusters learned
-            learning_denominator (int): number of samples over which the new clusters are learned
-            learning_max_clusters (int): max number of clusters before turning off learning
-            learning_samples (int): max number of samples before turning off learning
-
-
-        Returns:
-            result (boolean): true if successful (configuration was successfully created)
-            response (dict or str): configuration dictionary when result is true, error string when result is false
-
-        &#34;&#34;&#34;
-
-        if isinstance(min_val, int) or isinstance(min_val, float):
-            min_val = [min_val] * feature_count
-        if isinstance(max_val, int) or isinstance(max_val, float):
-            max_val = [max_val] * feature_count
-        if isinstance(weight, int):
-            weight = [weight] * feature_count
-
-        if exclusions is None:
-            exclusions = []
-
-        config = {}
-        config[&#39;clusterMode&#39;] = cluster_mode
-        config[&#39;numericFormat&#39;] = numeric_format
-        config[&#39;features&#39;] = []
-
-        if (isinstance(min_val, list) or isinstance(min_val, np.ndarray)) and (
-                isinstance(max_val, list) or isinstance(max_val, np.ndarray)) and (
-                isinstance(weight, list) or isinstance(weight, np.ndarray)):
-            if len(min_val) != len(max_val) or len(min_val) != len(weight):
-                return False, &#34;parameters must be lists of the same length&#34;
-
-            for min, max, w in zip(min_val, max_val, weight):
-                tempDict = {}
-                tempDict[&#39;minVal&#39;] = min
-                tempDict[&#39;maxVal&#39;] = max
-                tempDict[&#39;weight&#39;] = w
-                config[&#39;features&#39;].append(tempDict)
-        else:
-            return False, &#34;min_val, max_val and weight must be list or numpy array&#34;
-
-        if isinstance(label, list):
-            if len(label) != len(min_val):
-                return False, &#34;label must be the same length as other parameters&#34;
-            for i, l in enumerate(label):
-                config[&#39;features&#39;][i][&#39;label&#39;] = l
-        elif label:
-            return False, &#34;label must be list&#34;
-
-        config[&#39;percentVariation&#39;] = percent_variation
-        config[&#39;accuracy&#39;] = accuracy
-        config[&#39;streamingWindowSize&#39;] = streaming_window
-
-        config[&#39;autoTuning&#39;] = {}
-        config[&#39;autoTuning&#39;][&#39;autoTuneByFeature&#39;] = autotune_by_feature
-        config[&#39;autoTuning&#39;][&#39;autoTunePV&#39;] = autotune_pv
-        config[&#39;autoTuning&#39;][&#39;autoTuneRange&#39;] = autotune_range
-        config[&#39;autoTuning&#39;][&#39;maxClusters&#39;] = autotune_max_clusters
-        if isinstance(exclusions, list):
-            config[&#39;autoTuning&#39;][&#39;exclusions&#39;] = exclusions
-        elif exclusions:
-            return False, &#39;exclusions must be a list&#39;
-
-        if config[&#39;clusterMode&#39;] == &#39;streaming&#39;:
-            config[&#39;streaming&#39;] = {}
-            config[&#39;streaming&#39;][&#39;enableAutoTuning&#39;] = streaming_autotune
-            config[&#39;streaming&#39;][&#39;samplesToBuffer&#39;] = streaming_buffer
-            config[&#39;streaming&#39;][&#39;learningRateNumerator&#39;] = learning_numerator
-            config[&#39;streaming&#39;][&#39;learningRateDenominator&#39;] = learning_denominator
-            config[&#39;streaming&#39;][&#39;learningMaxClusters&#39;] = learning_max_clusters
-            config[&#39;streaming&#39;][&#39;learningMaxSamples&#39;] = learning_samples
-
-        return True, config
-
-    def configure_nano(self, feature_count=1, numeric_format=&#39;float32&#39;, cluster_mode=&#39;batch&#39;, min_val=0, max_val=1,
-                       weight=1, label=None,
-                       percent_variation=.05, streaming_window=1, accuracy=.99,
-                       autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000,
-                       exclusions=None,
-                       streaming_autotune=True, streaming_buffer=10000, learning_numerator=10,
-                       learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000,
-                       config=None):
-
-        &#34;&#34;&#34;Returns the posted clustering configuration
-
-         Args:
-             feature_count (int): number of features per vector
-             numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
-             cluster_mode (str): &#39;streaming&#39; or &#39;batch&#39; mode to run expert
-             min_val: list of minimum values per feature, if specified as a single value, use that on all features
-             max_val: list of maximum values per feature, if specified as a single value, use that on all features
-             weight: influence each column has on creating a new cluster
-             label (list): name of each feature (if applicable)
-             percent_variation (float): amount of variation within each cluster
-             streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
-             accuracy (float): statistical accuracy of the clusters
-             autotune_pv (bool): whether to autotune the percent variation
-             autotune_range (bool): whether to autotune the min and max values
-             autotune_by_feature (bool): whether to have individually set min and max values for each feature
-             autotune_max_clusters (int): max number of clusters allowed
-             exclusions (list): features to exclude while autotuning
-             streaming_autotune (bool): whether to autotune while in streaming mode
-             streaming_buffer (int): number of samples to autotune on
-             learning_numerator (int): max number of new clusters learned
-             learning_denominator (int): number of samples over which the new clusters are learned
-             learning_max_clusters (int): max number of clusters before turning off learning
-             learning_samples (int): max number of samples before turning off learning
-             config (dict): dictionary of configuration parameters
-
-         Returns:
-             result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
-             response (dict or str): configuration dictionary when result is true, error string when result is false
-
-         &#34;&#34;&#34;
-
-        if config is None:
-            success, config = self.create_config(feature_count, numeric_format, cluster_mode, min_val, max_val, weight,
-                                                 label, percent_variation, streaming_window, accuracy,
-                                                 autotune_pv, autotune_range, autotune_by_feature,
-                                                 autotune_max_clusters, exclusions,
-                                                 streaming_autotune, streaming_buffer, learning_numerator,
-                                                 learning_denominator,
-                                                 learning_max_clusters, learning_samples)
-            if not success:
-                return False, config
-        body = json.dumps(config)
-
-        config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        result, response = simple_post(self, config_cmd, body=body)
-        if result:
-            self.numeric_format = config[&#39;numericFormat&#39;]
-
-        return result, response
-
-    def nano_list(self):
-        &#34;&#34;&#34;Returns list of nano instances allocated for a pod
-
-        Returns:
-            result (boolean):  true if successful (list was returned)
-            response (str): json dictionary of pod instances when result=true, error string when result=false
-
-        &#34;&#34;&#34;
-
-        # build command
-        instance_cmd = self.url + &#39;nanoInstances&#39; + &#39;?api-tenant=&#39; + self.api_tenant
-
-        return simple_get(self, instance_cmd)
-
-    @_is_configured
-    def save_nano(self, filename):
-        &#34;&#34;&#34;serialize a nano pod instance and save to a local file
-
-        Args:
-            filename (str): path to local file where saved pod instance should be written
-
-        Returns:
-            result (boolean):  true if successful (pod instance was written)
-            response (str): None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-
-        # build command
-        snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-        # serialize nano
-        result, response = simple_get(self, snapshot_cmd)
-        if not result:
-            return result, response
-
-        # at this point, the call succeeded, saves the result to a local file
-        try:
-            with open(filename, &#39;wb&#39;) as fp:
-                fp.write(response)
-        except Exception as e:
-            return False, e.strerror
-
-        return True, None
-
-    def restore_nano(self, filename):
-        &#34;&#34;&#34;Restore a nano pod instance from local file
-
-        Args:
-            filename (str): path to local file containing saved pod instance
-
-        Returns:
-            result (boolean):  true if successful (nano pod instance was restored)
-            response (str): None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-
-        # verify that input file is a valid nano file (gzip&#39;d tar with Magic Number)
-        try:
-            with tarfile.open(filename, &#39;r:gz&#39;) as tp:
-                with tp.extractfile(&#39;/CommonState/MagicNumber&#39;) as magic_fp:
-                    magic_num = magic_fp.read()
-                    if magic_num != b&#39;\xda\xba&#39;:
-                        return False, &#39;file {} is not a Boon Logic nano-formatted file, bad magic number&#39;.format(
-                            filename)
-        except KeyError:
-            return False, &#39;file {} is not a Boon Logic nano-formatted file&#39;.format(filename)
-        except Exception as e:
-            return False, &#39;corrupt file {}&#39;.format(filename)
-
-        with open(filename, &#39;rb&#39;) as fp:
-            nano = fp.read()
-
-        # build command
-        snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-        fields = {&#39;snapshot&#39;: (filename, nano)}
-
-        result, response = multipart_post(self, snapshot_cmd, fields=fields)
-
-        if not result:
-            return result, response
-
-        self.numeric_format = response[&#39;numericFormat&#39;]
-
-        return True, response
-
-    @_is_configured
-    def autotune_config(self):
-        &#34;&#34;&#34;Autotunes the percent variation, min and max for each feature
-
-        Returns:
-            result (boolean): true if successful (autotuning was completed)
-            response (dict or str): configuration dictionary when result is true, error string when result is false
-
-        &#34;&#34;&#34;
-
-        # build command
-        config_cmd = self.url + &#39;autoTune/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-        # autotune parameters
-        return simple_post(self, config_cmd)
-
-    @_is_configured
-    def get_config(self):
-        &#34;&#34;&#34;Gets the configuration for this nano pod instance
-
-        Returns:
-            result (boolean): true if successful (configuration was found)
-            response (dict or str): configuration dictionary when result is true, error string when result is false
-
-        &#34;&#34;&#34;
-        config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        return simple_get(self, config_cmd)
-
-    @_is_configured
-    def load_file(self, file, file_type, gzip=False, append_data=False):
-        &#34;&#34;&#34;Load nano data from a file
-
-        Args:
-            file (str): local path to data file
-            file_type (str): file type specifier, must be either &#39;cvs&#39; or &#39;raw&#39;
-            gzip (boolean): true if file is gzip&#39;d, false if not gzip&#39;d
-            append_data (boolean): true if data should be appended to previous data, false if existing
-                data should be truncated
-
-        Returns:
-            result (boolean): true if successful (file was successful loaded into nano pod instance)
-            response (str): None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-
-        # load the data file
-        try:
-            with open(file, &#39;rb&#39;) as fp:
-                file_data = fp.read()
-        except FileNotFoundError as e:
-            return False, e.strerror
-        except Exception as e:
-            return False, e
-
-        # verify file_type is set correctly
-        if file_type not in [&#39;csv&#39;, &#39;csv-c&#39;, &#39;raw&#39;, &#39;raw-n&#39;]:
-            return False, &#39;file_type must be &#34;csv&#34;, &#34;csv-c&#34;, &#34;raw&#34; or &#34;raw-n&#34;&#39;
-
-        file_name = os.path.basename(file)
-
-        fields = {&#39;data&#39;: (file_name, file_data)}
-
-        # build command
-        dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        dataset_cmd += &#39;&amp;fileType=&#39; + file_type
-        dataset_cmd += &#39;&amp;gzip=&#39; + str(gzip).lower()
-        dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
-
-        return multipart_post(self, dataset_cmd, fields=fields)
-
-    @_is_configured
-    def load_data(self, data, append_data=False):
-        &#34;&#34;&#34;Load nano data from an existing numpy array or simple python list
-
-        Args:
-            data (np.ndarray or list): numpy array or list of data values
-            append_data (boolean): true if data should be appended to previous data, false if existing
-                data should be truncated
-
-        Returns:
-            result (boolean): true if successful (data was successful loaded into nano pod instance)
-            response (str): None when result is true, error string when result=false
-
-        &#34;&#34;&#34;
-        data = normalize_nano_data(data, self.numeric_format)
-        file_name = &#39;dummy_filename.bin&#39;
-        file_type = &#39;raw&#39;
-
-        fields = {&#39;data&#39;: (file_name, data)}
-
-        # build command
-        dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        dataset_cmd += &#39;&amp;fileType=&#39; + file_type
-        dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
-
-        return multipart_post(self, dataset_cmd, fields=fields)
-
-    def set_learning_status(self, status):
-        &#34;&#34;&#34;returns list of nano instances allocated for a pod
-
-        Args:
-            status (boolean): true or false of whether to learning is on or off
-
-        Returns:
-            result (boolean):  true if successful (list was returned)
-            response (str): json dictionary of pod instances when result=true, error string when result=false
-
-        &#34;&#34;&#34;
-        if status not in [True, False]:
-            return False, &#39;status must be a boolean&#39;
-        # build command
-        learning_cmd = self.url + &#39;learning/&#39; + self.instance + &#39;?enable=&#39; + str(
-            status).lower() + &#39;&amp;api-tenant=&#39; + self.api_tenant
-
-        return simple_post(self, learning_cmd)
-
-    def set_root_cause_status(self, status):
-        &#34;&#34;&#34;configures whether or not to save new clusters coming in for root cause analysis
-
-        Args:
-            status (boolean): true or false of whether root cause is on or off
-
-        Returns:
-            result (boolean):  true if successful (list was returned)
-            response (str): status of root cause
-
-        &#34;&#34;&#34;
-        if status not in [True, False]:
-            return False, &#39;status must be a boolean&#39;
-        # build command
-        learning_cmd = self.url + &#39;rootCause/&#39; + self.instance + &#39;?enable=&#39; + str(
-            status).lower() + &#39;&amp;api-tenant=&#39; + self.api_tenant
-
-        return simple_post(self, learning_cmd)
-
-    def run_nano(self, results=None):
-        &#34;&#34;&#34;Clusters the data in the nano pod buffer and returns the specified results
-
-        Args:
-            results (str): comma separated list of result specifiers
-
-                ID = cluster ID
-
-                SI = smoothed anomaly index
-
-                RI = raw anomaly index
-
-                FI = frequency index
-
-                DI = distance index
-
-                All = ID,SI,RI,FI,DI
-
-        Returns:
-            result (boolean): true if successful (nano was successfully run)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-
-        results_str = &#39;&#39;
-        if str(results) == &#39;All&#39;:
-            results_str = &#39;ID,SI,RI,FI,DI&#39;
-        elif results:
-            for result in results.split(&#39;,&#39;):
-                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
-                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-            results_str = results
-
-        # build command
-        nano_cmd = self.url + &#39;nanoRun/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        if results:
-            nano_cmd += &#39;&amp;results=&#39; + results_str
-
-        return simple_post(self, nano_cmd)
-
-    @_is_configured
-    def run_streaming_nano(self, data, results=None):
-        &#34;&#34;&#34;Load streaming data into self-autotuning nano pod instance, run the nano and return results
-
-        Args:
-            data (np.ndarray or list): numpy array or list of data values
-            results (str): comma separated list of result specifiers
-
-                ID = cluster ID
-
-                SI = smoothed anomaly index
-
-                RI = raw anomaly index
-
-                FI = frequency index
-
-                DI = distance index
-
-                All = ID,SI,RI,FI,DI
-
-        Returns:
-            result (boolean): true if successful (data was successful streamed to nano pod instance)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-        data = normalize_nano_data(data, self.numeric_format)
-        file_name = &#39;dummy_filename.bin&#39;
-        file_type = &#39;raw&#39;
-
-        fields = {&#39;data&#39;: (file_name, data)}
-
-        results_str = &#39;&#39;
-        if str(results) == &#39;All&#39;:
-            results_str = &#39;ID,SI,RI,FI,DI&#39;
-        elif results:
-            for result in results.split(&#39;,&#39;):
-                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
-                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-            results_str = results
-
-        # build command
-        streaming_cmd = self.url + &#39;nanoRunStreaming/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        streaming_cmd += &#39;&amp;fileType=&#39; + file_type
-        if results:
-            streaming_cmd += &#39;&amp;results=&#39; + results_str
-
-        return multipart_post(self, streaming_cmd, fields=fields)
-
-    def get_version(self):
-        &#34;&#34;&#34;Version information for this nano pod
-
-        Returns:
-            result (boolean): true if successful (version information was retrieved)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-
-        # build command (minus the v3 portion)
-        version_cmd = self.url[:-3] + &#39;version&#39; + &#39;?api-tenant=&#39; + self.api_tenant
-        return simple_get(self, version_cmd)
-
-    @_is_configured
-    def get_buffer_status(self):
-        &#34;&#34;&#34;Results related to the bytes processed/in the buffer
-
-        Returns:
-            result (boolean): true if successful (nano was successfully run)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-        status_cmd = self.url + &#39;bufferStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        return simple_get(self, status_cmd)
-
-    @_is_configured
-    def get_nano_results(self, results=&#39;All&#39;):
-        &#34;&#34;&#34;Results per pattern
-
-        Args:
-            results (str): comma separated list of results
-
-                ID = cluster ID
-
-                SI = smoothed anomaly index
-
-                RI = raw anomaly index
-
-                FI = frequency index
-
-                DI = distance index
-
-                All = ID,SI,RI,FI,DI
-
-        Returns:
-            result (boolean): true if successful (nano was successfully run)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-        # build results command
-        if str(results) == &#39;All&#39;:
-            results_str = &#39;ID,SI,RI,FI,DI&#39;
-        else:
-            for result in results.split(&#39;,&#39;):
-                if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
-                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-            results_str = results
-
-        # build command
-        results_cmd = self.url + &#39;nanoResults/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        results_cmd += &#39;&amp;results=&#39; + results_str
-
-        return simple_get(self, results_cmd)
-
-    @_is_configured
-    def get_nano_status(self, results=&#39;All&#39;):
-        &#34;&#34;&#34;Results in relation to each cluster/overall stats
-
-        Args:
-            results (str): comma separated list of results
-
-                PCA = principal components (includes 0 cluster)
-
-                clusterGrowth = indexes of each increase in cluster (includes 0 cluster)
-
-                clusterSizes = number of patterns in each cluster (includes 0 cluster)
-
-                anomalyIndexes = anomaly index (includes 0 cluster)
-
-                frequencyIndexes = frequency index (includes 0 cluster)
-
-                distanceIndexes = distance index (includes 0 cluster)
-
-                totalInferences = total number of patterns clustered (overall)
-
-                averageInferenceTime = time in milliseconds to cluster per
-                    pattern (not available if uploading from serialized nano) (overall)
-
-                numClusters = total number of clusters (includes 0 cluster) (overall)
-
-                All = PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,numClusters
-
-        Returns:
-            result (boolean): true if successful (nano was successfully run)
-            response (dict or str): dictionary of results when result is true, error message when result = false
-
-        &#34;&#34;&#34;
-
-        # build results command
-        if str(results) == &#39;All&#39;:
-            results_str = &#39;PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,&#39; \
-                          &#39;distanceIndexes,totalInferences,numClusters&#39;
-        else:
-            for result in results.split(&#39;,&#39;):
-                if result not in [&#39;PCA&#39;, &#39;clusterGrowth&#39;, &#39;clusterSizes&#39;, &#39;anomalyIndexes&#39;, &#39;frequencyIndexes&#39;,
-                                  &#39;distanceIndexes&#39;, &#39;totalInferences&#39;, &#39;numClusters&#39;, &#39;averageInferenceTime&#39;]:
-                    return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-            results_str = results
-
-        # build command
-        results_cmd = self.url + &#39;nanoStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        results_cmd = results_cmd + &#39;&amp;results=&#39; + results_str
-
-        return simple_get(self, results_cmd)
-
-    def get_root_cause(self, id_list=None, pattern_list=None):
-        &#34;&#34;&#34;Get root cause
-
-        Args:
-            id_list (list): list of IDs to return the root cause for
-            pattern_list (list): list of pattern vectors to calculate the root cause against the model
-
-        Returns:
-            A list containing the root cause for each pattern/id provided for a sensor:
-
-                [float]
-
-        Raises:
-            BoonException: if Amber cloud gives non-200 response
-        &#34;&#34;&#34;
-        if id_list is None and pattern_list is None:
-            raise BoonException(&#39;Must specify either list of ID(s) or list of pattern(s).&#39;)
-
-        response = {&#39;RootCauseFromID&#39;: [], &#39;RootCauseFromPattern&#39;: []}
-        if id_list is not None:
-            id_list = [str(element) for element in id_list]
-            rc_cmd = self.url + &#39;rootCauseFromID/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-            rc_cmd = rc_cmd + &#39;&amp;clusterID=&#39; + &#34;,&#34;.join(id_list)
-
-            success, status = simple_get(self, rc_cmd)
-            if success:
-                response[&#39;RootCauseFromID&#39;] = status
-            else:
-                return success, status
-
-        if pattern_list is not None:
-            if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided    
-                pattern_list = [pattern_list] 
-            else:
-                for i, pattern in enumerate(pattern_list):
-                    pattern_list[i] = &#39;,&#39;.join([str(element) for element in pattern])
-            rc_cmd = self.url + &#39;rootCauseFromPattern/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-            rc_cmd = rc_cmd + &#39;&amp;pattern=&#39; + &#39;[[&#39; + &#34;],[&#34;.join(pattern_list) + &#39;]]&#39;
-
-            success, status = simple_get(self, rc_cmd)
-            if success:
-                response[&#39;RootCauseFromPattern&#39;] = status
-            else:
-                return success, status
-
-        return True, response</code></pre>
-</details>
+</code></pre></div>
 <h3>Methods</h3>
 <dl>
-<dt id="boonnano.NanoHandle.autotune_config"><code class="name flex">
-<span>def <span class="ident">autotune_config</span></span>(<span>self)</span>
+<dt id="boonnano.ExpertClient.autotune_config"><code class="name flex">
+<span>def <span class="ident">autotune_config</span></span>(<span>self, instance_id)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Autotunes the percent variation, min and max for each feature</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (autotuning was completed)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>configuration dictionary when result is true, error string when result is false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@_is_configured
-def autotune_config(self):
-    &#34;&#34;&#34;Autotunes the percent variation, min and max for each feature
-
-    Returns:
-        result (boolean): true if successful (autotuning was completed)
-        response (dict or str): configuration dictionary when result is true, error string when result is false
-
-    &#34;&#34;&#34;
-
-    # build command
-    config_cmd = self.url + &#39;autoTune/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-    # autotune parameters
-    return simple_post(self, config_cmd)</code></pre>
-</details>
-</dd>
-<dt id="boonnano.NanoHandle.close_nano"><code class="name flex">
-<span>def <span class="ident">close_nano</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Closes the pod instance</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano pod instance was closed)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def close_nano(self):
-    &#34;&#34;&#34;Closes the pod instance
-
-    Returns:
-        result (boolean):  true if successful (nano pod instance was closed)
-        response (str): None when result is true, error string when result=false
-
-    &#34;&#34;&#34;
-    close_cmd = self.url + &#39;nanoInstance/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-    # delete instance
-    result, response = simple_delete(self, close_cmd)
-    if not result:
-        return result, response
-
-    self.http.clear()
-    return result, None</code></pre>
-</details>
-</dd>
-<dt id="boonnano.NanoHandle.configure_nano"><code class="name flex">
-<span>def <span class="ident">configure_nano</span></span>(<span>self, feature_count=1, numeric_format='float32', cluster_mode='batch', min_val=0, max_val=1, weight=1, label=None, percent_variation=0.05, streaming_window=1, accuracy=0.99, autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None, streaming_autotune=True, streaming_buffer=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000, config=None)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Returns the posted clustering configuration</p>
+<div class="desc"><p>Autotunes the percent variation, min and max for each feature</p>
 <h2 id="args">Args</h2>
 <dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+</dl></div>
+</dd>
+<dt id="boonnano.ExpertClient.close_nano"><code class="name flex">
+<span>def <span class="ident">close_nano</span></span>(<span>self, instance_id)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Closes the pod instance</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+</dl></div>
+</dd>
+<dt id="boonnano.ExpertClient.configure_nano"><code class="name flex">
+<span>def <span class="ident">configure_nano</span></span>(<span>self, instance_id, feature_count=1, numeric_format='float32', cluster_mode='batch', min_val=0, max_val=1, weight=1, label=None, percent_variation=0.05, streaming_window=1, accuracy=0.99, autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None, streaming_autotune=True, streaming_buffer=10000, anomaly_history_window=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000, config=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the posted clustering configuration</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
 <dt><strong><code>feature_count</code></strong> :&ensp;<code>int</code></dt>
 <dd>number of features per vector</dd>
 <dt><strong><code>numeric_format</code></strong> :&ensp;<code>str</code></dt>
@@ -1874,6 +147,8 @@ def autotune_config(self):
 <dd>whether to autotune while in streaming mode</dd>
 <dt><strong><code>streaming_buffer</code></strong> :&ensp;<code>int</code></dt>
 <dd>number of samples to autotune on</dd>
+<dt><strong><code>anomaly_history_window</code></strong> :&ensp;<code>int</code></dt>
+<dd>number of samples to use for AH calculation</dd>
 <dt><strong><code>learning_numerator</code></strong> :&ensp;<code>int</code></dt>
 <dd>max number of new clusters learned</dd>
 <dt><strong><code>learning_denominator</code></strong> :&ensp;<code>int</code></dt>
@@ -1886,82 +161,13 @@ def autotune_config(self):
 <dd>dictionary of configuration parameters</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (configuration was successfully loaded into nano pod instance)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>configuration dictionary when result is true, error string when result is false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def configure_nano(self, feature_count=1, numeric_format=&#39;float32&#39;, cluster_mode=&#39;batch&#39;, min_val=0, max_val=1,
-                   weight=1, label=None,
-                   percent_variation=.05, streaming_window=1, accuracy=.99,
-                   autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000,
-                   exclusions=None,
-                   streaming_autotune=True, streaming_buffer=10000, learning_numerator=10,
-                   learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000,
-                   config=None):
-
-    &#34;&#34;&#34;Returns the posted clustering configuration
-
-     Args:
-         feature_count (int): number of features per vector
-         numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
-         cluster_mode (str): &#39;streaming&#39; or &#39;batch&#39; mode to run expert
-         min_val: list of minimum values per feature, if specified as a single value, use that on all features
-         max_val: list of maximum values per feature, if specified as a single value, use that on all features
-         weight: influence each column has on creating a new cluster
-         label (list): name of each feature (if applicable)
-         percent_variation (float): amount of variation within each cluster
-         streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
-         accuracy (float): statistical accuracy of the clusters
-         autotune_pv (bool): whether to autotune the percent variation
-         autotune_range (bool): whether to autotune the min and max values
-         autotune_by_feature (bool): whether to have individually set min and max values for each feature
-         autotune_max_clusters (int): max number of clusters allowed
-         exclusions (list): features to exclude while autotuning
-         streaming_autotune (bool): whether to autotune while in streaming mode
-         streaming_buffer (int): number of samples to autotune on
-         learning_numerator (int): max number of new clusters learned
-         learning_denominator (int): number of samples over which the new clusters are learned
-         learning_max_clusters (int): max number of clusters before turning off learning
-         learning_samples (int): max number of samples before turning off learning
-         config (dict): dictionary of configuration parameters
-
-     Returns:
-         result (boolean): true if successful (configuration was successfully loaded into nano pod instance)
-         response (dict or str): configuration dictionary when result is true, error string when result is false
-
-     &#34;&#34;&#34;
-
-    if config is None:
-        success, config = self.create_config(feature_count, numeric_format, cluster_mode, min_val, max_val, weight,
-                                             label, percent_variation, streaming_window, accuracy,
-                                             autotune_pv, autotune_range, autotune_by_feature,
-                                             autotune_max_clusters, exclusions,
-                                             streaming_autotune, streaming_buffer, learning_numerator,
-                                             learning_denominator,
-                                             learning_max_clusters, learning_samples)
-        if not success:
-            return False, config
-    body = json.dumps(config)
-
-    config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-    result, response = simple_post(self, config_cmd, body=body)
-    if result:
-        self.numeric_format = config[&#39;numericFormat&#39;]
-
-    return result, response</code></pre>
-</details>
+<p>response (dict): configuration dictionary</p></div>
 </dd>
-<dt id="boonnano.NanoHandle.create_config"><code class="name flex">
-<span>def <span class="ident">create_config</span></span>(<span>self, feature_count, numeric_format, cluster_mode='batch', min_val=0, max_val=1, weight=1, label=None, percent_variation=0.05, streaming_window=1, accuracy=0.99, autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None, streaming_autotune=True, streaming_buffer=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000)</span>
+<dt id="boonnano.ExpertClient.create_config"><code class="name flex">
+<span>def <span class="ident">create_config</span></span>(<span>self, feature_count, numeric_format, cluster_mode='batch', min_val=0, max_val=1, weight=1, label=None, percent_variation=0.05, streaming_window=1, accuracy=0.99, autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None, streaming_autotune=True, streaming_buffer=10000, anomaly_history_window=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Generate a configuration template for the given parameters</p>
+<div class="desc"><p>Generate a configuration template for the given parameters</p>
 <p>A discrete configuration is specified as a list of min, max, weights, and labels</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -2003,6 +209,8 @@ a single element list assigns all features with same min_val</dd>
 <dd>whether to autotune while in streaming mode</dd>
 <dt><strong><code>streaming_buffer</code></strong> :&ensp;<code>int</code></dt>
 <dd>number of samples to autotune on</dd>
+<dt><strong><code>anomaly_history_window</code></strong> :&ensp;<code>int</code></dt>
+<dd>number of samples to use in AH calculation</dd>
 <dt><strong><code>learning_numerator</code></strong> :&ensp;<code>int</code></dt>
 <dd>max number of new clusters learned</dd>
 <dt><strong><code>learning_denominator</code></strong> :&ensp;<code>int</code></dt>
@@ -2013,257 +221,75 @@ a single element list assigns all features with same min_val</dd>
 <dd>max number of samples before turning off learning</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (configuration was successfully created)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>configuration dictionary when result is true, error string when result is false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def create_config(self, feature_count, numeric_format, cluster_mode=&#39;batch&#39;, min_val=0, max_val=1,
-                  weight=1, label=None,
-                  percent_variation=0.05, streaming_window=1, accuracy=0.99,
-                  autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000,
-                  exclusions=None, streaming_autotune=True, streaming_buffer=10000, learning_numerator=10,
-                  learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000):
-    &#34;&#34;&#34;Generate a configuration template for the given parameters
-
-    A discrete configuration is specified as a list of min, max, weights, and labels
-
-    Args:
-        feature_count (int): number of features per vector
-        numeric_format (str): numeric type of data (one of &#34;float32&#34;, &#34;uint16&#34;, or &#34;int16&#34;)
-        cluster_mode (str): &#39;streaming&#39; or &#39;batch&#39; for expert run type
-        min_val: the value that should be considered the minimum value for this feature. This
-            can be set to a value larger than the actual min if you want to treat all value less
-            than that as the same (for instance, to keep a noise spike from having undue influence
-            in the clustering.  a single element list assigns all features with same min_val
-        max_val: corresponding maximum value, a single element list assigns all features with same max_val
-        weight: weight for this feature, a single element list assigns all features with same weight
-        label (list): list of labels to assign to features
-        percent_variation (float): amount of variation allowed within clusters
-        streaming_window (integer): number of consecutive vectors treated as one inference (parametric parameter)
-        accuracy (float): statistical accuracy of the clusters
-        autotune_pv (bool): whether to autotune the percent variation
-        autotune_range (bool): whether to autotune the min and max values
-        autotune_by_feature (bool): whether to have individually set min and max values for each feature
-        autotune_max_clusters (int): max number of clusters allowed
-        exclusions (list): features to exclude while autotuning
-        streaming_autotune (bool): whether to autotune while in streaming mode
-        streaming_buffer (int): number of samples to autotune on
-        learning_numerator (int): max number of new clusters learned
-        learning_denominator (int): number of samples over which the new clusters are learned
-        learning_max_clusters (int): max number of clusters before turning off learning
-        learning_samples (int): max number of samples before turning off learning
-
-
-    Returns:
-        result (boolean): true if successful (configuration was successfully created)
-        response (dict or str): configuration dictionary when result is true, error string when result is false
-
-    &#34;&#34;&#34;
-
-    if isinstance(min_val, int) or isinstance(min_val, float):
-        min_val = [min_val] * feature_count
-    if isinstance(max_val, int) or isinstance(max_val, float):
-        max_val = [max_val] * feature_count
-    if isinstance(weight, int):
-        weight = [weight] * feature_count
-
-    if exclusions is None:
-        exclusions = []
-
-    config = {}
-    config[&#39;clusterMode&#39;] = cluster_mode
-    config[&#39;numericFormat&#39;] = numeric_format
-    config[&#39;features&#39;] = []
-
-    if (isinstance(min_val, list) or isinstance(min_val, np.ndarray)) and (
-            isinstance(max_val, list) or isinstance(max_val, np.ndarray)) and (
-            isinstance(weight, list) or isinstance(weight, np.ndarray)):
-        if len(min_val) != len(max_val) or len(min_val) != len(weight):
-            return False, &#34;parameters must be lists of the same length&#34;
-
-        for min, max, w in zip(min_val, max_val, weight):
-            tempDict = {}
-            tempDict[&#39;minVal&#39;] = min
-            tempDict[&#39;maxVal&#39;] = max
-            tempDict[&#39;weight&#39;] = w
-            config[&#39;features&#39;].append(tempDict)
-    else:
-        return False, &#34;min_val, max_val and weight must be list or numpy array&#34;
-
-    if isinstance(label, list):
-        if len(label) != len(min_val):
-            return False, &#34;label must be the same length as other parameters&#34;
-        for i, l in enumerate(label):
-            config[&#39;features&#39;][i][&#39;label&#39;] = l
-    elif label:
-        return False, &#34;label must be list&#34;
-
-    config[&#39;percentVariation&#39;] = percent_variation
-    config[&#39;accuracy&#39;] = accuracy
-    config[&#39;streamingWindowSize&#39;] = streaming_window
-
-    config[&#39;autoTuning&#39;] = {}
-    config[&#39;autoTuning&#39;][&#39;autoTuneByFeature&#39;] = autotune_by_feature
-    config[&#39;autoTuning&#39;][&#39;autoTunePV&#39;] = autotune_pv
-    config[&#39;autoTuning&#39;][&#39;autoTuneRange&#39;] = autotune_range
-    config[&#39;autoTuning&#39;][&#39;maxClusters&#39;] = autotune_max_clusters
-    if isinstance(exclusions, list):
-        config[&#39;autoTuning&#39;][&#39;exclusions&#39;] = exclusions
-    elif exclusions:
-        return False, &#39;exclusions must be a list&#39;
-
-    if config[&#39;clusterMode&#39;] == &#39;streaming&#39;:
-        config[&#39;streaming&#39;] = {}
-        config[&#39;streaming&#39;][&#39;enableAutoTuning&#39;] = streaming_autotune
-        config[&#39;streaming&#39;][&#39;samplesToBuffer&#39;] = streaming_buffer
-        config[&#39;streaming&#39;][&#39;learningRateNumerator&#39;] = learning_numerator
-        config[&#39;streaming&#39;][&#39;learningRateDenominator&#39;] = learning_denominator
-        config[&#39;streaming&#39;][&#39;learningMaxClusters&#39;] = learning_max_clusters
-        config[&#39;streaming&#39;][&#39;learningMaxSamples&#39;] = learning_samples
-
-    return True, config</code></pre>
-</details>
+<p>config (dict): configuration dictionary</p></div>
 </dd>
-<dt id="boonnano.NanoHandle.get_buffer_status"><code class="name flex">
-<span>def <span class="ident">get_buffer_status</span></span>(<span>self)</span>
+<dt id="boonnano.ExpertClient.get_autotune_array"><code class="name flex">
+<span>def <span class="ident">get_autotune_array</span></span>(<span>self, instance_id)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Results related to the bytes processed/in the buffer</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano was successfully run)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@_is_configured
-def get_buffer_status(self):
-    &#34;&#34;&#34;Results related to the bytes processed/in the buffer
-
-    Returns:
-        result (boolean): true if successful (nano was successfully run)
-        response (dict or str): dictionary of results when result is true, error message when result = false
-
-    &#34;&#34;&#34;
-    status_cmd = self.url + &#39;bufferStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-    return simple_get(self, status_cmd)</code></pre>
-</details>
-</dd>
-<dt id="boonnano.NanoHandle.get_config"><code class="name flex">
-<span>def <span class="ident">get_config</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Gets the configuration for this nano pod instance</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (configuration was found)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>configuration dictionary when result is true, error string when result is false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@_is_configured
-def get_config(self):
-    &#34;&#34;&#34;Gets the configuration for this nano pod instance
-
-    Returns:
-        result (boolean): true if successful (configuration was found)
-        response (dict or str): configuration dictionary when result is true, error string when result is false
-
-    &#34;&#34;&#34;
-    config_cmd = self.url + &#39;clusterConfig/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-    return simple_get(self, config_cmd)</code></pre>
-</details>
-</dd>
-<dt id="boonnano.NanoHandle.get_nano_results"><code class="name flex">
-<span>def <span class="ident">get_nano_results</span></span>(<span>self, results='All')</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Results per pattern</p>
+<div class="desc"><p>Gets the autotune elbow</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
-<dd>
-<p>comma separated list of results</p>
-<p>ID = cluster ID</p>
-<p>SI = smoothed anomaly index</p>
-<p>RI = raw anomaly index</p>
-<p>FI = frequency index</p>
-<p>DI = distance index</p>
-<p>All = ID,SI,RI,FI,DI</p>
-</dd>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano was successfully run)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@_is_configured
-def get_nano_results(self, results=&#39;All&#39;):
-    &#34;&#34;&#34;Results per pattern
-
-    Args:
-        results (str): comma separated list of results
-
-            ID = cluster ID
-
-            SI = smoothed anomaly index
-
-            RI = raw anomaly index
-
-            FI = frequency index
-
-            DI = distance index
-
-            All = ID,SI,RI,FI,DI
-
-    Returns:
-        result (boolean): true if successful (nano was successfully run)
-        response (dict or str): dictionary of results when result is true, error message when result = false
-
-    &#34;&#34;&#34;
-    # build results command
-    if str(results) == &#39;All&#39;:
-        results_str = &#39;ID,SI,RI,FI,DI&#39;
-    else:
-        for result in results.split(&#39;,&#39;):
-            if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
-                return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-        results_str = results
-
-    # build command
-    results_cmd = self.url + &#39;nanoResults/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-    results_cmd += &#39;&amp;results=&#39; + results_str
-
-    return simple_get(self, results_cmd)</code></pre>
-</details>
+<p>response (list): 2D array of the autotuning elbox values</p></div>
 </dd>
-<dt id="boonnano.NanoHandle.get_nano_status"><code class="name flex">
-<span>def <span class="ident">get_nano_status</span></span>(<span>self, results='All')</span>
+<dt id="boonnano.ExpertClient.get_buffer_status"><code class="name flex">
+<span>def <span class="ident">get_buffer_status</span></span>(<span>self, instance_id)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Results in relation to each cluster/overall stats</p>
+<div class="desc"><p>Results related to the bytes processed/in the buffer</p>
 <h2 id="args">Args</h2>
 <dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>response (dict): dictionary of buffer statistics</p></div>
+</dd>
+<dt id="boonnano.ExpertClient.get_config"><code class="name flex">
+<span>def <span class="ident">get_config</span></span>(<span>self, instance_id)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets the configuration for this nano pod instance</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>response (dict): configuration dictionary</p></div>
+</dd>
+<dt id="boonnano.ExpertClient.get_nano_instance"><code class="name flex">
+<span>def <span class="ident">get_nano_instance</span></span>(<span>self, instance_id)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get instance info</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>response (dict): metadata about the instance</p></div>
+</dd>
+<dt id="boonnano.ExpertClient.get_nano_results"><code class="name flex">
+<span>def <span class="ident">get_nano_results</span></span>(<span>self, instance_id, results='All')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="boonnano.ExpertClient.get_nano_status"><code class="name flex">
+<span>def <span class="ident">get_nano_status</span></span>(<span>self, instance_id, results='All')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Results in relation to each cluster/overall stats</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
 <dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
 <dd>
 <p>comma separated list of results</p>
@@ -2277,235 +303,101 @@ def get_nano_results(self, results=&#39;All&#39;):
 <p>averageInferenceTime = time in milliseconds to cluster per
 pattern (not available if uploading from serialized nano) (overall)</p>
 <p>numClusters = total number of clusters (includes 0 cluster) (overall)</p>
-<p>All = PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,numClusters</p>
+<p>All = PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,numClusters,clusterDistances</p>
 </dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano was successfully run)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@_is_configured
-def get_nano_status(self, results=&#39;All&#39;):
-    &#34;&#34;&#34;Results in relation to each cluster/overall stats
-
-    Args:
-        results (str): comma separated list of results
-
-            PCA = principal components (includes 0 cluster)
-
-            clusterGrowth = indexes of each increase in cluster (includes 0 cluster)
-
-            clusterSizes = number of patterns in each cluster (includes 0 cluster)
-
-            anomalyIndexes = anomaly index (includes 0 cluster)
-
-            frequencyIndexes = frequency index (includes 0 cluster)
-
-            distanceIndexes = distance index (includes 0 cluster)
-
-            totalInferences = total number of patterns clustered (overall)
-
-            averageInferenceTime = time in milliseconds to cluster per
-                pattern (not available if uploading from serialized nano) (overall)
-
-            numClusters = total number of clusters (includes 0 cluster) (overall)
-
-            All = PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,distanceIndexes,totalInferences,numClusters
-
-    Returns:
-        result (boolean): true if successful (nano was successfully run)
-        response (dict or str): dictionary of results when result is true, error message when result = false
-
-    &#34;&#34;&#34;
-
-    # build results command
-    if str(results) == &#39;All&#39;:
-        results_str = &#39;PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,&#39; \
-                      &#39;distanceIndexes,totalInferences,numClusters&#39;
-    else:
-        for result in results.split(&#39;,&#39;):
-            if result not in [&#39;PCA&#39;, &#39;clusterGrowth&#39;, &#39;clusterSizes&#39;, &#39;anomalyIndexes&#39;, &#39;frequencyIndexes&#39;,
-                              &#39;distanceIndexes&#39;, &#39;totalInferences&#39;, &#39;numClusters&#39;, &#39;averageInferenceTime&#39;]:
-                return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-        results_str = results
-
-    # build command
-    results_cmd = self.url + &#39;nanoStatus/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-    results_cmd = results_cmd + &#39;&amp;results=&#39; + results_str
-
-    return simple_get(self, results_cmd)</code></pre>
-</details>
+<p>response (dict): dictionary of results</p></div>
 </dd>
-<dt id="boonnano.NanoHandle.get_root_cause"><code class="name flex">
-<span>def <span class="ident">get_root_cause</span></span>(<span>self, id_list=None, pattern_list=None)</span>
+<dt id="boonnano.ExpertClient.get_root_cause"><code class="name flex">
+<span>def <span class="ident">get_root_cause</span></span>(<span>self, instance_id, id_list=[], pattern_list=[])</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Get root cause</p>
+<div class="desc"><p>Get root cause</p>
 <h2 id="args">Args</h2>
 <dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
 <dt><strong><code>id_list</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of IDs to return the root cause for</dd>
 <dt><strong><code>pattern_list</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of pattern vectors to calculate the root cause against the model</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>A</code> <code>list</code> <code>containing</code> <code>the</code> <code>root</code> <code>cause</code> <code>for</code> <code>each</code> <code>pattern</code>/<code>id</code> <code>provided</code> <code>for</code> <code>a</code> <code>sensor</code>:</dt>
-<dd>[float]</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><strong><a title="boonnano.BoonException" href="#boonnano.BoonException"><code>BoonException</code></a></strong></dt>
-<dd>if Amber cloud gives non-200 response</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_root_cause(self, id_list=None, pattern_list=None):
-    &#34;&#34;&#34;Get root cause
-
-    Args:
-        id_list (list): list of IDs to return the root cause for
-        pattern_list (list): list of pattern vectors to calculate the root cause against the model
-
-    Returns:
-        A list containing the root cause for each pattern/id provided for a sensor:
-
-            [float]
-
-    Raises:
-        BoonException: if Amber cloud gives non-200 response
-    &#34;&#34;&#34;
-    if id_list is None and pattern_list is None:
-        raise BoonException(&#39;Must specify either list of ID(s) or list of pattern(s).&#39;)
-
-    response = {&#39;RootCauseFromID&#39;: [], &#39;RootCauseFromPattern&#39;: []}
-    if id_list is not None:
-        id_list = [str(element) for element in id_list]
-        rc_cmd = self.url + &#39;rootCauseFromID/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        rc_cmd = rc_cmd + &#39;&amp;clusterID=&#39; + &#34;,&#34;.join(id_list)
-
-        success, status = simple_get(self, rc_cmd)
-        if success:
-            response[&#39;RootCauseFromID&#39;] = status
-        else:
-            return success, status
-
-    if pattern_list is not None:
-        if len(np.array(pattern_list).shape) == 1:  # only 1 pattern provided    
-            pattern_list = [pattern_list] 
-        else:
-            for i, pattern in enumerate(pattern_list):
-                pattern_list[i] = &#39;,&#39;.join([str(element) for element in pattern])
-        rc_cmd = self.url + &#39;rootCauseFromPattern/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-        rc_cmd = rc_cmd + &#39;&amp;pattern=&#39; + &#39;[[&#39; + &#34;],[&#34;.join(pattern_list) + &#39;]]&#39;
-
-        success, status = simple_get(self, rc_cmd)
-        if success:
-            response[&#39;RootCauseFromPattern&#39;] = status
-        else:
-            return success, status
-
-    return True, response</code></pre>
-</details>
+<p>response (list): list containing the root cause for each pattern/id provided for a sensor</p></div>
 </dd>
-<dt id="boonnano.NanoHandle.get_version"><code class="name flex">
+<dt id="boonnano.ExpertClient.get_version"><code class="name flex">
 <span>def <span class="ident">get_version</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Version information for this nano pod</p>
+<div class="desc"><p>Version information for this nano pod</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (version information was retrieved)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_version(self):
-    &#34;&#34;&#34;Version information for this nano pod
-
-    Returns:
-        result (boolean): true if successful (version information was retrieved)
-        response (dict or str): dictionary of results when result is true, error message when result = false
-
-    &#34;&#34;&#34;
-
-    # build command (minus the v3 portion)
-    version_cmd = self.url[:-3] + &#39;version&#39; + &#39;?api-tenant=&#39; + self.api_tenant
-    return simple_get(self, version_cmd)</code></pre>
-</details>
+<p>response (dict): dictionary of version information</p></div>
 </dd>
-<dt id="boonnano.NanoHandle.load_data"><code class="name flex">
-<span>def <span class="ident">load_data</span></span>(<span>self, data, append_data=False)</span>
+<dt id="boonnano.ExpertClient.is_clipping_detection_enabled"><code class="name flex">
+<span>def <span class="ident">is_clipping_detection_enabled</span></span>(<span>self, instance_id)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Load nano data from an existing numpy array or simple python list</p>
+<div class="desc"><p>Results in relation to each cluster/overall stats</p>
 <h2 id="args">Args</h2>
 <dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>response (boolean): nano clipping detection on/off status</p></div>
+</dd>
+<dt id="boonnano.ExpertClient.is_learning_enabled"><code class="name flex">
+<span>def <span class="ident">is_learning_enabled</span></span>(<span>self, instance_id)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Results in relation to each cluster/overall stats</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>response (boolean): learning on/off status</p></div>
+</dd>
+<dt id="boonnano.ExpertClient.is_root_cause_enabled"><code class="name flex">
+<span>def <span class="ident">is_root_cause_enabled</span></span>(<span>self, instance_id)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Results in relation to each cluster/overall stats</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>response (boolean): root cause on/off status</p></div>
+</dd>
+<dt id="boonnano.ExpertClient.load_data"><code class="name flex">
+<span>def <span class="ident">load_data</span></span>(<span>self, instance_id, data, append_data=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load nano data from an existing numpy array or simple python list</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
 <dt><strong><code>data</code></strong> :&ensp;<code>np.ndarray</code> or <code>list</code></dt>
 <dd>numpy array or list of data values</dd>
 <dt><strong><code>append_data</code></strong> :&ensp;<code>boolean</code></dt>
 <dd>true if data should be appended to previous data, false if existing
 data should be truncated</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (data was successful loaded into nano pod instance)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@_is_configured
-def load_data(self, data, append_data=False):
-    &#34;&#34;&#34;Load nano data from an existing numpy array or simple python list
-
-    Args:
-        data (np.ndarray or list): numpy array or list of data values
-        append_data (boolean): true if data should be appended to previous data, false if existing
-            data should be truncated
-
-    Returns:
-        result (boolean): true if successful (data was successful loaded into nano pod instance)
-        response (str): None when result is true, error string when result=false
-
-    &#34;&#34;&#34;
-    data = normalize_nano_data(data, self.numeric_format)
-    file_name = &#39;dummy_filename.bin&#39;
-    file_type = &#39;raw&#39;
-
-    fields = {&#39;data&#39;: (file_name, data)}
-
-    # build command
-    dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-    dataset_cmd += &#39;&amp;fileType=&#39; + file_type
-    dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
-
-    return multipart_post(self, dataset_cmd, fields=fields)</code></pre>
-</details>
+</dl></div>
 </dd>
-<dt id="boonnano.NanoHandle.load_file"><code class="name flex">
-<span>def <span class="ident">load_file</span></span>(<span>self, file, file_type, gzip=False, append_data=False)</span>
+<dt id="boonnano.ExpertClient.load_file"><code class="name flex">
+<span>def <span class="ident">load_file</span></span>(<span>self, instance_id, file, file_type, gzip=False, append_data=False)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Load nano data from a file</p>
+<div class="desc"><p>Load nano data from a file</p>
 <h2 id="args">Args</h2>
 <dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
 <dt><strong><code>file</code></strong> :&ensp;<code>str</code></dt>
 <dd>local path to data file</dd>
 <dt><strong><code>file_type</code></strong> :&ensp;<code>str</code></dt>
@@ -2515,482 +407,128 @@ def load_data(self, data, append_data=False):
 <dt><strong><code>append_data</code></strong> :&ensp;<code>boolean</code></dt>
 <dd>true if data should be appended to previous data, false if existing
 data should be truncated</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (file was successful loaded into nano pod instance)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@_is_configured
-def load_file(self, file, file_type, gzip=False, append_data=False):
-    &#34;&#34;&#34;Load nano data from a file
-
-    Args:
-        file (str): local path to data file
-        file_type (str): file type specifier, must be either &#39;cvs&#39; or &#39;raw&#39;
-        gzip (boolean): true if file is gzip&#39;d, false if not gzip&#39;d
-        append_data (boolean): true if data should be appended to previous data, false if existing
-            data should be truncated
-
-    Returns:
-        result (boolean): true if successful (file was successful loaded into nano pod instance)
-        response (str): None when result is true, error string when result=false
-
-    &#34;&#34;&#34;
-
-    # load the data file
-    try:
-        with open(file, &#39;rb&#39;) as fp:
-            file_data = fp.read()
-    except FileNotFoundError as e:
-        return False, e.strerror
-    except Exception as e:
-        return False, e
-
-    # verify file_type is set correctly
-    if file_type not in [&#39;csv&#39;, &#39;csv-c&#39;, &#39;raw&#39;, &#39;raw-n&#39;]:
-        return False, &#39;file_type must be &#34;csv&#34;, &#34;csv-c&#34;, &#34;raw&#34; or &#34;raw-n&#34;&#39;
-
-    file_name = os.path.basename(file)
-
-    fields = {&#39;data&#39;: (file_name, file_data)}
-
-    # build command
-    dataset_cmd = self.url + &#39;data/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-    dataset_cmd += &#39;&amp;fileType=&#39; + file_type
-    dataset_cmd += &#39;&amp;gzip=&#39; + str(gzip).lower()
-    dataset_cmd += &#39;&amp;appendData=&#39; + str(append_data).lower()
-
-    return multipart_post(self, dataset_cmd, fields=fields)</code></pre>
-</details>
+</dl></div>
 </dd>
-<dt id="boonnano.NanoHandle.nano_list"><code class="name flex">
+<dt id="boonnano.ExpertClient.nano_list"><code class="name flex">
 <span>def <span class="ident">nano_list</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Returns list of nano instances allocated for a pod</p>
+<div class="desc"><p>Returns list of nano instances allocated for a pod</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (list was returned)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>json dictionary of pod instances when result=true, error string when result=false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def nano_list(self):
-    &#34;&#34;&#34;Returns list of nano instances allocated for a pod
-
-    Returns:
-        result (boolean):  true if successful (list was returned)
-        response (str): json dictionary of pod instances when result=true, error string when result=false
-
-    &#34;&#34;&#34;
-
-    # build command
-    instance_cmd = self.url + &#39;nanoInstances&#39; + &#39;?api-tenant=&#39; + self.api_tenant
-
-    return simple_get(self, instance_cmd)</code></pre>
-</details>
+<p>response (dict): json dictionary of pod instances</p></div>
 </dd>
-<dt id="boonnano.NanoHandle.open_nano"><code class="name flex">
+<dt id="boonnano.ExpertClient.open_nano"><code class="name flex">
 <span>def <span class="ident">open_nano</span></span>(<span>self, instance_id)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Creates or attaches to a nano pod instance</p>
+<div class="desc"><p>Creates or attaches to a nano pod instance</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
 <dd>instance identifier to assign to new pod instance</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>boolean</code></strong></dt>
-<dd>true if successful (instance is created or attached)</dd>
-<dt><strong><code>str</code></strong></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def open_nano(self, instance_id):
-    &#34;&#34;&#34;Creates or attaches to a nano pod instance
-
-    Args:
-        instance_id (str): instance identifier to assign to new pod instance
-
-    Returns:
-        boolean: true if successful (instance is created or attached)
-
-        str: None when result is true, error string when result=false
-
-    &#34;&#34;&#34;
-    instance_cmd = self.url + &#39;nanoInstance/&#39; + instance_id + &#39;?api-tenant=&#39; + self.api_tenant
-
-    success, response = simple_post(self, instance_cmd)
-    if not success:
-        return False, response
-
-    self.instance = instance_id
-    return success, response</code></pre>
-</details>
+<p>response (dict): metadata about the instance</p></div>
 </dd>
-<dt id="boonnano.NanoHandle.restore_nano"><code class="name flex">
-<span>def <span class="ident">restore_nano</span></span>(<span>self, filename)</span>
+<dt id="boonnano.ExpertClient.prune_ids"><code class="name flex">
+<span>def <span class="ident">prune_ids</span></span>(<span>self, instance_id, id_list=[])</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Restore a nano pod instance from local file</p>
+<div class="desc"><p>Get root cause</p>
 <h2 id="args">Args</h2>
 <dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+<dt><strong><code>id_list</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of IDs to remove from the model</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>response (dict): metadata about the updated model</p></div>
+</dd>
+<dt id="boonnano.ExpertClient.restore_nano"><code class="name flex">
+<span>def <span class="ident">restore_nano</span></span>(<span>self, instance_id, filename)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Restore a nano pod instance from local file</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
 <dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
 <dd>path to local file containing saved pod instance</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano pod instance was restored)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def restore_nano(self, filename):
-    &#34;&#34;&#34;Restore a nano pod instance from local file
-
-    Args:
-        filename (str): path to local file containing saved pod instance
-
-    Returns:
-        result (boolean):  true if successful (nano pod instance was restored)
-        response (str): None when result is true, error string when result=false
-
-    &#34;&#34;&#34;
-
-    # verify that input file is a valid nano file (gzip&#39;d tar with Magic Number)
-    try:
-        with tarfile.open(filename, &#39;r:gz&#39;) as tp:
-            with tp.extractfile(&#39;/CommonState/MagicNumber&#39;) as magic_fp:
-                magic_num = magic_fp.read()
-                if magic_num != b&#39;\xda\xba&#39;:
-                    return False, &#39;file {} is not a Boon Logic nano-formatted file, bad magic number&#39;.format(
-                        filename)
-    except KeyError:
-        return False, &#39;file {} is not a Boon Logic nano-formatted file&#39;.format(filename)
-    except Exception as e:
-        return False, &#39;corrupt file {}&#39;.format(filename)
-
-    with open(filename, &#39;rb&#39;) as fp:
-        nano = fp.read()
-
-    # build command
-    snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-    fields = {&#39;snapshot&#39;: (filename, nano)}
-
-    result, response = multipart_post(self, snapshot_cmd, fields=fields)
-
-    if not result:
-        return result, response
-
-    self.numeric_format = response[&#39;numericFormat&#39;]
-
-    return True, response</code></pre>
-</details>
+<p>response (dict): config dictionary of the uploaded nano</p></div>
 </dd>
-<dt id="boonnano.NanoHandle.run_nano"><code class="name flex">
-<span>def <span class="ident">run_nano</span></span>(<span>self, results=None)</span>
+<dt id="boonnano.ExpertClient.run_nano"><code class="name flex">
+<span>def <span class="ident">run_nano</span></span>(<span>self, instance_id, results=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Clusters the data in the nano pod buffer and returns the specified results</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
-<dd>
-<p>comma separated list of result specifiers</p>
-<p>ID = cluster ID</p>
-<p>SI = smoothed anomaly index</p>
-<p>RI = raw anomaly index</p>
-<p>FI = frequency index</p>
-<p>DI = distance index</p>
-<p>All = ID,SI,RI,FI,DI</p>
+<div class="desc"></div>
 </dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (nano was successfully run)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def run_nano(self, results=None):
-    &#34;&#34;&#34;Clusters the data in the nano pod buffer and returns the specified results
-
-    Args:
-        results (str): comma separated list of result specifiers
-
-            ID = cluster ID
-
-            SI = smoothed anomaly index
-
-            RI = raw anomaly index
-
-            FI = frequency index
-
-            DI = distance index
-
-            All = ID,SI,RI,FI,DI
-
-    Returns:
-        result (boolean): true if successful (nano was successfully run)
-        response (dict or str): dictionary of results when result is true, error message when result = false
-
-    &#34;&#34;&#34;
-
-    results_str = &#39;&#39;
-    if str(results) == &#39;All&#39;:
-        results_str = &#39;ID,SI,RI,FI,DI&#39;
-    elif results:
-        for result in results.split(&#39;,&#39;):
-            if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
-                return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-        results_str = results
-
-    # build command
-    nano_cmd = self.url + &#39;nanoRun/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-    if results:
-        nano_cmd += &#39;&amp;results=&#39; + results_str
-
-    return simple_post(self, nano_cmd)</code></pre>
-</details>
-</dd>
-<dt id="boonnano.NanoHandle.run_streaming_nano"><code class="name flex">
-<span>def <span class="ident">run_streaming_nano</span></span>(<span>self, data, results=None)</span>
+<dt id="boonnano.ExpertClient.run_streaming_nano"><code class="name flex">
+<span>def <span class="ident">run_streaming_nano</span></span>(<span>self, instance_id, data, results=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Load streaming data into self-autotuning nano pod instance, run the nano and return results</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>data</code></strong> :&ensp;<code>np.ndarray</code> or <code>list</code></dt>
-<dd>numpy array or list of data values</dd>
-<dt><strong><code>results</code></strong> :&ensp;<code>str</code></dt>
-<dd>
-<p>comma separated list of result specifiers</p>
-<p>ID = cluster ID</p>
-<p>SI = smoothed anomaly index</p>
-<p>RI = raw anomaly index</p>
-<p>FI = frequency index</p>
-<p>DI = distance index</p>
-<p>All = ID,SI,RI,FI,DI</p>
+<div class="desc"></div>
 </dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (data was successful streamed to nano pod instance)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>dict</code> or <code>str</code></dt>
-<dd>dictionary of results when result is true, error message when result = false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@_is_configured
-def run_streaming_nano(self, data, results=None):
-    &#34;&#34;&#34;Load streaming data into self-autotuning nano pod instance, run the nano and return results
-
-    Args:
-        data (np.ndarray or list): numpy array or list of data values
-        results (str): comma separated list of result specifiers
-
-            ID = cluster ID
-
-            SI = smoothed anomaly index
-
-            RI = raw anomaly index
-
-            FI = frequency index
-
-            DI = distance index
-
-            All = ID,SI,RI,FI,DI
-
-    Returns:
-        result (boolean): true if successful (data was successful streamed to nano pod instance)
-        response (dict or str): dictionary of results when result is true, error message when result = false
-
-    &#34;&#34;&#34;
-    data = normalize_nano_data(data, self.numeric_format)
-    file_name = &#39;dummy_filename.bin&#39;
-    file_type = &#39;raw&#39;
-
-    fields = {&#39;data&#39;: (file_name, data)}
-
-    results_str = &#39;&#39;
-    if str(results) == &#39;All&#39;:
-        results_str = &#39;ID,SI,RI,FI,DI&#39;
-    elif results:
-        for result in results.split(&#39;,&#39;):
-            if result not in [&#39;ID&#39;, &#39;SI&#39;, &#39;RI&#39;, &#39;FI&#39;, &#39;DI&#39;]:
-                return False, &#39;unknown result &#34;{}&#34; found in results parameter&#39;.format(result)
-        results_str = results
-
-    # build command
-    streaming_cmd = self.url + &#39;nanoRunStreaming/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-    streaming_cmd += &#39;&amp;fileType=&#39; + file_type
-    if results:
-        streaming_cmd += &#39;&amp;results=&#39; + results_str
-
-    return multipart_post(self, streaming_cmd, fields=fields)</code></pre>
-</details>
-</dd>
-<dt id="boonnano.NanoHandle.save_nano"><code class="name flex">
-<span>def <span class="ident">save_nano</span></span>(<span>self, filename)</span>
+<dt id="boonnano.ExpertClient.save_nano"><code class="name flex">
+<span>def <span class="ident">save_nano</span></span>(<span>self, instance_id, filename)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>serialize a nano pod instance and save to a local file</p>
+<div class="desc"><p>serialize a nano pod instance and save to a local file</p>
 <h2 id="args">Args</h2>
 <dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
 <dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
 <dd>path to local file where saved pod instance should be written</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (pod instance was written)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>None when result is true, error string when result=false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@_is_configured
-def save_nano(self, filename):
-    &#34;&#34;&#34;serialize a nano pod instance and save to a local file
-
-    Args:
-        filename (str): path to local file where saved pod instance should be written
-
-    Returns:
-        result (boolean):  true if successful (pod instance was written)
-        response (str): None when result is true, error string when result=false
-
-    &#34;&#34;&#34;
-
-    # build command
-    snapshot_cmd = self.url + &#39;snapshot/&#39; + self.instance + &#39;?api-tenant=&#39; + self.api_tenant
-
-    # serialize nano
-    result, response = simple_get(self, snapshot_cmd)
-    if not result:
-        return result, response
-
-    # at this point, the call succeeded, saves the result to a local file
-    try:
-        with open(filename, &#39;wb&#39;) as fp:
-            fp.write(response)
-    except Exception as e:
-        return False, e.strerror
-
-    return True, None</code></pre>
-</details>
+</dl></div>
 </dd>
-<dt id="boonnano.NanoHandle.set_learning_status"><code class="name flex">
-<span>def <span class="ident">set_learning_status</span></span>(<span>self, status)</span>
+<dt id="boonnano.ExpertClient.set_clipping_detection_enabled"><code class="name flex">
+<span>def <span class="ident">set_clipping_detection_enabled</span></span>(<span>self, instance_id, status)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>returns list of nano instances allocated for a pod</p>
+<div class="desc"><p>configures whether or not to save new clusters coming in for root cause analysis</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>status</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true or false of whether to learning is on or off</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (list was returned)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>json dictionary of pod instances when result=true, error string when result=false</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def set_learning_status(self, status):
-    &#34;&#34;&#34;returns list of nano instances allocated for a pod
-
-    Args:
-        status (boolean): true or false of whether to learning is on or off
-
-    Returns:
-        result (boolean):  true if successful (list was returned)
-        response (str): json dictionary of pod instances when result=true, error string when result=false
-
-    &#34;&#34;&#34;
-    if status not in [True, False]:
-        return False, &#39;status must be a boolean&#39;
-    # build command
-    learning_cmd = self.url + &#39;learning/&#39; + self.instance + &#39;?enable=&#39; + str(
-        status).lower() + &#39;&amp;api-tenant=&#39; + self.api_tenant
-
-    return simple_post(self, learning_cmd)</code></pre>
-</details>
-</dd>
-<dt id="boonnano.NanoHandle.set_root_cause_status"><code class="name flex">
-<span>def <span class="ident">set_root_cause_status</span></span>(<span>self, status)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>configures whether or not to save new clusters coming in for root cause analysis</p>
-<h2 id="args">Args</h2>
-<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
 <dt><strong><code>status</code></strong> :&ensp;<code>boolean</code></dt>
 <dd>true or false of whether root cause is on or off</dd>
 </dl>
 <h2 id="returns">Returns</h2>
+<p>response (boolean): status of nano clipping detection</p></div>
+</dd>
+<dt id="boonnano.ExpertClient.set_learning_enabled"><code class="name flex">
+<span>def <span class="ident">set_learning_enabled</span></span>(<span>self, instance_id, status)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>returns list of nano instances allocated for a pod</p>
+<h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>result</code></strong> :&ensp;<code>boolean</code></dt>
-<dd>true if successful (list was returned)</dd>
-<dt><strong><code>response</code></strong> :&ensp;<code>str</code></dt>
-<dd>status of root cause</dd>
-</dl></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def set_root_cause_status(self, status):
-    &#34;&#34;&#34;configures whether or not to save new clusters coming in for root cause analysis
-
-    Args:
-        status (boolean): true or false of whether root cause is on or off
-
-    Returns:
-        result (boolean):  true if successful (list was returned)
-        response (str): status of root cause
-
-    &#34;&#34;&#34;
-    if status not in [True, False]:
-        return False, &#39;status must be a boolean&#39;
-    # build command
-    learning_cmd = self.url + &#39;rootCause/&#39; + self.instance + &#39;?enable=&#39; + str(
-        status).lower() + &#39;&amp;api-tenant=&#39; + self.api_tenant
-
-    return simple_post(self, learning_cmd)</code></pre>
-</details>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+<dt><strong><code>status</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true or false of whether to learning is on or off</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>response (boolean): status of learning</p></div>
+</dd>
+<dt id="boonnano.ExpertClient.set_root_cause_enabled"><code class="name flex">
+<span>def <span class="ident">set_root_cause_enabled</span></span>(<span>self, instance_id, status)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>configures whether or not to save new clusters coming in for root cause analysis</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>instance_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>instance identifier to assign to new pod instance</dd>
+<dt><strong><code>status</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>true or false of whether root cause is on or off</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>response (boolean): status of root cause</p></div>
 </dd>
 </dl>
 </dd>
@@ -3003,39 +541,41 @@ def save_nano(self, filename):
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="boonnano.rest" href="rest.html">boonnano.rest</a></code></li>
-</ul>
-</li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
 <h4><code><a title="boonnano.BoonException" href="#boonnano.BoonException">BoonException</a></code></h4>
 </li>
 <li>
-<h4><code><a title="boonnano.NanoHandle" href="#boonnano.NanoHandle">NanoHandle</a></code></h4>
+<h4><code><a title="boonnano.ExpertClient" href="#boonnano.ExpertClient">ExpertClient</a></code></h4>
 <ul class="">
-<li><code><a title="boonnano.NanoHandle.autotune_config" href="#boonnano.NanoHandle.autotune_config">autotune_config</a></code></li>
-<li><code><a title="boonnano.NanoHandle.close_nano" href="#boonnano.NanoHandle.close_nano">close_nano</a></code></li>
-<li><code><a title="boonnano.NanoHandle.configure_nano" href="#boonnano.NanoHandle.configure_nano">configure_nano</a></code></li>
-<li><code><a title="boonnano.NanoHandle.create_config" href="#boonnano.NanoHandle.create_config">create_config</a></code></li>
-<li><code><a title="boonnano.NanoHandle.get_buffer_status" href="#boonnano.NanoHandle.get_buffer_status">get_buffer_status</a></code></li>
-<li><code><a title="boonnano.NanoHandle.get_config" href="#boonnano.NanoHandle.get_config">get_config</a></code></li>
-<li><code><a title="boonnano.NanoHandle.get_nano_results" href="#boonnano.NanoHandle.get_nano_results">get_nano_results</a></code></li>
-<li><code><a title="boonnano.NanoHandle.get_nano_status" href="#boonnano.NanoHandle.get_nano_status">get_nano_status</a></code></li>
-<li><code><a title="boonnano.NanoHandle.get_root_cause" href="#boonnano.NanoHandle.get_root_cause">get_root_cause</a></code></li>
-<li><code><a title="boonnano.NanoHandle.get_version" href="#boonnano.NanoHandle.get_version">get_version</a></code></li>
-<li><code><a title="boonnano.NanoHandle.load_data" href="#boonnano.NanoHandle.load_data">load_data</a></code></li>
-<li><code><a title="boonnano.NanoHandle.load_file" href="#boonnano.NanoHandle.load_file">load_file</a></code></li>
-<li><code><a title="boonnano.NanoHandle.nano_list" href="#boonnano.NanoHandle.nano_list">nano_list</a></code></li>
-<li><code><a title="boonnano.NanoHandle.open_nano" href="#boonnano.NanoHandle.open_nano">open_nano</a></code></li>
-<li><code><a title="boonnano.NanoHandle.restore_nano" href="#boonnano.NanoHandle.restore_nano">restore_nano</a></code></li>
-<li><code><a title="boonnano.NanoHandle.run_nano" href="#boonnano.NanoHandle.run_nano">run_nano</a></code></li>
-<li><code><a title="boonnano.NanoHandle.run_streaming_nano" href="#boonnano.NanoHandle.run_streaming_nano">run_streaming_nano</a></code></li>
-<li><code><a title="boonnano.NanoHandle.save_nano" href="#boonnano.NanoHandle.save_nano">save_nano</a></code></li>
-<li><code><a title="boonnano.NanoHandle.set_learning_status" href="#boonnano.NanoHandle.set_learning_status">set_learning_status</a></code></li>
-<li><code><a title="boonnano.NanoHandle.set_root_cause_status" href="#boonnano.NanoHandle.set_root_cause_status">set_root_cause_status</a></code></li>
+<li><code><a title="boonnano.ExpertClient.autotune_config" href="#boonnano.ExpertClient.autotune_config">autotune_config</a></code></li>
+<li><code><a title="boonnano.ExpertClient.close_nano" href="#boonnano.ExpertClient.close_nano">close_nano</a></code></li>
+<li><code><a title="boonnano.ExpertClient.configure_nano" href="#boonnano.ExpertClient.configure_nano">configure_nano</a></code></li>
+<li><code><a title="boonnano.ExpertClient.create_config" href="#boonnano.ExpertClient.create_config">create_config</a></code></li>
+<li><code><a title="boonnano.ExpertClient.get_autotune_array" href="#boonnano.ExpertClient.get_autotune_array">get_autotune_array</a></code></li>
+<li><code><a title="boonnano.ExpertClient.get_buffer_status" href="#boonnano.ExpertClient.get_buffer_status">get_buffer_status</a></code></li>
+<li><code><a title="boonnano.ExpertClient.get_config" href="#boonnano.ExpertClient.get_config">get_config</a></code></li>
+<li><code><a title="boonnano.ExpertClient.get_nano_instance" href="#boonnano.ExpertClient.get_nano_instance">get_nano_instance</a></code></li>
+<li><code><a title="boonnano.ExpertClient.get_nano_results" href="#boonnano.ExpertClient.get_nano_results">get_nano_results</a></code></li>
+<li><code><a title="boonnano.ExpertClient.get_nano_status" href="#boonnano.ExpertClient.get_nano_status">get_nano_status</a></code></li>
+<li><code><a title="boonnano.ExpertClient.get_root_cause" href="#boonnano.ExpertClient.get_root_cause">get_root_cause</a></code></li>
+<li><code><a title="boonnano.ExpertClient.get_version" href="#boonnano.ExpertClient.get_version">get_version</a></code></li>
+<li><code><a title="boonnano.ExpertClient.is_clipping_detection_enabled" href="#boonnano.ExpertClient.is_clipping_detection_enabled">is_clipping_detection_enabled</a></code></li>
+<li><code><a title="boonnano.ExpertClient.is_learning_enabled" href="#boonnano.ExpertClient.is_learning_enabled">is_learning_enabled</a></code></li>
+<li><code><a title="boonnano.ExpertClient.is_root_cause_enabled" href="#boonnano.ExpertClient.is_root_cause_enabled">is_root_cause_enabled</a></code></li>
+<li><code><a title="boonnano.ExpertClient.load_data" href="#boonnano.ExpertClient.load_data">load_data</a></code></li>
+<li><code><a title="boonnano.ExpertClient.load_file" href="#boonnano.ExpertClient.load_file">load_file</a></code></li>
+<li><code><a title="boonnano.ExpertClient.nano_list" href="#boonnano.ExpertClient.nano_list">nano_list</a></code></li>
+<li><code><a title="boonnano.ExpertClient.open_nano" href="#boonnano.ExpertClient.open_nano">open_nano</a></code></li>
+<li><code><a title="boonnano.ExpertClient.prune_ids" href="#boonnano.ExpertClient.prune_ids">prune_ids</a></code></li>
+<li><code><a title="boonnano.ExpertClient.restore_nano" href="#boonnano.ExpertClient.restore_nano">restore_nano</a></code></li>
+<li><code><a title="boonnano.ExpertClient.run_nano" href="#boonnano.ExpertClient.run_nano">run_nano</a></code></li>
+<li><code><a title="boonnano.ExpertClient.run_streaming_nano" href="#boonnano.ExpertClient.run_streaming_nano">run_streaming_nano</a></code></li>
+<li><code><a title="boonnano.ExpertClient.save_nano" href="#boonnano.ExpertClient.save_nano">save_nano</a></code></li>
+<li><code><a title="boonnano.ExpertClient.set_clipping_detection_enabled" href="#boonnano.ExpertClient.set_clipping_detection_enabled">set_clipping_detection_enabled</a></code></li>
+<li><code><a title="boonnano.ExpertClient.set_learning_enabled" href="#boonnano.ExpertClient.set_learning_enabled">set_learning_enabled</a></code></li>
+<li><code><a title="boonnano.ExpertClient.set_root_cause_enabled" href="#boonnano.ExpertClient.set_root_cause_enabled">set_root_cause_enabled</a></code></li>
 </ul>
 </li>
 </ul>
@@ -3044,9 +584,7 @@ def save_nano(self, filename):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
 </body>
 </html>
