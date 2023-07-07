@@ -12,7 +12,7 @@ format-check: format
 	git diff --exit-code; if [ $$? -ne 0 ]; then echo "format-check failed"; exit 1; fi; \
 	echo "*** format-check passed"
 
-format:
+format: local-env-check
 	@. local-env/bin/activate && \
 	pip install black && \
 	black boonnano
@@ -23,7 +23,21 @@ test: local-env-check
 	coverage run --source=boonnano -m pytest -x -vv test_client.py && \
 	coverage html
 
-pypi:
+test-examples: local-env-check
+	@. local-env/bin/activate; \
+	cd examples && \
+	for f in *.py; do \
+		python $${f} \
+		|| exit 1; \
+	done
+
+release:
+	. ./bin/increment_release.sh && \
+	git add setup.py && git commit -m "increment version to $$VERSION" && git push && \
+	git tag -a "v$$VERSION" && \
+	git push origin --tags
+
+pypi: local-env-check
 	@. local-env/bin/activate; \
 	python3 setup.py sdist; \
 	twine upload --skip-existing dist/*
@@ -34,7 +48,7 @@ local-env-check:
 		exit 1; \
 	fi
 
-docs:
+docs: local-env-check
 	@. local-env/bin/activate; \
 	pdoc3 --force -o docs --template-dir docs --html boonnano
 

@@ -46,7 +46,7 @@
 </dd>
 <dt id="boonnano.ExpertClient"><code class="flex name class">
 <span>class <span class="ident">ExpertClient</span></span>
-<span>(</span><span>license_id='default', license_file='~/.BoonLogic.license', timeout=120.0, verify=True, cert=None)</span>
+<span>(</span><span>license_id: str = 'default', license_file: str = '~/.BoonLogic.license', timeout: int = 120, verify: bool = True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Primary handle for BoonNano Pod instances</p>
@@ -57,12 +57,10 @@
 <dd>license identifier label found within the .BoonLogic.license configuration file</dd>
 <dt><strong><code>license_file</code></strong> :&ensp;<code>str</code></dt>
 <dd>path to .BoonLogic license file</dd>
-<dt><strong><code>timeout</code></strong> :&ensp;<code>float</code></dt>
-<dd>read timeout for http requests</dd>
-<dt><strong><code>verify</code></strong></dt>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>int</code></dt>
+<dd>read timeout for http requests in seconds</dd>
+<dt><strong><code>verify</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use</dd>
-<dt><strong><code>cert</code></strong> :&ensp;<code>bool</code></dt>
-<dd>if String, path to ssl client cert file (.pem). If Tuple, (‘cert’, ‘key’) pair.</dd>
 </dl>
 <h2 id="environment">Environment</h2>
 <p>BOON_LICENSE_FILE: sets license_file path
@@ -83,7 +81,7 @@ except bn.BoonException as be:
 <h3>Methods</h3>
 <dl>
 <dt id="boonnano.ExpertClient.autotune_config"><code class="name flex">
-<span>def <span class="ident">autotune_config</span></span>(<span>self, instance_id)</span>
+<span>def <span class="ident">autotune_config</span></span>(<span>self, instance_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Autotunes the percent variation, min and max for each feature</p>
@@ -94,7 +92,7 @@ except bn.BoonException as be:
 </dl></div>
 </dd>
 <dt id="boonnano.ExpertClient.close_nano"><code class="name flex">
-<span>def <span class="ident">close_nano</span></span>(<span>self, instance_id)</span>
+<span>def <span class="ident">close_nano</span></span>(<span>self, instance_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Closes the pod instance</p>
@@ -105,7 +103,7 @@ except bn.BoonException as be:
 </dl></div>
 </dd>
 <dt id="boonnano.ExpertClient.configure_nano"><code class="name flex">
-<span>def <span class="ident">configure_nano</span></span>(<span>self, instance_id, feature_count=1, numeric_format='float32', cluster_mode='batch', min_val=0, max_val=1, weight=1, label=None, percent_variation=0.05, streaming_window=1, accuracy=0.99, autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None, streaming_autotune=True, streaming_buffer=10000, anomaly_history_window=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000, config=None)</span>
+<span>def <span class="ident">configure_nano</span></span>(<span>self, instance_id: str, feature_count: int = 1, numeric_format: str = 'float32', cluster_mode: str = 'batch', min_val=0, max_val=1, weight=1, label=None, percent_variation: float = 0.05, streaming_window: int = 1, accuracy: float = 0.99, autotune_pv: bool = True, autotune_range: bool = True, autotune_by_feature: bool = True, autotune_max_clusters: int = 1000, exclusions: list = None, streaming_autotune: bool = True, streaming_buffer: int = 10000, anomaly_history_window: int = 10000, learning_numerator: int = 10, learning_denominator: int = 10000, learning_max_clusters: int = 1000, learning_samples: int = 1000000, config: dict = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the posted clustering configuration</p>
@@ -164,7 +162,7 @@ except bn.BoonException as be:
 <p>response (dict): configuration dictionary</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.create_config"><code class="name flex">
-<span>def <span class="ident">create_config</span></span>(<span>self, feature_count, numeric_format, cluster_mode='batch', min_val=0, max_val=1, weight=1, label=None, percent_variation=0.05, streaming_window=1, accuracy=0.99, autotune_pv=True, autotune_range=True, autotune_by_feature=True, autotune_max_clusters=1000, exclusions=None, streaming_autotune=True, streaming_buffer=10000, anomaly_history_window=10000, learning_numerator=10, learning_denominator=10000, learning_max_clusters=1000, learning_samples=1000000)</span>
+<span>def <span class="ident">create_config</span></span>(<span>self, feature_count: int, numeric_format: str, cluster_mode: str = 'batch', min_val=0, max_val=1, weight=1, label=None, percent_variation: float = 0.05, streaming_window: int = 1, accuracy: float = 0.99, autotune_pv: bool = True, autotune_range: bool = True, autotune_by_feature: bool = True, autotune_max_clusters: int = 1000, exclusions: list = None, streaming_autotune: bool = True, streaming_buffer: int = 10000, anomaly_history_window: int = 10000, learning_numerator: int = 10, learning_denominator: int = 10000, learning_max_clusters: int = 1000, learning_samples: int = 1000000)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Generate a configuration template for the given parameters</p>
@@ -224,7 +222,7 @@ a single element list assigns all features with same min_val</dd>
 <p>config (dict): configuration dictionary</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.get_autotune_array"><code class="name flex">
-<span>def <span class="ident">get_autotune_array</span></span>(<span>self, instance_id)</span>
+<span>def <span class="ident">get_autotune_array</span></span>(<span>self, instance_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the autotune elbow</p>
@@ -237,7 +235,7 @@ a single element list assigns all features with same min_val</dd>
 <p>response (list): 2D array of the autotuning elbox values</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.get_buffer_status"><code class="name flex">
-<span>def <span class="ident">get_buffer_status</span></span>(<span>self, instance_id)</span>
+<span>def <span class="ident">get_buffer_status</span></span>(<span>self, instance_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Results related to the bytes processed/in the buffer</p>
@@ -250,7 +248,7 @@ a single element list assigns all features with same min_val</dd>
 <p>response (dict): dictionary of buffer statistics</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.get_config"><code class="name flex">
-<span>def <span class="ident">get_config</span></span>(<span>self, instance_id)</span>
+<span>def <span class="ident">get_config</span></span>(<span>self, instance_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the configuration for this nano pod instance</p>
@@ -263,7 +261,7 @@ a single element list assigns all features with same min_val</dd>
 <p>response (dict): configuration dictionary</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.get_nano_instance"><code class="name flex">
-<span>def <span class="ident">get_nano_instance</span></span>(<span>self, instance_id)</span>
+<span>def <span class="ident">get_nano_instance</span></span>(<span>self, instance_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get instance info</p>
@@ -276,13 +274,13 @@ a single element list assigns all features with same min_val</dd>
 <p>response (dict): metadata about the instance</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.get_nano_results"><code class="name flex">
-<span>def <span class="ident">get_nano_results</span></span>(<span>self, instance_id, results='All')</span>
+<span>def <span class="ident">get_nano_results</span></span>(<span>self, instance_id: str, results: str = 'All')</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="boonnano.ExpertClient.get_nano_status"><code class="name flex">
-<span>def <span class="ident">get_nano_status</span></span>(<span>self, instance_id, results='All')</span>
+<span>def <span class="ident">get_nano_status</span></span>(<span>self, instance_id: str, results: str = 'All')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Results in relation to each cluster/overall stats</p>
@@ -298,6 +296,7 @@ a single element list assigns all features with same min_val</dd>
 <p>clusterSizes = number of patterns in each cluster (includes 0 cluster)</p>
 <p>anomalyIndexes = anomaly index (includes 0 cluster)</p>
 <p>frequencyIndexes = frequency index (includes 0 cluster)</p>
+<p>anomalyThreshold = RI threshold</p>
 <p>distanceIndexes = distance index (includes 0 cluster)</p>
 <p>totalInferences = total number of patterns clustered (overall)</p>
 <p>averageInferenceTime = time in milliseconds to cluster per
@@ -310,7 +309,7 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 <p>response (dict): dictionary of results</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.get_root_cause"><code class="name flex">
-<span>def <span class="ident">get_root_cause</span></span>(<span>self, instance_id, id_list=[], pattern_list=[])</span>
+<span>def <span class="ident">get_root_cause</span></span>(<span>self, instance_id: str, id_list: list = [], pattern_list: list = [])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get root cause</p>
@@ -335,7 +334,7 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 <p>response (dict): dictionary of version information</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.is_clipping_detection_enabled"><code class="name flex">
-<span>def <span class="ident">is_clipping_detection_enabled</span></span>(<span>self, instance_id)</span>
+<span>def <span class="ident">is_clipping_detection_enabled</span></span>(<span>self, instance_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Results in relation to each cluster/overall stats</p>
@@ -348,7 +347,7 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 <p>response (boolean): nano clipping detection on/off status</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.is_learning_enabled"><code class="name flex">
-<span>def <span class="ident">is_learning_enabled</span></span>(<span>self, instance_id)</span>
+<span>def <span class="ident">is_learning_enabled</span></span>(<span>self, instance_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Results in relation to each cluster/overall stats</p>
@@ -361,7 +360,7 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 <p>response (boolean): learning on/off status</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.is_root_cause_enabled"><code class="name flex">
-<span>def <span class="ident">is_root_cause_enabled</span></span>(<span>self, instance_id)</span>
+<span>def <span class="ident">is_root_cause_enabled</span></span>(<span>self, instance_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Results in relation to each cluster/overall stats</p>
@@ -374,7 +373,7 @@ pattern (not available if uploading from serialized nano) (overall)</p>
 <p>response (boolean): root cause on/off status</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.load_data"><code class="name flex">
-<span>def <span class="ident">load_data</span></span>(<span>self, instance_id, data, append_data=False)</span>
+<span>def <span class="ident">load_data</span></span>(<span>self, instance_id: str, data: list, append_data: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Load nano data from an existing numpy array or simple python list</p>
@@ -390,7 +389,7 @@ data should be truncated</dd>
 </dl></div>
 </dd>
 <dt id="boonnano.ExpertClient.load_file"><code class="name flex">
-<span>def <span class="ident">load_file</span></span>(<span>self, instance_id, file, file_type, gzip=False, append_data=False)</span>
+<span>def <span class="ident">load_file</span></span>(<span>self, instance_id: str, file: str, file_type: str, gzip: bool = False, append_data: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Load nano data from a file</p>
@@ -418,7 +417,7 @@ data should be truncated</dd>
 <p>response (dict): json dictionary of pod instances</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.open_nano"><code class="name flex">
-<span>def <span class="ident">open_nano</span></span>(<span>self, instance_id)</span>
+<span>def <span class="ident">open_nano</span></span>(<span>self, instance_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates or attaches to a nano pod instance</p>
@@ -431,7 +430,7 @@ data should be truncated</dd>
 <p>response (dict): metadata about the instance</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.prune_ids"><code class="name flex">
-<span>def <span class="ident">prune_ids</span></span>(<span>self, instance_id, id_list=[])</span>
+<span>def <span class="ident">prune_ids</span></span>(<span>self, instance_id: str, id_list: list = [])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get root cause</p>
@@ -446,7 +445,7 @@ data should be truncated</dd>
 <p>response (dict): metadata about the updated model</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.restore_nano"><code class="name flex">
-<span>def <span class="ident">restore_nano</span></span>(<span>self, instance_id, filename)</span>
+<span>def <span class="ident">restore_nano</span></span>(<span>self, instance_id: str, filename: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Restore a nano pod instance from local file</p>
@@ -461,19 +460,19 @@ data should be truncated</dd>
 <p>response (dict): config dictionary of the uploaded nano</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.run_nano"><code class="name flex">
-<span>def <span class="ident">run_nano</span></span>(<span>self, instance_id, results=None)</span>
+<span>def <span class="ident">run_nano</span></span>(<span>self, instance_id: str, results: str = None)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="boonnano.ExpertClient.run_streaming_nano"><code class="name flex">
-<span>def <span class="ident">run_streaming_nano</span></span>(<span>self, instance_id, data, results=None)</span>
+<span>def <span class="ident">run_streaming_nano</span></span>(<span>self, instance_id: str, data: list, results: str = None)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="boonnano.ExpertClient.save_nano"><code class="name flex">
-<span>def <span class="ident">save_nano</span></span>(<span>self, instance_id, filename)</span>
+<span>def <span class="ident">save_nano</span></span>(<span>self, instance_id: str, filename: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>serialize a nano pod instance and save to a local file</p>
@@ -486,7 +485,7 @@ data should be truncated</dd>
 </dl></div>
 </dd>
 <dt id="boonnano.ExpertClient.set_clipping_detection_enabled"><code class="name flex">
-<span>def <span class="ident">set_clipping_detection_enabled</span></span>(<span>self, instance_id, status)</span>
+<span>def <span class="ident">set_clipping_detection_enabled</span></span>(<span>self, instance_id: str, status: bool)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>configures whether or not to save new clusters coming in for root cause analysis</p>
@@ -501,7 +500,7 @@ data should be truncated</dd>
 <p>response (boolean): status of nano clipping detection</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.set_learning_enabled"><code class="name flex">
-<span>def <span class="ident">set_learning_enabled</span></span>(<span>self, instance_id, status)</span>
+<span>def <span class="ident">set_learning_enabled</span></span>(<span>self, instance_id: str, status: bool)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>returns list of nano instances allocated for a pod</p>
@@ -516,7 +515,7 @@ data should be truncated</dd>
 <p>response (boolean): status of learning</p></div>
 </dd>
 <dt id="boonnano.ExpertClient.set_root_cause_enabled"><code class="name flex">
-<span>def <span class="ident">set_root_cause_enabled</span></span>(<span>self, instance_id, status)</span>
+<span>def <span class="ident">set_root_cause_enabled</span></span>(<span>self, instance_id: str, status: bool)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>configures whether or not to save new clusters coming in for root cause analysis</p>
