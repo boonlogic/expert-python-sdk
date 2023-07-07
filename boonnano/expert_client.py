@@ -1,6 +1,3 @@
-from urllib3 import ProxyManager
-from urllib3 import PoolManager
-from urllib3 import Timeout
 from functools import wraps
 import json
 import os
@@ -25,11 +22,10 @@ class BoonException(Exception):
 class ExpertClient:
     def __init__(
         self,
-        license_id="default",
-        license_file="~/.BoonLogic.license",
-        timeout=120.0,
-        verify=True,
-        cert=None,
+        license_id: str = "default",
+        license_file: str = "~/.BoonLogic.license",
+        timeout: int = 120,
+        verify: bool = True,
     ):
         """Primary handle for BoonNano Pod instances
 
@@ -38,9 +34,8 @@ class ExpertClient:
         Args:
             license_id (str): license identifier label found within the .BoonLogic.license configuration file
             license_file (str): path to .BoonLogic license file
-            timeout (float): read timeout for http requests
-            verify:  Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
-            cert (bool): if String, path to ssl client cert file (.pem). If Tuple, (‘cert’, ‘key’) pair.
+            timeout (int): read timeout for http requests in seconds
+            verify (bool):  Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
 
 
         Environment:
@@ -64,7 +59,22 @@ class ExpertClient:
             ```
 
         """
-        self.results = ["ID", "SI", "RI", "FI", "DI", "NI", "NS", "NW", "OM", "PI"]
+        self.results = [
+            "ID",
+            "SI",
+            "RI",
+            "FI",
+            "DI",
+            "AD",
+            "AH",
+            "AM",
+            "AW",
+            "NI",
+            "NS",
+            "NW",
+            "OM",
+            "PI",
+        ]
         self.user_agent = "Boon Logic / expert-python-sdk / requests"
 
         self.license_id = None
@@ -82,11 +92,7 @@ class ExpertClient:
         env_verify = os.environ.get("BOON_SSL_VERIFY", None)
 
         # certificates
-        self.cert = (
-            "CERT_REQUIRED"
-            if env_cert
-            else {None: "CERT_NONE", True: "CERT_REQUIRED"}[cert]
-        )
+        self.cert = env_cert if env_cert else None
         if env_verify:
             if env_verify.lower() == "false":
                 self.verify = False
@@ -160,8 +166,6 @@ class ExpertClient:
             self.url = "http://" + self.url
 
         self.timeout = timeout
-        timeout_inst = Timeout(connect=30.0, read=timeout)
-        self.http = PoolManager(timeout=timeout_inst, cert_reqs=self.cert)
 
     def _is_configured(f):
         @wraps(f)
@@ -192,6 +196,7 @@ class ExpertClient:
                 data=body,
                 verify=self.verify,
                 timeout=self.timeout,
+                cert=self.cert,
                 files=fields,
             )
         except requests.exceptions.Timeout:
@@ -238,7 +243,7 @@ class ExpertClient:
             results_str = results if isinstance(results, str) else ",".join(results)
         return results_str
 
-    def open_nano(self, instance_id):
+    def open_nano(self, instance_id: str):
         """Creates or attaches to a nano pod instance
 
         Args:
@@ -257,7 +262,7 @@ class ExpertClient:
 
         return response.json()
 
-    def get_nano_instance(self, instance_id):
+    def get_nano_instance(self, instance_id: str):
         """Get instance info
 
         Args:
@@ -276,7 +281,7 @@ class ExpertClient:
 
         return response.json()
 
-    def close_nano(self, instance_id):
+    def close_nano(self, instance_id: str):
         """Closes the pod instance
 
         Args:
@@ -292,28 +297,28 @@ class ExpertClient:
 
     def create_config(
         self,
-        feature_count,
-        numeric_format,
-        cluster_mode="batch",
+        feature_count: int,
+        numeric_format: str,
+        cluster_mode: str = "batch",
         min_val=0,
         max_val=1,
         weight=1,
         label=None,
-        percent_variation=0.05,
-        streaming_window=1,
-        accuracy=0.99,
-        autotune_pv=True,
-        autotune_range=True,
-        autotune_by_feature=True,
-        autotune_max_clusters=1000,
-        exclusions=None,
-        streaming_autotune=True,
-        streaming_buffer=10000,
-        anomaly_history_window=10000,
-        learning_numerator=10,
-        learning_denominator=10000,
-        learning_max_clusters=1000,
-        learning_samples=1000000,
+        percent_variation: float = 0.05,
+        streaming_window: int = 1,
+        accuracy: float = 0.99,
+        autotune_pv: bool = True,
+        autotune_range: bool = True,
+        autotune_by_feature: bool = True,
+        autotune_max_clusters: int = 1000,
+        exclusions: list = None,
+        streaming_autotune: bool = True,
+        streaming_buffer: int = 10000,
+        anomaly_history_window: int = 10000,
+        learning_numerator: int = 10,
+        learning_denominator: int = 10000,
+        learning_max_clusters: int = 1000,
+        learning_samples: int = 1000000,
     ):
         """Generate a configuration template for the given parameters
 
@@ -426,30 +431,30 @@ class ExpertClient:
 
     def configure_nano(
         self,
-        instance_id,
-        feature_count=1,
-        numeric_format="float32",
-        cluster_mode="batch",
+        instance_id: str,
+        feature_count: int = 1,
+        numeric_format: str = "float32",
+        cluster_mode: str = "batch",
         min_val=0,
         max_val=1,
         weight=1,
         label=None,
-        percent_variation=0.05,
-        streaming_window=1,
-        accuracy=0.99,
-        autotune_pv=True,
-        autotune_range=True,
-        autotune_by_feature=True,
-        autotune_max_clusters=1000,
-        exclusions=None,
-        streaming_autotune=True,
-        streaming_buffer=10000,
-        anomaly_history_window=10000,
-        learning_numerator=10,
-        learning_denominator=10000,
-        learning_max_clusters=1000,
-        learning_samples=1000000,
-        config=None,
+        percent_variation: float = 0.05,
+        streaming_window: int = 1,
+        accuracy: float = 0.99,
+        autotune_pv: bool = True,
+        autotune_range: bool = True,
+        autotune_by_feature: bool = True,
+        autotune_max_clusters: int = 1000,
+        exclusions: list = None,
+        streaming_autotune: bool = True,
+        streaming_buffer: int = 10000,
+        anomaly_history_window: int = 10000,
+        learning_numerator: int = 10,
+        learning_denominator: int = 10000,
+        learning_max_clusters: int = 1000,
+        learning_samples: int = 1000000,
+        config: dict = None,
     ):
         """Returns the posted clustering configuration
 
@@ -541,7 +546,7 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def save_nano(self, instance_id, filename):
+    def save_nano(self, instance_id: str, filename: str):
         """serialize a nano pod instance and save to a local file
 
         Args:
@@ -561,7 +566,7 @@ class ExpertClient:
         except Exception as e:
             raise BoonException(message=str(e))
 
-    def restore_nano(self, instance_id, filename):
+    def restore_nano(self, instance_id: str, filename: str):
         """Restore a nano pod instance from local file
 
         Args:
@@ -609,7 +614,7 @@ class ExpertClient:
         return response
 
     @_is_configured
-    def autotune_config(self, instance_id):
+    def autotune_config(self, instance_id: str):
         """Autotunes the percent variation, min and max for each feature
 
         Args:
@@ -622,7 +627,7 @@ class ExpertClient:
         self._api_call("POST", url, headers)
 
     @_is_configured
-    def get_autotune_array(self, instance_id):
+    def get_autotune_array(self, instance_id: str):
         """Gets the autotune elbow
 
         Args:
@@ -646,7 +651,7 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def get_config(self, instance_id):
+    def get_config(self, instance_id: str):
         """Gets the configuration for this nano pod instance
 
         Args:
@@ -670,7 +675,14 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def load_file(self, instance_id, file, file_type, gzip=False, append_data=False):
+    def load_file(
+        self,
+        instance_id: str,
+        file: str,
+        file_type: str,
+        gzip: bool = False,
+        append_data: bool = False,
+    ):
         """Load nano data from a file
 
         Args:
@@ -719,7 +731,7 @@ class ExpertClient:
         self._api_call("POST", url, headers, fields=fields)
 
     @_is_configured
-    def load_data(self, instance_id, data, append_data=False):
+    def load_data(self, instance_id: str, data: list, append_data: bool = False):
         """Load nano data from an existing numpy array or simple python list
 
         Args:
@@ -750,7 +762,7 @@ class ExpertClient:
         headers = {}
         self._api_call("POST", url, headers, fields=fields)
 
-    def set_learning_enabled(self, instance_id, status):
+    def set_learning_enabled(self, instance_id: str, status: bool):
         """returns list of nano instances allocated for a pod
 
         Args:
@@ -779,7 +791,7 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def is_learning_enabled(self, instance_id):
+    def is_learning_enabled(self, instance_id: str):
         """Results in relation to each cluster/overall stats
 
         Args:
@@ -796,7 +808,7 @@ class ExpertClient:
 
         return response.json()
 
-    def set_root_cause_enabled(self, instance_id, status):
+    def set_root_cause_enabled(self, instance_id: str, status: bool):
         """configures whether or not to save new clusters coming in for root cause analysis
 
         Args:
@@ -825,7 +837,7 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def is_root_cause_enabled(self, instance_id):
+    def is_root_cause_enabled(self, instance_id: str):
         """Results in relation to each cluster/overall stats
 
         Args:
@@ -842,7 +854,7 @@ class ExpertClient:
 
         return response.json()
 
-    def set_clipping_detection_enabled(self, instance_id, status):
+    def set_clipping_detection_enabled(self, instance_id: str, status: bool):
         """configures whether or not to save new clusters coming in for root cause analysis
 
         Args:
@@ -871,7 +883,7 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def is_clipping_detection_enabled(self, instance_id):
+    def is_clipping_detection_enabled(self, instance_id: str):
         """Results in relation to each cluster/overall stats
 
         Args:
@@ -894,7 +906,7 @@ class ExpertClient:
 
         return response.json()
 
-    def run_nano(self, instance_id, results=None):
+    def run_nano(self, instance_id: str, results: str = None):
         f"""Clusters the data in the nano pod buffer and returns the specified results
 
         Args:
@@ -910,6 +922,24 @@ class ExpertClient:
                 FI = frequency index
 
                 DI = distance index
+
+                AD = anomaly detection
+
+                AH = anomaly history
+
+                AM = anomaly metric
+
+                AW = anomaly warning level
+
+                NI = novelty index
+
+                NS = smoothed novelty index
+
+                NW = novelty warning level
+
+                PI = probability index
+
+                OM = operational mode
 
                 All = {",".join(self.results)}
 
@@ -929,7 +959,7 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def prune_ids(self, instance_id, id_list=[]):
+    def prune_ids(self, instance_id: str, id_list: list = []):
         """Get root cause
 
         Args:
@@ -961,7 +991,7 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def run_streaming_nano(self, instance_id, data, results=None):
+    def run_streaming_nano(self, instance_id: str, data: list, results: str = None):
         f"""Load streaming data into self-autotuning nano pod instance, run the nano and return results
 
         Args:
@@ -978,6 +1008,24 @@ class ExpertClient:
                 FI = frequency index
 
                 DI = distance index
+
+                AD = anomaly detection
+
+                AH = anomaly history
+
+                AM = anomaly metric
+
+                AW = anomaly warning level
+
+                NI = novelty index
+
+                NS = smoothed novelty index
+
+                NW = novelty warning level
+
+                PI = probability index
+
+                OM = operational mode
 
                 All = {",".join(self.results)}
 
@@ -1025,7 +1073,7 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def get_buffer_status(self, instance_id):
+    def get_buffer_status(self, instance_id: str):
         """Results related to the bytes processed/in the buffer
 
         Args:
@@ -1045,7 +1093,7 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def get_nano_results(self, instance_id, results="All"):
+    def get_nano_results(self, instance_id: str, results: str = "All"):
         f"""Results per pattern
 
         Args:
@@ -1061,6 +1109,24 @@ class ExpertClient:
                 FI = frequency index
 
                 DI = distance index
+
+                AD = anomaly detection
+
+                AH = anomaly history
+
+                AM = anomaly metric
+
+                AW = anomaly warning level
+
+                NI = novelty index
+
+                NS = smoothed novelty index
+
+                NW = novelty warning level
+
+                PI = probability index
+
+                OM = operational mode
 
                 All = {",".join(self.results)}
 
@@ -1085,7 +1151,7 @@ class ExpertClient:
         return response.json()
 
     @_is_configured
-    def get_nano_status(self, instance_id, results="All"):
+    def get_nano_status(self, instance_id: str, results: str = "All"):
         """Results in relation to each cluster/overall stats
 
         Args:
@@ -1101,6 +1167,8 @@ class ExpertClient:
                 anomalyIndexes = anomaly index (includes 0 cluster)
 
                 frequencyIndexes = frequency index (includes 0 cluster)
+
+                anomalyThreshold = RI threshold
 
                 distanceIndexes = distance index (includes 0 cluster)
 
@@ -1122,7 +1190,7 @@ class ExpertClient:
         if str(results) == "All":
             results_str = (
                 "PCA,clusterGrowth,clusterSizes,anomalyIndexes,frequencyIndexes,"
-                "distanceIndexes,totalInferences,numClusters,clusterDistances"
+                "distanceIndexes,totalInferences,numClusters,clusterDistances,anomalyThreshold"
             )
         else:
             results_str = results if isinstance(results, str) else ",".join(results)
@@ -1141,7 +1209,9 @@ class ExpertClient:
 
         return response.json()
 
-    def get_root_cause(self, instance_id, id_list=[], pattern_list=[]):
+    def get_root_cause(
+        self, instance_id: str, id_list: list = [], pattern_list: list = []
+    ):
         """Get root cause
 
         Args:
