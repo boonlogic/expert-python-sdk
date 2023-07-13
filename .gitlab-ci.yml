@@ -3,6 +3,14 @@ image: 715859896688.dkr.ecr.us-east-1.amazonaws.com/pipeline-x86-python
 include:
   - template: 'Workflows/Boon-Pipelines.gitlab-ci.yml'
 
+variables:
+  GIT_STRATEGY: none
+  GIT_SSL_NO_VERIFY: "true"
+  CLANG_FORMAT: clang-format
+  REF_NAME: master
+  SHELL: /bin/bash
+  CI_DEBUG_SERVICES: "true"
+
 before_script:
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
   - eval $(ssh-agent -s)
@@ -13,18 +21,11 @@ before_script:
   - chmod 644 ~/.ssh/known_hosts
   - export PATH=~/.local/bin:$PATH
 
-variables:
-  GIT_STRATEGY: none
-  GIT_SSL_NO_VERIFY: "true"
-  CLANG_FORMAT: clang-format
-  REF_NAME: master
-  SHELL: /bin/bash
-
 stages:
   - build
   - self-test
   - test
-  
+
 build:
   stage: build
   tags:
@@ -34,12 +35,15 @@ build:
   - git clone git@gitlab.boonlogic.com:development/builder.git ci-root
   - cd ci-root
   - git checkout ${CI_COMMIT_REF_NAME} || true
-  - which python3
   - BRANCH=${CI_COMMIT_REF_NAME} make expert-python-sdk-env
   - make expert-python-sdk-build
+  - pipelines/expert-api/create-expertv3-test-env pipeline
   artifacts:
     paths:
     - ci-root/
+    reports:
+      dotenv:
+        - ci-root/pipeline.env
 
 code-check:
   stage: self-test
@@ -49,20 +53,21 @@ code-check:
     - cd ci-root
     - make expert-python-sdk-code-check
 
-unittests:
+test-expert-v3:
   stage: test
   tags:
     - expert-docker
   services:
-    - name: 715859896688.dkr.ecr.us-east-1.amazonaws.com/expert-server:latest
-      alias: expert-test-fixture
+    - name: 715859896688.dkr.ecr.us-east-1.amazonaws.com/expert-server:${EXPERT_TAG}
+      alias: expertv3-pipeline
   variables:
     BOON_PRODUCT_ID: expert-swagger
-    BOON_AMBER_PORT: 5007
-    BOON_MAX_INSTANCES: 4
+    BOON_API_KEY: $BOON_API_KEY
+    BOON_API_TENANT: $BOON_API_TENANT
   script:
     - cd ${CI_PROJECT_DIR}/ci-root/packages/expert-python-sdk/expert-python-sdk
-    - EXPERT_SERVER=http://expert-test-fixture:5007 make test
+    - export BOON_TEST_LICENSE_FILE=${CI_PROJECT_DIR}/ci-root/.BoonLogic.license
+    - make test-pipeline
   artifacts:
     paths:
     - ci-root/packages/expert-python-sdk/expert-python-sdk

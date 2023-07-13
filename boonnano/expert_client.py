@@ -2,6 +2,7 @@ from functools import wraps
 import json
 import os
 import tarfile
+import gzip
 
 import requests
 import numpy as np
@@ -19,46 +20,33 @@ class BoonException(Exception):
         self.message = message
 
 
-class ExpertClient:
+class LicenseProfile:
     def __init__(
         self,
-        license_id: str = "default",
-        license_file: str = "~/.BoonLogic.license",
-        timeout: int = 120,
-        verify: bool = True,
+        api_key: str = None,
+        api_tenant: str = None,
+        server: str = None,
+        proxy_server: str = None,
     ):
-        """Primary handle for BoonNano Pod instances
-
-        The is the primary handle to manage a nano pod instance
-
-        Args:
-            license_id (str): license identifier label found within the .BoonLogic.license configuration file
-            license_file (str): path to .BoonLogic license file
-            timeout (int): read timeout for http requests in seconds
-            verify (bool):  Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
+        self.api_key = api_key
+        self.api_tenant = api_tenant
+        self.server = server
+        self.proxy_server = proxy_server
 
 
-        Environment:
-            BOON_LICENSE_FILE: sets license_file path
-            BOON_LICENSE_ID: sets license_id
-            BOON_API_KEY: overrides the api-key as found in .BoonLogic.license file
-            BOON_API_TENANT: overrides the api-tenant as found in .BoonLogic.license file
-            BOON_SERVER: overrides the server as found in .BoonLogic.license file
-            PROXY_SERVER: overrides the proxy server as found in .BoonLogic.license file
-            BOON_SSL_CERT: path to ssl client cert file (.pem)
-            BOON_SSL_VERIFY: Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use
+class ExpertClient:
 
+    """Primary handle for BoonNano Pod instances
 
-        Example:
-            ```python
-            try:
-                nano = bn.ExpertClient()
-            except bn.BoonException as be:
-                print(be)
-                sys.exit(1)
-            ```
+    This is the primary handle to manage a nano pod instance
 
-        """
+    Environment:
+    BOON_SSL_CERT: specifies location of ssl certification
+    BOON_SSL_VERIFY: verify cert of server (default is true, ignored if http connection)
+    BOON_TIMEOUT: request timeout (default is 300)
+    """
+
+    def __init__(self, profile: LicenseProfile = None):
         self.results = [
             "ID",
             "SI",
@@ -76,96 +64,104 @@ class ExpertClient:
             "PI",
         ]
         self.user_agent = "Boon Logic / expert-python-sdk / requests"
-
-        self.license_id = None
-        self.api_key = None
-        self.api_tenant = None
+        self.server = profile.server
+        self.proxy_server = profile.proxy_server
+        self.api_key = profile.api_key
+        self.api_tenant = profile.api_tenant
         self.numeric_format = ""
 
-        env_license_file = os.environ.get("BOON_LICENSE_FILE", None)
-        env_license_id = os.environ.get("BOON_LICENSE_ID", None)
-        env_api_key = os.environ.get("BOON_API_KEY", None)
-        env_api_tenant = os.environ.get("BOON_API_TENANT", None)
-        env_server = os.environ.get("BOON_SERVER", None)
-        env_proxy_server = os.environ.get("PROXY_SERVER", None)
-        env_cert = os.environ.get("BOON_SSL_CERT", None)
-        env_verify = os.environ.get("BOON_SSL_VERIFY", None)
+        if self.server is None:
+            raise BoonException(400, "server not specified")
+        if self.api_key is None:
+            raise BoonException(400, "api-key not specified")
+        if self.api_tenant is None:
+            raise BoonException(400, "api-tenant not specified")
 
-        # certificates
-        self.cert = env_cert if env_cert else None
-        if env_verify:
-            if env_verify.lower() == "false":
-                self.verify = False
-            elif env_verify.lower() == "true":
-                self.verify = True
-            else:
-                self.verify = env_verify
-        else:
-            self.verify = verify
-
-        # when license_id comes in as None, use 'default'
-        if license_id is None:
-            license_id = "default"
-
-        license_file = env_license_file if env_license_file else license_file
-        self.license_id = env_license_id if env_license_id else license_id
-
-        license_path = os.path.abspath(os.path.expanduser(license_file))
-        if not os.path.exists(license_path):
-            raise BoonException(
-                message="license file {} does not exist".format(license_file)
-            )
-        try:
-            with open(license_path, "r") as json_file:
-                file_data = json.load(json_file)
-        except json.JSONDecodeError as e:
-            raise BoonException(
-                message="json formatting error in .BoonLogic.license file, {}, line: {}, col: {}".format(
-                    e.msg, e.lineno, e.colno
-                )
-            )
-        try:
-            license_data = file_data[self.license_id]
-        except KeyError:
-            raise BoonException(
-                message='license_id "{}" not found in license file'.format(
-                    self.license_id
-                )
-            )
-
-        try:
-            self.api_key = env_api_key if env_api_key else license_data["api-key"]
-        except KeyError:
-            raise BoonException(
-                message='"api-key" is missing from the specified license in license file'
-            )
-
-        try:
-            self.api_tenant = (
-                env_api_tenant if env_api_tenant else license_data["api-tenant"]
-            )
-        except KeyError:
-            raise BoonException(
-                message='"api-tenant" is missing from the specified license in license file'
-            )
-
-        try:
-            self.server = env_server if env_server else license_data["server"]
-        except KeyError:
-            raise BoonException(
-                message='"server" is missing from the specified license in license file'
-            )
-
-        self.proxy_server = env_proxy_server
-        if not self.proxy_server and "proxy-server" in license_data.keys():
-            self.proxy_server = license_data["proxy-server"]
+        self.ssl_cert = os.environ.get("BOON_SSL_CERT", None)
+        self.ssl_verify = os.environ.get("BOON_SSL_VERIFY", "true").lower() == "true"
+        self.timeout = int(os.environ.get("BOON_TIMEOUT", "300"))
 
         # set up base url
         self.url = self.server + "/expert/v3"
         if "http" not in self.server:
             self.url = "http://" + self.url
 
-        self.timeout = timeout
+    @classmethod
+    def from_license_file(
+        cls, license_file: str = "~/.BoonLogic.license", license_id: str = "default"
+    ):
+        """Primary handle for BoonNano Pod instances
+
+         This is the primary handle to manage a nano pod instance
+
+        Args:
+        license_file (str): path to .BoonLogic license file
+        license_id (str): license identifier label found within the .BoonLogic.license configuration file
+
+        Environment:
+        BOON_LICENSE_FILE: Specifies location of BOON_LICENSE_FILE.  This will override the license_file parameter
+        BOON_LICENSE_ID: Specifies the profile id.  This will override the license_id parameter
+        """
+
+        license_file = os.environ.get("BOON_LICENSE_FILE", license_file)
+        license_id = os.environ.get("BOON_LICENSE_ID", license_id)
+
+        license_path = os.path.expanduser(license_file)
+        if not os.path.exists(license_path):
+            raise BoonException(404, 'license_file "{}" not found'.format(license_path))
+
+        try:
+            with open(license_path, "r") as f:
+                file_data = json.load(f)
+        except json.JSONDecodeError as e:
+            raise BoonException(
+                400,
+                "JSON formatting error in license file: {}, line: {}, col: {}, message:{}".format(
+                    license_path, e.lineno, e.colno, e.msg
+                ),
+            )
+
+        if license_id not in file_data:
+            raise BoonException(
+                404,
+                'license_id "{}" not found in license file {}'.format(
+                    license_id, license_path
+                ),
+            )
+
+        profile = file_data[license_id]
+
+        server = profile.get("server", None)
+        proxy_server = profile.get("proxy-server", None)
+        api_key = profile.get("api-key", None)
+        api_tenant = profile.get("api-tenant", None)
+
+        return cls(
+            profile=LicenseProfile(
+                server=server,
+                proxy_server=proxy_server,
+                api_key=api_key,
+                api_tenant=api_tenant,
+            )
+        )
+
+    @classmethod
+    def from_dict(cls, profile_dict: dict = None):
+        try:
+            server = profile_dict.get("server", None)
+            api_key = profile_dict.get("api-key", None)
+            api_tenant = profile_dict.get("api-tenant", None)
+            proxy_server = profile_dict.get("proxy-server", None)
+        except json.JSONDecodeError as e:
+            raise BoonException(400, "JSON formatting error, message:{}".format(e.msg))
+        return cls(
+            profile=LicenseProfile(
+                server=server,
+                proxy_server=proxy_server,
+                api_key=api_key,
+                api_tenant=api_tenant,
+            )
+        )
 
     def _is_configured(f):
         @wraps(f)
@@ -194,9 +190,9 @@ class ExpertClient:
                 url=url,
                 headers=headers,
                 data=body,
-                verify=self.verify,
+                verify=self.ssl_verify,
                 timeout=self.timeout,
-                cert=self.cert,
+                cert=self.ssl_cert,
                 files=fields,
             )
         except requests.exceptions.Timeout:
@@ -1262,6 +1258,6 @@ def normalize_nano_data(data, numeric_format):
         data = data.astype(np.uint16)
 
     # Serialize to binary blob
-    data = data.tostring()
+    data = data.tobytes()
 
     return data

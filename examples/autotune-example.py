@@ -8,7 +8,7 @@ import sys
 #
 
 try:
-    nano = bn.ExpertClient(license_id='default')
+    nano = bn.ExpertClient.from_license_file(license_id='default')
 except bn.BoonException as be:
     print(be)
     sys.exit(1)
@@ -23,7 +23,7 @@ except BoonException as e:
 
 # create the configuration
 response = nano.create_config(numeric_format='float32', feature_count=20, min_val=-10, max_val=15,
-                                       percent_variation=0.05, accuracy=0.99, weight=1, streaming_window=1)
+                              percent_variation=0.05, accuracy=0.99, weight=1, streaming_window=1)
 print(json.dumps(response, indent=4))
 
 # configure the nano with created configuration

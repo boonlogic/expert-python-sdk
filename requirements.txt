@@ -1,8 +1,10 @@
 wheel==0.34.2
-coverage==5.0.2
+coverage==5.5
+boto3
+botocore
 pytest
 -e .
-numpy>=1.21
+numpy
 simplejson==3.17.0
 urllib3>=1.26.5
 pdoc3==0.10.0
