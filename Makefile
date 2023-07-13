@@ -17,10 +17,11 @@ format: local-env-check
 	pip install black && \
 	black boonnano
 
-test: local-env-check
+test-%: local-env-check
 	@. local-env/bin/activate && \
 	cd tests && \
-	coverage run --source=boonnano -m pytest -x -vv test_client.py && \
+	BOON_TEST_LICENSE_ID=$* coverage run --source=boonnano -m pytest -x -vv test_client.py && \
+	coverage report -m && \
 	coverage html
 
 test-examples: local-env-check
