@@ -68,6 +68,7 @@ test-expert-v3:
     - cd ${CI_PROJECT_DIR}/ci-root/packages/expert-python-sdk/expert-python-sdk
     - export BOON_TEST_LICENSE_FILE=${CI_PROJECT_DIR}/ci-root/.BoonLogic.license
     - make test-pipeline
+  coverage: 'TOTAL.*\s([.\d]+)%'
   artifacts:
     paths:
     - ci-root/packages/expert-python-sdk/expert-python-sdk
