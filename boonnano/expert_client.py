@@ -353,11 +353,21 @@ class ExpertClient:
 
         """
 
-        if isinstance(min_val, int) or isinstance(min_val, float):
+        if isinstance(min_val, (int, float, np.floating, np.integer)):
+            if isinstance(min_val, np.integer):
+                min_val = int(min_val)
+            if isinstance(min_val, np.floating):
+                min_val = float(min_val)
             min_val = [min_val] * feature_count
-        if isinstance(max_val, int) or isinstance(max_val, float):
+        if isinstance(max_val, (int, float, np.floating, np.integer)):
+            if isinstance(max_val, np.integer):
+                max_val = int(max_val)
+            if isinstance(max_val, np.floating):
+                max_val = float(max_val)
             max_val = [max_val] * feature_count
-        if isinstance(weight, int):
+        if isinstance(weight, (int, np.integer)):
+            if isinstance(weight, np.integer):
+                weight = int(weight)
             weight = [weight] * feature_count
 
         if exclusions is None:
